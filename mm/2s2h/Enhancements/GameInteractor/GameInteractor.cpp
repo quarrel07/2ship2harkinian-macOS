@@ -1,11 +1,19 @@
 #include "GameInteractor.h"
 #include "spdlog/spdlog.h"
+#include <libultraship/bridge.h>
+#include <variant>
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
+#include "2s2h/CustomMessage/CustomMessage.h"
 
 extern "C" {
-#include "z64actor.h"
+#include "z64.h"
+#include "macros.h"
+#include "functions.h"
+extern SaveContext gSaveContext;
+extern PlayState* gPlayState;
+void func_800A6A40(EnItem00* thisx, PlayState* play);
+extern Vec3f sPlayerGetItemRefPos;
 }
-
-#include <libultraship/bridge.h>
 
 void GameInteractor_ExecuteOnGameStateMainFinish() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGameStateMainFinish>();
@@ -300,4 +308,154 @@ uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo) {
     }
 
     return result;
+}
+
+void EnItem00_DrawCustomForOverHead(Actor* thisx, PlayState* play) {
+    EnItem00* enItem00 = (EnItem00*)thisx;
+    thisx->shape.rot.y += 0x3C0;
+    Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+    Matrix_Translate(0.0f, -50.0f, 0.0f, MTXMODE_APPLY);
+    GetItem_Draw(play, GID_SHIP);
+}
+
+void GameInteractor_ProcessEvents(Actor* actor) {
+    Player* player = GET_PLAYER(gPlayState);
+
+    // If the player has a message active, stop
+    if (gPlayState->msgCtx.msgMode != 0) {
+        return;
+    }
+
+    // If the player is in a blocking cutscene, stop
+    if (Player_InBlockingCsMode(gPlayState, player)) {
+        return;
+    }
+
+    // If there is an event active, stop
+    const auto& currentEvent = GameInteractor::Instance->currentEvent;
+    bool shouldReturn = false;
+    std::visit(
+        [&](auto&& e) {
+            using T = std::decay_t<decltype(e)>;
+            if constexpr (!std::is_same_v<T, GIEventNone>) {
+                shouldReturn = true;
+            }
+            // additionally if the active event is a give item event with a cutscene, clear the current event
+            if constexpr (std::is_same_v<T, GIEventGiveItem>) {
+                if (e.showGetItemCutscene) {
+                    GameInteractor::Instance->currentEvent = GIEventNone{};
+                }
+            }
+        },
+        currentEvent);
+    if (shouldReturn) {
+        return;
+    }
+
+    // If there are no events that need to happen, stop
+    if (GameInteractor::Instance->events.empty()) {
+        return;
+    }
+
+    GameInteractor::Instance->currentEvent = GameInteractor::Instance->events.front();
+    const auto& nextEvent = GameInteractor::Instance->currentEvent;
+    std::visit(
+        [&](auto&& e) {
+            using T = std::decay_t<decltype(e)>;
+            if constexpr (std::is_same_v<T, GIEventGiveItem>) {
+                if (e.showGetItemCutscene) {
+                    EnItem00* enItem00 = (EnItem00*)Item_DropCollectible(gPlayState, &actor->world.pos, ITEM00_NOTHING);
+                    enItem00->getItemId = GI_SHIP;
+                    enItem00->actionFunc = func_800A6A40;
+                    CustomMessage_SetActiveMessage(MOD_ID_SHIP, SHIP_TEXT_GIVE_ITEM);
+                    Actor_OfferGetItem(&enItem00->actor, gPlayState, GI_SHIP, 50.0f, 20.0f);
+                    enItem00->actionFunc(enItem00, gPlayState);
+                    e.giveItem();
+                } else {
+                    EnItem00* enItem00 =
+                        (EnItem00*)Item_DropCollectible(gPlayState, &actor->world.pos, ITEM00_NOTHING | 0x8000);
+                    Audio_PlaySfx(NA_SE_SY_GET_ITEM);
+                    CustomMessage_StartTextbox(gPlayState, MOD_ID_SHIP, SHIP_TEXT_GIVE_ITEM_NO_STOP, &enItem00->actor);
+                    e.giveItem();
+                    enItem00->actor.draw = EnItem00_DrawCustomForOverHead;
+                }
+            } else if constexpr (std::is_same_v<T, GIEventTransition>) {
+                gPlayState->nextEntrance = e.entrance;
+                gSaveContext.nextCutsceneIndex = e.cutsceneIndex;
+                gPlayState->transitionTrigger = e.transitionTrigger;
+                gPlayState->transitionType = e.transitionType;
+            }
+        },
+        nextEvent);
+
+    GameInteractor::Instance->events.erase(GameInteractor::Instance->events.begin());
+}
+
+void GameInteractor::Init() {
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER,
+                                                                                   GameInteractor_ProcessEvents);
+
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(
+        GI_VB_GIVE_ITEM_FROM_ITEM00, [](GIVanillaBehavior _, bool* should, void* opt) {
+            EnItem00* item00 = static_cast<EnItem00*>(opt);
+            if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
+                *should = false;
+            }
+        });
+
+    // If it's a give item event without a cutscene, clear the current event
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorKill>(ACTOR_EN_ITEM00, [](Actor* actor) {
+        if (actor->params == 24) {
+            const auto& currentEvent = GameInteractor::Instance->currentEvent;
+            std::visit(
+                [&](auto&& e) {
+                    using T = std::decay_t<decltype(e)>;
+                    if constexpr (std::is_same_v<T, GIEventGiveItem>) {
+                        if (!e.showGetItemCutscene) {
+                            GameInteractor::Instance->currentEvent = GIEventNone{};
+                        }
+                    }
+                },
+                currentEvent);
+        }
+    });
+
+    // If there is a transition event active, clear it
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
+        const auto& currentEvent = GameInteractor::Instance->currentEvent;
+        std::visit(
+            [&](auto&& e) {
+                using T = std::decay_t<decltype(e)>;
+                if constexpr (std::is_same_v<T, GIEventTransition>) {
+                    GameInteractor::Instance->currentEvent = GIEventNone{};
+                }
+            },
+            currentEvent);
+    });
+
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnHandleCustomMessage>(
+        [](s32 modId, s32 textId, std::string* msg) {
+            // Replaces {{item}} in msg arg with currentEvent getItemText
+            const auto& currentEvent = GameInteractor::Instance->currentEvent;
+            std::visit(
+                [&](auto&& e) {
+                    using T = std::decay_t<decltype(e)>;
+                    if constexpr (std::is_same_v<T, GIEventGiveItem>) {
+                        CustomMessage_Replace(msg, "{{item}}", e.getItemText);
+                    }
+                },
+                currentEvent);
+        });
+}
+
+void GameInteractor_GetItemDraw(PlayState* play, s16 drawId) {
+    const auto& currentEvent = GameInteractor::Instance->currentEvent;
+    std::visit(
+        [&](auto&& e) {
+            using T = std::decay_t<decltype(e)>;
+            if constexpr (std::is_same_v<T, GIEventGiveItem>) {
+                e.drawItem();
+            }
+        },
+        currentEvent);
 }

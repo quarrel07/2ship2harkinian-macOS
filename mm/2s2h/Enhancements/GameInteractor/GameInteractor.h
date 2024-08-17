@@ -3,6 +3,7 @@
 
 #ifdef __cplusplus
 #include <string>
+#include <variant>
 extern "C" {
 #endif
 #include "z64.h"
@@ -60,6 +61,7 @@ typedef enum {
     GI_VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE,
     GI_VB_DRAW_SLIME_BODY_ITEM,
     GI_VB_ZTARGET_SPEED_CHECK,
+    GI_VB_GIVE_ITEM_FROM_ITEM00,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -71,6 +73,13 @@ typedef enum {
     GI_DPAD_OCARINA,
     GI_DPAD_EQUIP,
 } GIDpadType;
+
+typedef enum {
+    GI_EVENT_NONE,
+    GI_EVENT_GIVE_ITEM,
+    GI_EVENT_SPAWN_ACTOR,
+    GI_EVENT_TRANSITION,
+} GIEventType;
 
 #ifdef __cplusplus
 
@@ -88,12 +97,46 @@ typedef uint32_t HOOK_ID;
         typedef std::function<bool args> filter; \
     }
 
+struct GIEventNone {
+    GIEventType type = GI_EVENT_NONE;
+};
+
+struct GIEventGiveItem {
+    GIEventType type = GI_EVENT_GIVE_ITEM;
+    bool showGetItemCutscene;
+    std::string getItemText;
+    std::function<void()> drawItem;
+    std::function<void()> giveItem;
+};
+
+struct GIEventSpawnActor {
+    GIEventType type = GI_EVENT_SPAWN_ACTOR;
+    s16 actorId;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    s16 rot;
+    s32 params;
+    bool relativeCoords;
+};
+
+struct GIEventTransition {
+    GIEventType type = GI_EVENT_TRANSITION;
+    u16 entrance;
+    u16 cutsceneIndex;
+    s8 transitionTrigger;
+    u8 transitionType;
+};
+
+typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTransition> GIEvent;
+
 class GameInteractor {
   public:
     static GameInteractor* Instance;
 
     // Game State
-    class State {};
+    std::vector<GIEvent> events = {};
+    GIEvent currentEvent = GIEventNone();
 
     // Game Hooks
     HOOK_ID nextHookId = 1;
@@ -239,6 +282,8 @@ class GameInteractor {
         }
     }
 
+    void Init();
+
     class HookFilter {
       public:
         static auto ActorNotPlayer(Actor* actor) {
@@ -361,6 +406,8 @@ bool GameInteractor_Should(GIVanillaBehavior flag, bool result, void* optionalAr
 
 int GameInteractor_InvertControl(GIInvertType type);
 uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo);
+
+void GameInteractor_GetItemDraw(PlayState* play, s16 drawId);
 
 #ifdef __cplusplus
 }
