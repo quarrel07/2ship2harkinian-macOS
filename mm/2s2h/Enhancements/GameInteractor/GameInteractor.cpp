@@ -50,6 +50,10 @@ void GameInteractor_ExecuteOnSaveInit(s16 fileNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSaveInit>(fileNum);
 }
 
+void GameInteractor_ExecuteOnSaveLoad(s16 fileNum) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSaveLoad>(fileNum);
+}
+
 void GameInteractor_ExecuteBeforeEndOfCycleSave() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeEndOfCycleSave>();
 }
@@ -328,6 +332,11 @@ void GameInteractor_ProcessEvents(Actor* actor) {
 
     // If the player is in a blocking cutscene, stop
     if (Player_InBlockingCsMode(gPlayState, player)) {
+        return;
+    }
+
+    // If the player is not on the solid ground, stop
+    if (!(player->actor.bgCheckFlags & BGCHECKFLAG_GROUND)) {
         return;
     }
 

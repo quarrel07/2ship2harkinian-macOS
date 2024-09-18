@@ -20,16 +20,50 @@ void from_json(const json& j, DpadSaveInfo& dpadEquips) {
     }
 }
 
+void to_json(json& j, const RandoSaveInfoCheck& check) {
+    j = json{
+        { "item", check.item },
+        { "eligible", check.eligible },
+        { "obtained", check.obtained },
+    };
+}
+
+void from_json(const json& j, RandoSaveInfoCheck& check) {
+    j.at("item").get_to(check.item);
+    j.at("eligible").get_to(check.eligible);
+    j.at("obtained").get_to(check.obtained);
+}
+
+void to_json(json& j, const RandoSaveInfo& rando) {
+    j = json{
+        { "checks", rando.checks },
+    };
+}
+
+void from_json(const json& j, RandoSaveInfo& rando) {
+    j.at("checks").get_to(rando.checks);
+}
+
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {
     j = json {
         { "dpadEquips", shipSaveInfo.dpadEquips },
         { "pauseSaveEntrance", shipSaveInfo.pauseSaveEntrance },
+        { "saveType", shipSaveInfo.saveType },
     };
+
+    if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        j["rando"] = shipSaveInfo.rando;
+    }
 }
 
 void from_json(const json& j, ShipSaveInfo& shipSaveInfo) {
     j.at("dpadEquips").get_to(shipSaveInfo.dpadEquips);
     j.at("pauseSaveEntrance").get_to(shipSaveInfo.pauseSaveEntrance);
+    j.at("saveType").get_to(shipSaveInfo.saveType);
+
+    if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        j.at("rando").get_to(shipSaveInfo.rando);
+    }
 }
 
 void to_json(json& j, const ItemEquips& itemEquips) {

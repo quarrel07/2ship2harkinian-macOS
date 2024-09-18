@@ -10,7 +10,7 @@ extern "C" {
 
 // Not really sure what the best ID is for this, but it needs to be between 0-255
 // because it's used as a u8 somewhere in the chain
-static const u16 CUSTOM_MESSAGE_ID = 0x004B;
+#define CUSTOM_MESSAGE_ID 0x004B
 
 typedef enum ModId {
     MOD_ID_VANILLA = 0,

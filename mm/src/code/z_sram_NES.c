@@ -982,6 +982,7 @@ void Sram_InitNewSave(void) {
     // #region 2S2H
     memcpy(&gSaveContext.save.shipSaveInfo.dpadEquips, &sSaveDefaultDpadItemEquips, sizeof(DpadSaveInfo));
     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
+    gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     // #endregion
 
     Sram_GenerateRandomSaveFields();
@@ -1207,6 +1208,7 @@ void Sram_InitDebugSave(void) {
     // #region 2S2H
     memcpy(&gSaveContext.save.shipSaveInfo.dpadEquips, &sSaveDefaultDpadItemEquips, sizeof(DpadSaveInfo));
     gSaveContext.save.shipSaveInfo.pauseSaveEntrance = -1;
+    gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_VANILLA;
     // #endregion
 
     Sram_GenerateRandomSaveFields();

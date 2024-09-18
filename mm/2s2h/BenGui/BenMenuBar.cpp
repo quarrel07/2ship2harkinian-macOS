@@ -697,6 +697,7 @@ void DrawEnhancementsMenu() {
 
 void DrawCheatsMenu() {
     if (UIWidgets::BeginMenu("Cheats")) {
+        UIWidgets::CVarCheckbox("Rando", "gRando.Enabled");
         UIWidgets::CVarCheckbox("Infinite Health", "gCheats.InfiniteHealth");
         UIWidgets::CVarCheckbox("Infinite Magic", "gCheats.InfiniteMagic");
         UIWidgets::CVarCheckbox("Infinite Rupees", "gCheats.InfiniteRupees");

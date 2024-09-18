@@ -62,6 +62,9 @@ typedef enum {
     GI_VB_DRAW_SLIME_BODY_ITEM,
     GI_VB_ZTARGET_SPEED_CHECK,
     GI_VB_GIVE_ITEM_FROM_ITEM00,
+    GI_VB_GIVE_ITEM_FROM_SCRIPT,
+    GI_VB_GIVE_ITEM_FROM_CHEST,
+    GI_VB_GIVE_ITEM_FROM_GURUGURU,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -312,6 +315,7 @@ class GameInteractor {
     DEFINE_HOOK(BeforeKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(AfterKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(OnSaveInit, (s16 fileNum));
+    DEFINE_HOOK(OnSaveLoad, (s16 fileNum));
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
@@ -363,6 +367,7 @@ void GameInteractor_ExecuteOnKaleidoUpdate(PauseContext* pauseCtx);
 void GameInteractor_ExecuteBeforeKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteAfterKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteOnSaveInit(s16 fileNum);
+void GameInteractor_ExecuteOnSaveLoad(s16 fileNum);
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();

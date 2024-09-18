@@ -7,6 +7,7 @@
 #include "z64math.h"
 #include "unk.h"
 #include "z64item.h"
+#include "Rando/Types.h"
 
 struct GameState;
 struct PlayState;
@@ -325,11 +326,28 @@ typedef struct DpadSaveInfo {
     u8 dpadSlots[4][4];
 } DpadSaveInfo;
 
+typedef enum {
+    SAVETYPE_VANILLA,
+    SAVETYPE_RANDO,
+} SaveType;
+
+typedef struct RandoSaveInfoCheck {
+    RandoItem item;
+    bool eligible;
+    bool obtained;
+} RandoSaveInfoCheck;
+
+typedef struct RandoSaveInfo {
+    RandoSaveInfoCheck checks[RC_MAX];
+} RandoSaveInfo;
+
 // These are values added by 2S2H that we need to be persisted to the save file
 // See `ShipSaveContext` for values on the SaveContext that aren't persisted.
 typedef struct ShipSaveInfo {
     DpadSaveInfo dpadEquips;
     s32 pauseSaveEntrance;
+    SaveType saveType;
+    RandoSaveInfo rando;
 } ShipSaveInfo;
 // #endregion
 

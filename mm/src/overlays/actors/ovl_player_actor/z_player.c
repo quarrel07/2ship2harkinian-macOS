@@ -9229,7 +9229,11 @@ s32 Player_ActionChange_2(Player* this, PlayState* play) {
                                 giEntry = &sGetItemTable[-this->getItemId - 1];
                             }
 
-                            func_80832558(play, this, func_80837C78);
+                            if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_CHEST, true, chest)) {
+                                // This inverts the sign of the getItemId and sets the player's action to GetItem
+                                // (Player_Action_65)
+                                func_80832558(play, this, func_80837C78);
+                            }
                             this->stateFlags1 |= (PLAYER_STATE1_400 | PLAYER_STATE1_800 | PLAYER_STATE1_20000000);
                             func_80838830(this, giEntry->objectId);
 

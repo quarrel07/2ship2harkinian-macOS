@@ -178,6 +178,13 @@ file(GLOB_RECURSE soh__CustomMessage RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "2s2h/CustomMessage/*.hpp"
 )
 
+file(GLOB_RECURSE soh__Rando RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "2s2h/Rando/*.c"
+    "2s2h/Rando/*.cpp"
+    "2s2h/Rando/*.h"
+    "2s2h/Rando/*.hpp"
+)
+
 #list(REMOVE_ITEM soh__Enhancements "soh/Enhancements/gamecommand.h")
 #list(FILTER soh__Enhancements EXCLUDE REGEX "soh/Enhancements/gfx.*")
 
@@ -292,6 +299,7 @@ set(ALL_FILES
     ${soh__BenGui}
     ${soh__SaveManager}
     ${soh__CustomMessage}
+    ${soh__Rando}
     ${soh__Extractor}
     ${soh__Resource}
     ${src__}
