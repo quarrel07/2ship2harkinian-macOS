@@ -20,7 +20,8 @@ void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
         auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE,
                                                              STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
         check = checkData.check;
-    } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING) {
+    } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING ||
+               STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_BUBBLE) {
         auto checkData = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_SWITCH,
                                                              STRAY_FAIRY_GET_FLAG(&enElforg->actor), play->sceneId);
         check = checkData.check;
@@ -65,7 +66,8 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
                 auto checkData = Rando::StaticData::GetCheckFromFlag(
                     FLAG_CYCL_SCENE_COLLECTIBLE, STRAY_FAIRY_GET_FLAG(&enElforg->actor), gPlayState->sceneId);
                 check = checkData.check;
-            } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING) {
+            } else if (STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_FREE_FLOATING ||
+                       STRAY_FAIRY_TYPE(&enElforg->actor) == STRAY_FAIRY_TYPE_BUBBLE) {
                 auto checkData = Rando::StaticData::GetCheckFromFlag(
                     FLAG_CYCL_SCENE_SWITCH, STRAY_FAIRY_GET_FLAG(&enElforg->actor), gPlayState->sceneId);
                 check = checkData.check;
