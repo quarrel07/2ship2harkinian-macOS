@@ -338,6 +338,7 @@ typedef struct RandoSaveInfoCheck {
 } RandoSaveInfoCheck;
 
 typedef struct RandoSaveInfo {
+    u16 randoInf[(RANDO_INF_MAX + 15) / 16];
     RandoSaveInfoCheck checks[RC_MAX];
 } RandoSaveInfo;
 

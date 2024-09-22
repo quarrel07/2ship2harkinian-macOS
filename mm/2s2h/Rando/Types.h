@@ -25,6 +25,7 @@ typedef enum {
     RC_STOCK_POT_INN_GRANDMA_LONG_STORY,
     RC_STOCK_POT_INN_ROOM_KEY,
     RC_WOODFALL_LOBBY_STRAY_FAIRY,
+    RC_WOODFALL_LOBBY_CHEST_STRAY_FAIRY,
     RC_MAX,
 } RandoCheck;
 
@@ -43,5 +44,10 @@ typedef enum {
     RI_WOODFALL_STRAY_FAIRY,
     RI_MAX,
 } RandoItem;
+
+typedef enum {
+    RANDO_INF_CLOCK_TOWN_STRAY_FAIRY_COLLECTED,
+    RANDO_INF_MAX,
+} RandoInf;
 
 #endif // RANDO_TYPES_H

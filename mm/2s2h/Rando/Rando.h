@@ -7,6 +7,8 @@
 namespace Rando {
 
 void Init();
+void DrawItem(RandoItem item);
+void GiveItem(RandoItem item);
 
 } // namespace Rando
 

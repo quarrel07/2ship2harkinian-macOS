@@ -18,7 +18,7 @@ void EnItem00_DrawCustomForFreestanding(Actor* thisx, PlayState* play) {
 
     auto checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[checkData.check];
 
-    GetItem_Draw(play, Rando::StaticData::Items[checkSaveData.item].drawId);
+    Rando::DrawItem(checkSaveData.item);
 }
 
 void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {

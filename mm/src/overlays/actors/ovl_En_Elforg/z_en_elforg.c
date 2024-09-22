@@ -5,6 +5,7 @@
  */
 
 #include "z_en_elforg.h"
+#include "Enhancements/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -80,7 +81,8 @@ void EnElforg_Init(Actor* thisx, PlayState* play) {
 
     switch (STRAY_FAIRY_TYPE(thisx)) {
         case STRAY_FAIRY_TYPE_CLOCK_TOWN:
-            if (CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80)) {
+            if (GameInteractor_Should(GI_VB_KILL_CLOCK_TOWN_STRAY_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80),
+                                      this)) {
                 Actor_Kill(thisx);
                 return;
             }
@@ -487,23 +489,25 @@ void EnElforg_FreeFloating(EnElforg* this, PlayState* play) {
                     break;
             }
 
-            if (STRAY_FAIRY_TYPE(&this->actor) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
-                player->actor.freezeTimer = 100;
-                player->stateFlags1 |= PLAYER_STATE1_20000000;
-                // Bring me back to North Clock Town!
-                Message_StartTextbox(play, 0x579, NULL);
-                this->actionFunc = EnElforg_ClockTownFairyCollected;
-                CutsceneManager_Queue(CS_ID_GLOBAL_TALK);
-                return;
-            }
+            if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_ELFORG, true, this)) {
+                if (STRAY_FAIRY_TYPE(&this->actor) == STRAY_FAIRY_TYPE_CLOCK_TOWN) {
+                    player->actor.freezeTimer = 100;
+                    player->stateFlags1 |= PLAYER_STATE1_20000000;
+                    // Bring me back to North Clock Town!
+                    Message_StartTextbox(play, 0x579, NULL);
+                    this->actionFunc = EnElforg_ClockTownFairyCollected;
+                    CutsceneManager_Queue(CS_ID_GLOBAL_TALK);
+                    return;
+                }
 
-            if (Map_IsInDungeonOrBossArea(play)) {
-                gSaveContext.save.saveInfo.inventory.strayFairies[gSaveContext.dungeonIndex]++;
-                // You found a Stray Fairy!
-                Message_StartTextbox(play, 0x11, NULL);
-                if (gSaveContext.save.saveInfo.inventory.strayFairies[(void)0, gSaveContext.dungeonIndex] >=
-                    STRAY_FAIRY_SCATTERED_TOTAL) {
-                    Audio_PlayFanfare(NA_BGM_GET_ITEM | 0x900);
+                if (Map_IsInDungeonOrBossArea(play)) {
+                    gSaveContext.save.saveInfo.inventory.strayFairies[gSaveContext.dungeonIndex]++;
+                    // You found a Stray Fairy!
+                    Message_StartTextbox(play, 0x11, NULL);
+                    if (gSaveContext.save.saveInfo.inventory.strayFairies[(void)0, gSaveContext.dungeonIndex] >=
+                        STRAY_FAIRY_SCATTERED_TOTAL) {
+                        Audio_PlayFanfare(NA_BGM_GET_ITEM | 0x900);
+                    }
                 }
             }
         }

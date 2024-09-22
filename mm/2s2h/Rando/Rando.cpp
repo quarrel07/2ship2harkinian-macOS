@@ -18,16 +18,15 @@ void RandomizerQueueCheck(RandoCheck check) {
     auto& checkSaveData = gSaveContext.save.shipSaveInfo.rando.checks[check];
 
     checkSaveData.eligible = true;
-    GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
-        .showGetItemCutscene = true,
-        .getItemText = Rando::StaticData::Items[checkSaveData.item].name,
-        .drawItem =
-            [checkSaveData]() { GetItem_Draw(gPlayState, Rando::StaticData::Items[checkSaveData.item].drawId); },
-        .giveItem =
-            [&checkSaveData]() {
-                Item_Give(gPlayState, Rando::StaticData::Items[checkSaveData.item].itemId);
-                checkSaveData.obtained = true;
-            } });
+    GameInteractor::Instance->events.emplace_back(
+        GIEventGiveItem{ .showGetItemCutscene = true,
+                         .getItemText = Rando::StaticData::Items[checkSaveData.item].name,
+                         .drawItem = [checkSaveData]() { Rando::DrawItem(checkSaveData.item); },
+                         .giveItem =
+                             [&checkSaveData]() {
+                                 Rando::GiveItem(checkSaveData.item);
+                                 checkSaveData.obtained = true;
+                             } });
 }
 
 void RandomizerOnFlagSetHandler(FlagType flagType, u32 flag) {
