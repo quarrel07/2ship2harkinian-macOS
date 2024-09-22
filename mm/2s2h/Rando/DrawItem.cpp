@@ -6,7 +6,7 @@ extern "C" {
 #include "variables.h"
 #include "functions.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
-SkeletonHeader* ResourceMgr_LoadSkeletonByName(const char* path, SkelAnime* skelAnime);
+#include "objects/object_gi_melody/object_gi_melody.h"
 }
 
 void DrawStrayFairy(RandoItem item) {
@@ -89,8 +89,31 @@ void DrawStrayFairy(RandoItem item) {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
+void DrawSong(RandoItem item) {
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+    switch (item) {
+        case RI_SUNS_SONG:
+            gDPSetEnvColor(POLY_XLU_DISP++, 237, 231, 62, 255);
+            break;
+        default:
+            break;
+    }
+
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gGiSongNoteDL);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
 void Rando::DrawItem(RandoItem item) {
     switch (item) {
+        case RI_SUNS_SONG:
+            DrawSong(item);
+            break;
         case RI_CLOCK_TOWN_STRAY_FAIRY:
         case RI_WOODFALL_STRAY_FAIRY:
             DrawStrayFairy(item);

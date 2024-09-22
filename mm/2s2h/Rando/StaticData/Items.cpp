@@ -18,6 +18,7 @@ std::unordered_map<RandoItem, RandoItemData> Items = {
     { RI_ROOM_KEY,               { "Room Key",                ITEM_ROOM_KEY,      GI_ROOM_KEY,     GID_ROOM_KEY } },
     { RI_MASK_BREMEN,            { "Bremen Mask",             ITEM_MASK_BREMEN,   GI_MASK_BREMEN,  GID_MASK_BREMEN } },
     { RI_WOODFALL_STRAY_FAIRY,   { "Woodfall Stray Fairy",    ITEM_STRAY_FAIRIES, GI_STRAY_FAIRY,  GID_NONE } },
+    { RI_SUNS_SONG,              { "Sun's Song",              ITEM_SONG_SUN,      GI_NONE,         GID_NONE } },
     { RI_MAX,                    { "Unknown",                 ITEM_NONE,          GI_MAX,          GID_MAXIMUM } },
 };
 // clang-format on

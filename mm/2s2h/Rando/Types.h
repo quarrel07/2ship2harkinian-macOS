@@ -43,6 +43,7 @@ typedef enum {
     RI_ROOM_KEY,
     RI_MASK_BREMEN,
     RI_WOODFALL_STRAY_FAIRY,
+    RI_SUNS_SONG,
     RI_MAX,
 } RandoItem;
 
