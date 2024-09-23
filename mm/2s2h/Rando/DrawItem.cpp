@@ -9,6 +9,8 @@ extern "C" {
 #include "objects/object_gi_melody/object_gi_melody.h"
 }
 
+// I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
+// render properly, and we don't really have the systems in place to mock that.
 void DrawStrayFairy(RandoItem item) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
