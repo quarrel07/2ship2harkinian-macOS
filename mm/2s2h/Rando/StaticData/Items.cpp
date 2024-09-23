@@ -20,6 +20,9 @@ std::unordered_map<RandoItem, RandoItemData> Items = {
     { RI_RUPEE_SILVER,           { "Silver Rupee",            ITEM_RUPEE_SILVER,    GI_RUPEE_SILVER,    GID_RUPEE_SILVER } },
     { RI_SUNS_SONG,              { "Sun's Song",              ITEM_SONG_SUN,        GI_NONE,            GID_NONE } },
     { RI_WOODFALL_STRAY_FAIRY,   { "Woodfall Stray Fairy",    ITEM_STRAY_FAIRIES,   GI_STRAY_FAIRY,     GID_NONE } },
+    { RI_SNOWHEAD_STRAY_FAIRY,   { "Snowhead Stray Fairy",    ITEM_STRAY_FAIRIES,   GI_STRAY_FAIRY,     GID_NONE } },
+    { RI_GREAT_BAY_STRAY_FAIRY,  { "Great Bay Stray Fairy",   ITEM_STRAY_FAIRIES,   GI_STRAY_FAIRY,     GID_NONE } },
+    { RI_STONE_TOWER_STRAY_FAIRY,{ "Stone Tower Stray Fairy", ITEM_STRAY_FAIRIES,   GI_STRAY_FAIRY,     GID_NONE } },
     { RI_MAX,                    { "Unknown",                 ITEM_NONE,            GI_MAX,             GID_MAXIMUM } },
 };
 // clang-format on

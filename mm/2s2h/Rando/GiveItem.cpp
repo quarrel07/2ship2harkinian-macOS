@@ -14,6 +14,15 @@ void Rando::GiveItem(RandoItem item) {
         case RI_WOODFALL_STRAY_FAIRY:
             gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_WOODFALL_TEMPLE]++;
             break;
+        case RI_SNOWHEAD_STRAY_FAIRY:
+            gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_SNOWHEAD_TEMPLE]++;
+            break;
+        case RI_GREAT_BAY_STRAY_FAIRY:
+            gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_GREAT_BAY_TEMPLE]++;
+            break;
+        case RI_STONE_TOWER_STRAY_FAIRY:
+            gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_STONE_TOWER_TEMPLE]++;
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[item].itemId);
             break;

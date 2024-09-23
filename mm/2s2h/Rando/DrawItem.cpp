@@ -20,19 +20,15 @@ void DrawStrayFairy(RandoItem item) {
         case RI_WOODFALL_STRAY_FAIRY:
             AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairyWoodfallTexAnim);
             break;
-
-            // case STRAY_FAIRY_AREA_SNOWHEAD:
-            //     AnimatedMat_Draw(play, Lib_SegmentedToVirtual(gStrayFairySnowheadTexAnim));
-            //     break;
-
-            // case STRAY_FAIRY_AREA_GREAT_BAY:
-            //     AnimatedMat_Draw(play, Lib_SegmentedToVirtual(gStrayFairyGreatBayTexAnim));
-            //     break;
-
-            // case STRAY_FAIRY_AREA_STONE_TOWER:
-            //     AnimatedMat_Draw(play, Lib_SegmentedToVirtual(gStrayFairyStoneTowerTexAnim));
-            //     break;
-
+        case RI_SNOWHEAD_STRAY_FAIRY:
+            AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairySnowheadTexAnim);
+            break;
+        case RI_GREAT_BAY_STRAY_FAIRY:
+            AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairyGreatBayTexAnim);
+            break;
+        case RI_STONE_TOWER_STRAY_FAIRY:
+            AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairyStoneTowerTexAnim);
+            break;
         default: // STRAY_FAIRY_AREA_CLOCK_TOWN
             AnimatedMat_Draw(gPlayState, (AnimatedMaterial*)&gStrayFairyClockTownTexAnim);
             break;
@@ -118,6 +114,9 @@ void Rando::DrawItem(RandoItem item) {
             break;
         case RI_CLOCK_TOWN_STRAY_FAIRY:
         case RI_WOODFALL_STRAY_FAIRY:
+        case RI_SNOWHEAD_STRAY_FAIRY:
+        case RI_GREAT_BAY_STRAY_FAIRY:
+        case RI_STONE_TOWER_STRAY_FAIRY:
             DrawStrayFairy(item);
             break;
         default:
