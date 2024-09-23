@@ -23,6 +23,23 @@ void Rando::GiveItem(RandoItem item) {
         case RI_STONE_TOWER_STRAY_FAIRY:
             gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_STONE_TOWER_TEMPLE]++;
             break;
+        case RI_GREAT_SPIN_ATTACK:
+            SET_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
+            break;
+        case RI_DOUBLE_DEFENSE:
+            gSaveContext.save.saveInfo.playerData.doubleDefense = true;
+            gSaveContext.save.saveInfo.inventory.defenseHearts = 20;
+            break;
+        case RI_PROGRESSIVE_MAGIC:
+            if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+                gSaveContext.save.saveInfo.playerData.isMagicAcquired = true;
+                gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
+            } else {
+                gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired = true;
+                gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
+                gSaveContext.save.saveInfo.playerData.magicLevel = 0;
+            }
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[item].itemId);
             break;

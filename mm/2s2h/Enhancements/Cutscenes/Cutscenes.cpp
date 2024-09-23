@@ -3,6 +3,7 @@
 void RegisterCutscenes() {
     // MiscInteractions
     RegisterSkipDekuSalesman();
+    RegisterSkipGreatFairyCutscene();
     RegisterSkipScarecrowDance();
     RegisterSkipTatlInterrupts();
 

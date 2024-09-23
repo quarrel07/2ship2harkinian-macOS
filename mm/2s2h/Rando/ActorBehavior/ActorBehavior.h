@@ -10,6 +10,7 @@ void InitActorBehavior(bool isRando);
 namespace ActorBehavior {
 
 void InitEnBoxBehavior(bool isRando);
+void InitEnElfgrpBehavior(bool isRando);
 void InitEnElforgBehavior(bool isRando);
 void InitEnItem00Behavior(bool isRando);
 

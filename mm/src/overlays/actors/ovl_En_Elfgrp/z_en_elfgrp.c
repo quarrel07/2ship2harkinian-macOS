@@ -33,6 +33,7 @@
 #include "z_en_elfgrp.h"
 #include "overlays/actors/ovl_En_Elforg/z_en_elforg.h"
 #include "overlays/actors/ovl_Demo_Effect/z_demo_effect.h"
+#include "Enhancements/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10)
 
@@ -482,20 +483,22 @@ void func_80A3A398(EnElfgrp* this, PlayState* play) {
         this->actionFunc = func_80A3A274;
         Flags_UnsetSwitch(play, ENELFGRP_GET_SWITCH_FLAG_PARAMS(&this->actor));
 
-        if (this->stateFlags & ELFGRP_STATE_1) {
-            Item_Give(play, ITEM_MASK_GREAT_FAIRY);
-        }
+        if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
+            if (this->stateFlags & ELFGRP_STATE_1) {
+                Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+            }
 
-        if (this->stateFlags & ELFGRP_STATE_2) {
-            SET_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
-        }
+            if (this->stateFlags & ELFGRP_STATE_2) {
+                SET_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
+            }
 
-        if (this->stateFlags & ELFGRP_STATE_4) {
-            Item_Give(play, ITEM_SWORD_GREAT_FAIRY);
+            if (this->stateFlags & ELFGRP_STATE_4) {
+                Item_Give(play, ITEM_SWORD_GREAT_FAIRY);
+            }
         }
 
         this->stateFlags &= ~ELFGRP_STATE_3;
-    } else if (this->actor.xzDistToPlayer < 350.0f) {
+    } else if (GameInteractor_Should(GI_VB_START_GREAT_FAIRY_CUTSCENE, this->actor.xzDistToPlayer < 350.0f, this)) {
         CutsceneManager_Queue(this->actor.csId);
     }
 }
@@ -526,14 +529,16 @@ void func_80A3A520(EnElfgrp* this, PlayState* play) {
         this->actionFunc = func_80A3A4AC;
         Flags_SetSwitch(play, ENELFGRP_GET_SWITCH_FLAG_PARAMS(&this->actor));
 
-        if (this->stateFlags & ELFGRP_STATE_1) {
-            Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+        if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, this)) {
+            if (this->stateFlags & ELFGRP_STATE_1) {
+                Item_Give(play, ITEM_MASK_GREAT_FAIRY);
+            }
         }
 
         if (ENELFGRP_GET_SWITCHFLAG_ROT(&this->actor) != 0) {
             Flags_SetSwitch(play, ENELFGRP_GET_SWITCHFLAG_ROT(&this->actor));
         }
-    } else if (this->actor.xzDistToPlayer < 350.0f) {
+    } else if (GameInteractor_Should(GI_VB_START_GREAT_FAIRY_CUTSCENE, this->actor.xzDistToPlayer < 350.0f, this)) {
         CutsceneManager_Queue(this->actor.csId);
     }
 }

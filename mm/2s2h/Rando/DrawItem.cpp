@@ -7,6 +7,7 @@ extern "C" {
 #include "functions.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_gi_melody/object_gi_melody.h"
+#include "objects/object_gi_hearts/object_gi_hearts.h"
 }
 
 // I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
@@ -107,6 +108,22 @@ void DrawSong(RandoItem item) {
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
 
+void DrawDoubleDefense() {
+    OPEN_DISPS(gPlayState->state.gfxCtx);
+
+    Gfx_SetupDL25_Xlu(gPlayState->state.gfxCtx);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gDPSetGrayscaleColor(POLY_XLU_DISP++, 255, 255, 255, 255);
+    gSPGrayscale(POLY_XLU_DISP++, true);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gGiHeartBorderDL);
+    gDPSetGrayscaleColor(POLY_XLU_DISP++, 255, 0, 0, 100);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gGiHeartContainerDL);
+    gSPGrayscale(POLY_XLU_DISP++, false);
+
+    CLOSE_DISPS(gPlayState->state.gfxCtx);
+}
+
 void Rando::DrawItem(RandoItem item) {
     switch (item) {
         case RI_SUNS_SONG:
@@ -118,6 +135,9 @@ void Rando::DrawItem(RandoItem item) {
         case RI_GREAT_BAY_STRAY_FAIRY:
         case RI_STONE_TOWER_STRAY_FAIRY:
             DrawStrayFairy(item);
+            break;
+        case RI_DOUBLE_DEFENSE:
+            DrawDoubleDefense();
             break;
         default:
             GetItem_Draw(gPlayState, Rando::StaticData::Items[item].drawId);
