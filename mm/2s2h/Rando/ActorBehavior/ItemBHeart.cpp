@@ -6,11 +6,10 @@ extern "C" {
 #include "variables.h"
 
 #include "overlays/actors/ovl_Item_B_Heart/z_item_b_heart.h"
+void ItemBHeart_UpdateModel(ItemBHeart* itemBHeart, PlayState* play);
 }
 
 void ItemBHeart_DrawCustom(Actor* thisx, PlayState* play) {
-    Matrix_Scale(20.0f, 20.0f, 20.0f, MTXMODE_APPLY);
-
     auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, 0x1F, gPlayState->sceneId);
     if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
         return;
@@ -24,9 +23,7 @@ void ItemBHeart_DrawCustom(Actor* thisx, PlayState* play) {
 void ItemBHeart_UpdateCustom(Actor* thisx, PlayState* play) {
     ItemBHeart* itemBHeart = (ItemBHeart*)thisx;
 
-    itemBHeart->actor.shape.rot.y += 0x400;
-    Math_ApproachF(&itemBHeart->variableScale, 0.4f, 0.1f, 0.01f);
-    Actor_SetScale(&itemBHeart->actor, itemBHeart->variableScale * 0.05f);
+    ItemBHeart_UpdateModel(itemBHeart, play);
 
     if (!(itemBHeart->baseScale < BHEART_SCALE_MIN_COLLECTIBLE)) {
         if ((thisx->xzDistToPlayer <= 30.0f) && (fabsf(thisx->playerHeightRel) <= fabsf(80.0f))) {
