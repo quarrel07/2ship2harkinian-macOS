@@ -20,16 +20,16 @@ void RandomizerQueueChecks(Actor* actor) {
             queued = true;
 
             RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
-            GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
-                .showGetItemCutscene = true,
-                .getItemText = Rando::StaticData::Items[randoItemId].name,
-                .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
-                .giveItem = [&randoSaveCheck, randoItemId]() {
-                    Rando::GiveItem(randoItemId);
-                    randoSaveCheck.obtained = true;
-                    queued = false;
-                }
-            });
+            GameInteractor::Instance->events.emplace_back(
+                GIEventGiveItem{ .showGetItemCutscene = true,
+                                 .getItemText = Rando::StaticData::Items[randoItemId].name,
+                                 .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
+                                 .giveItem =
+                                     [&randoSaveCheck, randoItemId]() {
+                                         Rando::GiveItem(randoItemId);
+                                         randoSaveCheck.obtained = true;
+                                         queued = false;
+                                     } });
             return;
         }
     }
@@ -117,7 +117,8 @@ void OnSaveLoadHandler(s16 fileNum) {
         GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(RandomizerOnSceneFlagSetHandler);
     onVanillaBehaviorHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::ShouldVanillaBehavior>(
         RandomizerOnVanillaBehaviorHandler);
-    onPlayerUpdateHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER, RandomizerQueueChecks);
+    onPlayerUpdateHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
+        ACTOR_PLAYER, RandomizerQueueChecks);
 }
 
 // Entry point for the rando module
