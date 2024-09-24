@@ -687,7 +687,8 @@ void func_80B27760(EnKendoJs* this) {
 void func_80B27774(EnKendoJs* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if (Actor_ProcessTalkRequest(&this->actor, &play->state) || !GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SWORDSMAN, true, this)) {
+    if (Actor_ProcessTalkRequest(&this->actor, &play->state) ||
+        !GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SWORDSMAN, true, this)) {
         if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_63_20)) {
             SET_WEEKEVENTREG(WEEKEVENTREG_63_20);
             Message_StartTextbox(play, 0x272F, &this->actor);
