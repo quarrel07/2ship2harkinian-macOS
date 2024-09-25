@@ -20,16 +20,16 @@ void RandomizerQueueChecks(Actor* actor) {
             queued = true;
 
             RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
-            GameInteractor::Instance->events.emplace_back(
-                GIEventGiveItem{ .showGetItemCutscene = true,
-                                 .getItemText = Rando::StaticData::Items[randoItemId].name,
-                                 .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
-                                 .giveItem =
-                                     [&randoSaveCheck, randoItemId]() {
-                                         Rando::GiveItem(randoItemId);
-                                         randoSaveCheck.obtained = true;
-                                         queued = false;
-                                     } });
+            GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
+                .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
+                .getItemText = Rando::StaticData::Items[randoItemId].name,
+                .drawItem = [randoItemId]() { Rando::DrawItem(randoItemId); },
+                .giveItem =
+                    [&randoSaveCheck, randoItemId]() {
+                        Rando::GiveItem(randoItemId);
+                        randoSaveCheck.obtained = true;
+                        queued = false;
+                    } });
             return;
         }
     }

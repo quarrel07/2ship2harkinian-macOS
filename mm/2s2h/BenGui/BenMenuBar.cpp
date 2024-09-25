@@ -440,6 +440,8 @@ void DrawEnhancementsMenu() {
                     .tooltip =
                         "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time",
                 });
+            UIWidgets::CVarCheckbox("Skip Get Item Cutscenes", "gEnhancements.Cutscenes.SkipGetItemCutscenes",
+                                    { .tooltip = "This only works in Randomizer currently" });
 
             ImGui::EndMenu();
         }
