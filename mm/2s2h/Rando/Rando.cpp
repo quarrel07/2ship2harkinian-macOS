@@ -9,8 +9,8 @@ extern "C" {
 #include "functions.h"
 }
 
+static bool queued = false;
 void RandomizerQueueChecks(Actor* actor) {
-    static bool queued = false;
     if (queued) {
         return;
     }
@@ -123,6 +123,9 @@ void OnSaveLoadHandler(s16 fileNum) {
 
 // Entry point for the rando module
 void Rando::Init() {
+    queued = false;
+    GameInteractor::Instance->currentEvent = GIEventNone{};
+    GameInteractor::Instance->events.clear();
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveInit>(OnSaveInitHandler);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveLoad>(OnSaveLoadHandler);
 }
