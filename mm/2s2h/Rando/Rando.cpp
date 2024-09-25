@@ -70,6 +70,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void
 void OnSaveInitHandler(s16 fileNum) {
     if (CVarGetInteger("gRando.Enabled", 0)) {
         gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
+        memset(&gSaveContext.save.shipSaveInfo.rando, 0, sizeof(gSaveContext.save.shipSaveInfo.rando));
 
         std::vector<RandoItemId> itemPool;
         for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
