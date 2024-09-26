@@ -414,13 +414,12 @@ void GameInteractor::Init() {
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER,
                                                                                    GameInteractor_ProcessEvents);
 
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(
-        GI_VB_GIVE_ITEM_FROM_ITEM00, [](GIVanillaBehavior _, bool* should, void* opt) {
-            EnItem00* item00 = static_cast<EnItem00*>(opt);
-            if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
-                *should = false;
-            }
-        });
+    REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ITEM00, {
+        EnItem00* item00 = va_arg(args, EnItem00*);
+        if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
+            *should = false;
+        }
+    });
 
     // If it's a give item event without a cutscene, clear the current event
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorKill>(ACTOR_EN_ITEM00, [](Actor* actor) {
