@@ -9,6 +9,7 @@ void RegisterCutscenes() {
 
     // StoryCutscenes
     RegisterSkipClockTowerOpen();
+    SkipClockTowerSkullKidEncounter();
     RegisterSkipLearningSongOfTime();
 
     RegisterHideTitleCards();

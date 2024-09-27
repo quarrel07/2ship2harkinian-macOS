@@ -1,6 +1,7 @@
 #include "ActorBehavior.h"
 
 void Rando::InitActorBehavior(bool isRando) {
+    ActorBehavior::InitDmStkBehavior(isRando);
     ActorBehavior::InitEnBoxBehavior(isRando);
     ActorBehavior::InitEnElfgrpBehavior(isRando);
     ActorBehavior::InitEnElforgBehavior(isRando);
