@@ -10,10 +10,11 @@ void Rando::DrawMenu() {
         static char seed[256];
         std::string stringSeed = CVarGetString("gRando.InputSeed", "");
         strcpy(seed, stringSeed.c_str());
-        ImGui::InputText("Seed", seed, sizeof(seed), ImGuiInputTextFlags_CallbackAlways, [](ImGuiInputTextCallbackData* data) {
-            CVarSetString("gRando.InputSeed", data->Buf);
-            return 0;
-        });
+        ImGui::InputText("Seed", seed, sizeof(seed), ImGuiInputTextFlags_CallbackAlways,
+                         [](ImGuiInputTextCallbackData* data) {
+                             CVarSetString("gRando.InputSeed", data->Buf);
+                             return 0;
+                         });
         UIWidgets::PopStyleSlider();
 
         ImGui::EndMenu();

@@ -4,7 +4,12 @@ namespace Rando {
 
 namespace StaticData {
 
-#define RC(id, type, scene, flagType, flag, item) { id, { id, #id, type, scene, flagType, flag, item } }
+#define RC(id, type, scene, flagType, flag, item)      \
+    {                                                  \
+        id, {                                          \
+            id, #id, type, scene, flagType, flag, item \
+        }                                              \
+    }
 
 // clang-format off
 std::map<RandoCheckId, RandoStaticCheck> Checks = {
