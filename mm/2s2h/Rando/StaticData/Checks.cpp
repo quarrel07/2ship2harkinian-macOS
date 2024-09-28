@@ -292,6 +292,9 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 };
 // clang-format on
 
+// Currently this just loops through the list of checks and returns the first one that matches. As the list grows we
+// should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
+// a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
     if (sceneId != SCENE_INISIE_R) {
         sceneId = Play_GetOriginalSceneId(sceneId);

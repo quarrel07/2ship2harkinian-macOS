@@ -4,6 +4,7 @@ extern "C" {
 #include "variables.h"
 }
 
+// This is kind of a catch-all for things that are simple enough to not need their own file.
 void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
     switch (id) {
         case GI_VB_GIVE_ITEM_FROM_GURUGURU:
@@ -14,6 +15,7 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
     }
 }
 
+// Entry point for the module, run once on game boot
 void Rando::ActorBehavior::Init() {
 }
 

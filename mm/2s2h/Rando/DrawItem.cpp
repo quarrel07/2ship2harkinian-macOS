@@ -11,7 +11,8 @@ extern "C" {
 }
 
 // I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
-// render properly, and we don't really have the systems in place to mock that.
+// render properly, and we don't really have the systems in place to mock that, so we're rendering the fairy by hand
+// using it's individual DL's, for some reason half of the DL's either crash or don't render so we have to re-use some
 void DrawStrayFairy(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 

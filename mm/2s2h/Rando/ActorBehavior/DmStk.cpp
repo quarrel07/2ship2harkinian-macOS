@@ -27,6 +27,8 @@ void DmChar02_UpdateCustom(Actor* actor, PlayState* play) {
     DmChar02_PlaySfxForCutscenes(dmChar02, play);
 }
 
+// This handles the two checks for the Clock Tower Roof, the Ocarina and Song of Time checks. It also handles
+// overriding the drawing of the Ocarina in the hand of the Skull Kid.
 void Rando::ActorBehavior::InitDmStkBehavior() {
     static uint32_t onActorInit = 0;
     static uint32_t shouldHookId1 = 0;
