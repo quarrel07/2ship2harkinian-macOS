@@ -1,4 +1,5 @@
 #include "Rando/Rando.h"
+#include "Rando/Spoiler/Spoiler.h"
 #include <libultraship/libultraship.h>
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "BenPort.h"
@@ -7,12 +8,12 @@ void Rando::DrawMenu() {
     if (UIWidgets::BeginMenu("Rando", UIWidgets::Colors::Green)) {
         UIWidgets::CVarCheckbox("Enable Rando (Randomizes new files upon creation)", "gRando.Enabled");
 
-        if (UIWidgets::CVarCombobox("Seed", "gRando.SpoilerFileIndex", Rando::spoilerFileOptions)) {
+        if (UIWidgets::CVarCombobox("Seed", "gRando.SpoilerFileIndex", Rando::Spoiler::spoilerOptions)) {
             if (CVarGetInteger("gRando.SpoilerFileIndex", 0) == 0) {
                 CVarSetString("gRando.SpoilerFile", "");
             } else {
                 CVarSetString("gRando.SpoilerFile",
-                              Rando::spoilerFileOptions[CVarGetInteger("gRando.SpoilerFileIndex", 0)].c_str());
+                              Rando::Spoiler::spoilerOptions[CVarGetInteger("gRando.SpoilerFileIndex", 0)].c_str());
             }
         }
 

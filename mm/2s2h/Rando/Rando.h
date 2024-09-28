@@ -4,12 +4,10 @@
 #include "StaticData/StaticData.h"
 #include "Types.h"
 
+#define IS_RANDO (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO)
 #define RANDO_SAVE_CHECKS gSaveContext.save.shipSaveInfo.rando.randoSaveChecks
 
 namespace Rando {
-
-extern std::vector<std::string> spoilerFileOptions;
-bool HandleFileDropped(std::string filePath);
 
 void Init();
 void DrawItem(RandoItemId randoItemId);

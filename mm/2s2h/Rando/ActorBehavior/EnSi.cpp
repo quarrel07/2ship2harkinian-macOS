@@ -22,7 +22,7 @@ void EnSi_DrawCustom(Actor* thisx, PlayState* play) {
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
-void Rando::ActorBehavior::InitEnSiBehavior(bool isRando) {
+void Rando::ActorBehavior::InitEnSiBehavior() {
     static uint32_t onActorInitHookId = 0;
     static uint32_t shouldHookId = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInitHookId);
@@ -31,7 +31,7 @@ void Rando::ActorBehavior::InitEnSiBehavior(bool isRando) {
     onActorInitHookId = 0;
     shouldHookId = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

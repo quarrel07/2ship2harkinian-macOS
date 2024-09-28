@@ -54,6 +54,7 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/DeveloperTools/DebugConsole.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/Rando/Spoiler/Spoiler.h"
 #include "2s2h/SaveManager/SaveManager.h"
 
 // Resource Types/Factories
@@ -422,7 +423,7 @@ void Ben_ProcessDroppedFiles(std::string filePath) {
     }
 
     if (!handled) {
-        handled = Rando::HandleFileDropped(filePath);
+        handled = Rando::Spoiler::HandleFileDropped(filePath);
     }
 
     // if (!handled) {

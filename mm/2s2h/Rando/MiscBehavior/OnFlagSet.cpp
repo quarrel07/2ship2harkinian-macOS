@@ -1,0 +1,25 @@
+#include "MiscBehavior.h"
+
+extern "C" {
+#include "variables.h"
+}
+
+void Rando::MiscBehavior::OnFlagSet(FlagType flagType, u32 flag) {
+    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(flagType, flag);
+    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+        return;
+    }
+
+    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+    randoSaveCheck.eligible = true;
+}
+
+void Rando::MiscBehavior::OnSceneFlagSet(s16 sceneId, FlagType flagType, u32 flag) {
+    auto randoStaticCheck = Rando::StaticData::GetCheckFromFlag(flagType, flag, sceneId);
+    if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+        return;
+    }
+
+    auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+    randoSaveCheck.eligible = true;
+}

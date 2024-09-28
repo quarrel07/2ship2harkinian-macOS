@@ -34,13 +34,13 @@ void ItemBHeart_UpdateCustom(Actor* thisx, PlayState* play) {
     }
 }
 
-void Rando::ActorBehavior::InitItemBHeartBehavior(bool isRando) {
+void Rando::ActorBehavior::InitItemBHeartBehavior() {
     static uint32_t onActorInitHookId = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInitHookId);
 
     onActorInitHookId = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

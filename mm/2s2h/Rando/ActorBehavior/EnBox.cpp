@@ -24,7 +24,7 @@ void func_80837C78_override(PlayState* play, Player* player) {
 
 // This simply prevents the player from getting an item from the chest, but still
 // plays the chest opening animation and ensure the treasure chest flag is set
-void Rando::ActorBehavior::InitEnBoxBehavior(bool isRando) {
+void Rando::ActorBehavior::InitEnBoxBehavior() {
     static uint32_t shouldHook1Id = 0;
     static uint32_t shouldHook2Id = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook1Id);
@@ -33,7 +33,7 @@ void Rando::ActorBehavior::InitEnBoxBehavior(bool isRando) {
     shouldHook1Id = 0;
     shouldHook2Id = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

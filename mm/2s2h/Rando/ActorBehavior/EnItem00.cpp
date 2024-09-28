@@ -21,7 +21,7 @@ void EnItem00_DrawCustomForFreestanding(Actor* thisx, PlayState* play) {
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
-void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
+void Rando::ActorBehavior::InitEnItem00Behavior() {
     static uint32_t onActorInitHookId = 0;
     static uint32_t shouldHookId = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInitHookId);
@@ -30,7 +30,7 @@ void Rando::ActorBehavior::InitEnItem00Behavior(bool isRando) {
     onActorInitHookId = 0;
     shouldHookId = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

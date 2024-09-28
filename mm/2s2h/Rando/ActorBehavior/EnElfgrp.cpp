@@ -8,7 +8,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Elfgrp/z_en_elfgrp.h"
 }
 
-void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
+void Rando::ActorBehavior::InitEnElfgrpBehavior() {
     static uint32_t shouldHook1Id = 0;
     static uint32_t shouldHook2Id = 0;
     static uint32_t shouldHook3Id = 0;
@@ -20,7 +20,7 @@ void Rando::ActorBehavior::InitEnElfgrpBehavior(bool isRando) {
     shouldHook2Id = 0;
     shouldHook3Id = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

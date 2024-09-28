@@ -27,7 +27,7 @@ void DmChar02_UpdateCustom(Actor* actor, PlayState* play) {
     DmChar02_PlaySfxForCutscenes(dmChar02, play);
 }
 
-void Rando::ActorBehavior::InitDmStkBehavior(bool isRando) {
+void Rando::ActorBehavior::InitDmStkBehavior() {
     static uint32_t onActorInit = 0;
     static uint32_t shouldHookId1 = 0;
     static uint32_t shouldHookId2 = 0;
@@ -45,7 +45,7 @@ void Rando::ActorBehavior::InitDmStkBehavior(bool isRando) {
     shouldHookId3 = 0;
     shouldHookId4 = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

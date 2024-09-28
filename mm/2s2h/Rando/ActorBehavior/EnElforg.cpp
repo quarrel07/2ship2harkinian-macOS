@@ -40,7 +40,7 @@ void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
     Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
-void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
+void Rando::ActorBehavior::InitEnElforgBehavior() {
     static uint32_t onActorInitHookId = 0;
     static uint32_t shouldHook1Id = 0;
     static uint32_t shouldHook2Id = 0;
@@ -55,7 +55,7 @@ void Rando::ActorBehavior::InitEnElforgBehavior(bool isRando) {
     shouldHook2Id = 0;
     shouldHook3Id = 0;
 
-    if (!isRando) {
+    if (!IS_RANDO) {
         return;
     }
 

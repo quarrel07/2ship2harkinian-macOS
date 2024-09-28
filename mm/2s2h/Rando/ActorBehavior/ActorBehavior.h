@@ -5,17 +5,18 @@
 
 namespace Rando {
 
-void InitActorBehavior(bool isRando);
-
 namespace ActorBehavior {
 
-void InitDmStkBehavior(bool isRando);
-void InitEnBoxBehavior(bool isRando);
-void InitEnElfgrpBehavior(bool isRando);
-void InitEnElforgBehavior(bool isRando);
-void InitEnItem00Behavior(bool isRando);
-void InitEnSiBehavior(bool isRando);
-void InitItemBHeartBehavior(bool isRando);
+void Init();
+void OnFileLoad();
+
+void InitDmStkBehavior();
+void InitEnBoxBehavior();
+void InitEnElfgrpBehavior();
+void InitEnElforgBehavior();
+void InitEnItem00Behavior();
+void InitEnSiBehavior();
+void InitItemBHeartBehavior();
 
 } // namespace ActorBehavior
 
