@@ -8,6 +8,9 @@
 
 namespace Rando {
 
+extern std::vector<std::string> spoilerFileOptions;
+bool HandleFileDropped(std::string filePath);
+
 void Init();
 void DrawItem(RandoItemId randoItemId);
 void GiveItem(RandoItemId randoItemId);

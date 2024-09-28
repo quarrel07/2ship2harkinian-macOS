@@ -285,7 +285,6 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // RC(RC_ZORA_CAPE_UNDERWATER_CHEST,                       RCTYPE_CHEST,            SCENE_31MISAKI,                 FLAG_CYCL_SCENE_CHEST,       0x00,                                                                RI_RUPEE_PURPLE),
     // RC(RC_ZORA_CAPE_WATERFALL_HP,                           RCTYPE_UNKNOWN,          SCENE_31MISAKI,                 FLAG_PERM_SCENE_COLLECTIBLE, 0x07,                                                                RI_HEART_PIECE),
     // RC(RC_ZORA_HALL_SCRUB_HP,                               RCTYPE_UNKNOWN,          SCENE_BANDROOM,                 FLAG_CYCL_SCENE_COLLECTIBLE, 0x1E,                                                                RI_HEART_PIECE),
-    RC(RC_MAX,                                              RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN),
 };
 // clang-format on
 
@@ -296,6 +295,15 @@ RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
         }
     }
     return Checks[RC_UNKNOWN];
+}
+
+RandoCheckId GetCheckIdFromName(const char* name) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (strcmp(name, randoStaticCheck.name) == 0) {
+            return randoCheckId;
+        }
+    }
+    return RC_UNKNOWN;
 }
 
 } // namespace StaticData

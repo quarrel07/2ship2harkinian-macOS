@@ -421,9 +421,9 @@ void Ben_ProcessDroppedFiles(std::string filePath) {
         handled = BinarySaveConverter_HandleFileDropped(filePath);
     }
 
-    // if (!handled) {
-    //     handled = Randomizer_HandleFileDropped(filePath);
-    // }
+    if (!handled) {
+        handled = Rando::HandleFileDropped(filePath);
+    }
 
     // if (!handled) {
     //     handled = Presets_HandleFileDropped(filePath);
