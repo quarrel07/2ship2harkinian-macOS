@@ -70,6 +70,7 @@ typedef enum {
     GI_VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY,
     GI_VB_DRAW_SLIME_BODY_ITEM,
     GI_VB_DRAW_OCARINA_IN_STK_HAND,
+    GI_VB_DRAW_FILE_SELECT_SAVE_TYPE_BOX,
     GI_VB_OVERRIDE_CHAR02_LIMB,
     GI_VB_STK_HAVE_OCARINA,
     GI_VB_POST_CHAR02_LIMB,
@@ -334,6 +335,7 @@ class GameInteractor {
     DEFINE_HOOK(AfterKaleidoDrawPage, (PauseContext * pauseCtx, u16 pauseIndex));
     DEFINE_HOOK(OnSaveInit, (s16 fileNum));
     DEFINE_HOOK(OnSaveLoad, (s16 fileNum));
+    DEFINE_HOOK(OnFileSelectSaveLoad, (s16 fileNum, bool isOwlSave, SaveContext * saveContext));
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
@@ -386,6 +388,7 @@ void GameInteractor_ExecuteBeforeKaleidoDrawPage(PauseContext* pauseCtx, u16 pau
 void GameInteractor_ExecuteAfterKaleidoDrawPage(PauseContext* pauseCtx, u16 pauseIndex);
 void GameInteractor_ExecuteOnSaveInit(s16 fileNum);
 void GameInteractor_ExecuteOnSaveLoad(s16 fileNum);
+void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, SaveContext* saveContext);
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();

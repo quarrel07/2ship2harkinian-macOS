@@ -100,6 +100,9 @@ void DrawSong(RandoItemId randoItemId) {
         case RI_SUNS_SONG:
             gDPSetEnvColor(POLY_XLU_DISP++, 237, 231, 62, 255);
             break;
+        case RI_SONG_OF_TIME:
+            gDPSetEnvColor(POLY_XLU_DISP++, 98, 177, 211, 255);
+            break;
         default:
             break;
     }
@@ -127,6 +130,7 @@ void DrawDoubleDefense() {
 
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
+        case RI_SONG_OF_TIME:
         case RI_SUNS_SONG:
             DrawSong(randoItemId);
             break;

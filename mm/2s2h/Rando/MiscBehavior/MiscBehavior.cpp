@@ -6,6 +6,7 @@ extern "C" {
 
 // Entry point for the module, run once on game boot
 void Rando::MiscBehavior::Init() {
+    Rando::MiscBehavior::InitFileSelect();
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSaveInit>(Rando::MiscBehavior::OnFileCreate);
 }
 
