@@ -348,6 +348,28 @@ typedef enum {
 } RandoItemId;
 
 typedef enum {
+    RO_LOGIC,
+    RO_MAX,
+} RandoOptionId;
+
+typedef enum {
+    RO_GENERIC_OFF,
+    RO_GENERIC_ON,
+} RandoOptionGenericOffOn;
+
+typedef enum {
+    RO_GENERIC_NO,
+    RO_GENERIC_YES,
+} RandoOptionGenericNoYes;
+
+typedef enum {
+    RO_LOGIC_NO_LOGIC,
+    RO_LOGIC_VANILLA,
+    RO_LOGIC_GLITCHLESS,
+    RO_LOGIC_GLITCHED,
+} RandoOptionLogic;
+
+typedef enum {
     RANDO_INF_UNKNOWN,
     RANDO_INF_MAX,
 } RandoInf;
