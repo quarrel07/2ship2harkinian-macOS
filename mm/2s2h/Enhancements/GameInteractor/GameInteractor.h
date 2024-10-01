@@ -88,6 +88,7 @@ typedef enum {
     // Vanilla condition: (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) && !CHECK_QUEST_ITEM(QUEST_SONG_HEALING)
     GI_VB_OSN_TEACH_SONG_OF_HEALING,
     GI_VB_GIVE_ITEM_FROM_OSN,
+    GI_VB_GIVE_ITEM_FROM_MOONS_TEAR,
 } GIVanillaBehavior;
 
 typedef enum {

@@ -20,6 +20,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_UNKNOWN,                                          RCTYPE_UNKNOWN,          SCENE_MAX,                      FLAG_NONE,                   0x00,                                                                RI_UNKNOWN),
 
     // Verified as working & name decided, no more iteration necessary
+    RC(RC_ASTRAL_OBSERVATORY_MOON_TEAR,                     RCTYPE_NPC,              SCENE_TENMON_DAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_74_40,                                                  RI_MOONS_TEAR),
     RC(RC_CLOCK_TOWER_ROOF_OCARINA,                         RCTYPE_NPC,              SCENE_OKUJOU,                   FLAG_NONE,                   0x00,                                                                RI_OCARINA),
     RC(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME,                    RCTYPE_SONG,             SCENE_OKUJOU,                   FLAG_NONE,                   0x00,                                                                RI_SONG_OF_TIME),
     RC(RC_CLOCK_TOWN_DEKU_MASK,                             RCTYPE_NPC,              SCENE_INSIDETOWER,              FLAG_NONE,                   0x00,                                                                RI_MASK_DEKU),

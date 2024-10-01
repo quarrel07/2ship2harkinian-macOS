@@ -17,6 +17,7 @@ typedef enum {
     RC_UNKNOWN,
 
     // Verified as working & name decided, no more iteration necessary
+    RC_ASTRAL_OBSERVATORY_MOON_TEAR,
     RC_CLOCK_TOWER_ROOF_OCARINA,
     RC_CLOCK_TOWER_ROOF_SONG_OF_TIME,
     RC_CLOCK_TOWN_DEKU_MASK,
@@ -317,6 +318,7 @@ typedef enum {
     RI_MASK_DEKU,
     RI_MASK_GIANT,
     RI_MASK_GREAT_FAIRY,
+    RI_MOONS_TEAR,
     RI_OCARINA,
     RI_PROGRESSIVE_BOW,
     RI_PROGRESSIVE_MAGIC,

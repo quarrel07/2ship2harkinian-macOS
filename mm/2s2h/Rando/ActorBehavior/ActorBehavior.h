@@ -18,6 +18,7 @@ void InitEnItem00Behavior();
 void InitEnOsnBehavior();
 void InitEnSiBehavior();
 void InitItemBHeartBehavior();
+void InitObjMoonStoneBehavior();
 
 } // namespace ActorBehavior
 
