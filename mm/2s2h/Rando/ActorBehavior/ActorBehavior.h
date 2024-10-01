@@ -15,6 +15,7 @@ void InitEnBoxBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnItem00Behavior();
+void InitEnOsnBehavior();
 void InitEnSiBehavior();
 void InitItemBHeartBehavior();
 
