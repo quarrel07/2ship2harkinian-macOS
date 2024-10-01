@@ -113,7 +113,8 @@ void func_80C06768(ObjMoonStone* this, PlayState* play) {
         }
     }
     if (this->actor.draw) {
-        if (Actor_HasParent(&this->actor, play) || !GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_MOONS_TEAR, true, this)) {
+        if (Actor_HasParent(&this->actor, play) ||
+            !GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_MOONS_TEAR, true, this)) {
             this->actor.parent = NULL;
             this->actor.draw = NULL;
             func_80C0685C(this);

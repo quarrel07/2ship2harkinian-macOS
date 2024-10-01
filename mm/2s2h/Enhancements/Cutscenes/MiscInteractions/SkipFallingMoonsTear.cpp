@@ -14,7 +14,8 @@ static int frames = 0;
 void RegisterSkipFallingMoonsTear() {
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_EN_BJI_01, [](Actor* actor) {
         EnBji01* bji = (EnBji01*)actor;
-        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && bji->actor.playerHeightRel >= -350.0f && !CHECK_WEEKEVENTREG(WEEKEVENTREG_74_80)) {
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
+            bji->actor.playerHeightRel >= -350.0f && !CHECK_WEEKEVENTREG(WEEKEVENTREG_74_80)) {
             // Normally set in the cutscene
             SET_WEEKEVENTREG(WEEKEVENTREG_17_10);
             SET_WEEKEVENTREG(WEEKEVENTREG_74_80);

@@ -721,8 +721,10 @@ void EnOsn_ChooseAction(EnOsn* this, PlayState* play) {
 void EnOsn_Idle(EnOsn* this, PlayState* play) {
     s16 yaw = this->actor.yawTowardsPlayer - this->actor.shape.rot.y;
 
-    if (GameInteractor_Should(GI_VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING, (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
-        !CHECK_QUEST_ITEM(QUEST_SONG_HEALING), this)) {
+    if (GameInteractor_Should(GI_VB_OSN_CONSIDER_ELIGIBLE_FOR_SONG_OF_HEALING,
+                              (gSaveContext.save.saveInfo.inventory.items[SLOT_OCARINA] != ITEM_NONE) &&
+                                  !CHECK_QUEST_ITEM(QUEST_SONG_HEALING),
+                              this)) {
         if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
             if (GameInteractor_Should(GI_VB_OSN_TEACH_SONG_OF_HEALING, true, this)) {
                 this->actionFunc = EnOsn_StartCutscene;
