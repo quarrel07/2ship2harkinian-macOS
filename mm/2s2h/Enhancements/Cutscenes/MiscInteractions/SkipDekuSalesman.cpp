@@ -22,23 +22,24 @@ void RegisterSkipDekuSalesman() {
         });
 
     // Kills him when he's about to pop out of the ground for his exit animation
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
-        ACTOR_EN_SELLNUTS, [](Actor* actor) {
-            EnSellnuts* enSellnuts = (EnSellnuts*)actor;
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_EN_SELLNUTS, [](Actor* actor) {
+        EnSellnuts* enSellnuts = (EnSellnuts*)actor;
 
-            if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && enSellnuts->actionFunc == func_80ADC118) {
-                CutsceneManager_Stop(enSellnuts->csId);
-                Player_SetCsActionWithHaltedActors(gPlayState, &enSellnuts->actor, PLAYER_CSACTION_END);
-                Actor_Kill(&enSellnuts->actor);
-            }
-        });
+        if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
+            enSellnuts->actionFunc == func_80ADC118) {
+            CutsceneManager_Stop(enSellnuts->csId);
+            Player_SetCsActionWithHaltedActors(gPlayState, &enSellnuts->actor, PLAYER_CSACTION_END);
+            Actor_Kill(&enSellnuts->actor);
+        }
+    });
 
     // Kills him when he's about to pop out of the ground for his exit animation
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
         ACTOR_EN_AKINDONUTS, [](Actor* actor) {
             EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
 
-            if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) && enAkindonuts->actionFunc == func_80BEF83C) {
+            if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
+                enAkindonuts->actionFunc == func_80BEF83C) {
                 CutsceneManager_Stop(enAkindonuts->csId);
                 Player_SetCsActionWithHaltedActors(gPlayState, &enAkindonuts->actor, PLAYER_CSACTION_END);
                 Actor_Kill(&enAkindonuts->actor);
