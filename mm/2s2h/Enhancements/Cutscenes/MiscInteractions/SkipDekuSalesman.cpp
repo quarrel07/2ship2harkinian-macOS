@@ -39,7 +39,7 @@ void RegisterSkipDekuSalesman() {
             EnAkindonuts* enAkindonuts = (EnAkindonuts*)actor;
 
             if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-                enAkindonuts->actionFunc == func_80BEF83C) {
+                enAkindonuts->actionFunc == func_80BEF83C && enAkindonuts->unk_33A < 40) {
                 CutsceneManager_Stop(enAkindonuts->csId);
                 Player_SetCsActionWithHaltedActors(gPlayState, &enAkindonuts->actor, PLAYER_CSACTION_END);
                 Actor_Kill(&enAkindonuts->actor);

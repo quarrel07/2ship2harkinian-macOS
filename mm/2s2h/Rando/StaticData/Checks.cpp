@@ -403,8 +403,14 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // Sort of working, more iteration and/or name needed
     RC(RC_GORON_VILLAGE_HP,                                 RCTYPE_FREESTANDING,     SCENE_11GORONNOSATO,            FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
     RC(RC_SOUTHERN_SWAMP_HP,                                RCTYPE_FREESTANDING,     SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x1e,                                                                RI_HEART_PIECE),
-    RC(RC_SOUTHERN_SWAMP_SCRUB_DEED,                        RCTYPE_NPC,              SCENE_20SICHITAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_61_10,                                                  RI_DEED_SWAMP),
+    RC(RC_GORON_VILLAGE_SCRUB_BOMB_BAG,                     RCTYPE_NPC,              SCENE_11GORONNOSATO,            FLAG_RANDO_INF,              RANDO_INF_PURCHASED_BOMB_BAG_FROM_GORON_VILLAGE_SCRUB,               RI_PROGRESSIVE_BOMB_BAG),
     RC(RC_GORON_VILLAGE_SCRUB_DEED,                         RCTYPE_NPC,              SCENE_11GORONNOSATO,            FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_61_80,                                                  RI_DEED_MOUNTAIN),
+    RC(RC_IKANA_CANYON_SCRUB_HUGE_RUPEE,                    RCTYPE_NPC,              SCENE_IKANA,                    FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_62_20,                                                  RI_RUPEE_HUGE),
+    RC(RC_IKANA_CANYON_SCRUB_POTION_REFILL,                 RCTYPE_NPC,              SCENE_IKANA,                    FLAG_RANDO_INF,              RANDO_INF_PURCHASED_POTION_FROM_IKANA_CANYON_SCRUB,                  RI_BLUE_POTION_REFILL),
+    RC(RC_SOUTHERN_SWAMP_SCRUB_BEANS,                       RCTYPE_NPC,              SCENE_20SICHITAI,               FLAG_WEEK_EVENT_REG,         RANDO_INF_PURCHASED_BEANS_FROM_SOUTHERN_SWAMP_SCRUB,                 RI_MAGIC_BEAN),
+    RC(RC_SOUTHERN_SWAMP_SCRUB_DEED,                        RCTYPE_NPC,              SCENE_20SICHITAI,               FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_61_10,                                                  RI_DEED_SWAMP),
+    RC(RC_ZORA_HALL_SCRUB_DEED,                             RCTYPE_NPC,              SCENE_BANDROOM,                 FLAG_WEEK_EVENT_REG,         WEEKEVENTREG_62_04,                                                  RI_DEED_OCEAN),
+    RC(RC_ZORA_HALL_SCRUB_POTION_REFILL,                    RCTYPE_NPC,              SCENE_BANDROOM,                 FLAG_RANDO_INF,              RANDO_INF_PURCHASED_POTION_FROM_ZORA_HALL_SCRUB,                     RI_GREEN_POTION_REFILL),
 
     // Converted list from ChatGPT
     // RC(RC_ANCIENT_CASTLE_OF_IKANA_HP,                       RCTYPE_UNKNOWN,          SCENE_CASTLE,                   FLAG_CYCL_SCENE_COLLECTIBLE, 0x0a,                                                                RI_HEART_PIECE),
