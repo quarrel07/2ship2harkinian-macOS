@@ -9,6 +9,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Akindonuts/z_en_akindonuts.h"
 void func_80ADC118(EnSellnuts* enSellnuts, PlayState* play);
 void func_80BEF83C(EnAkindonuts* enAkindonuts, PlayState* play);
+void CutsceneManager_End();
 }
 
 void RegisterSkipDekuSalesman() {
@@ -26,9 +27,8 @@ void RegisterSkipDekuSalesman() {
         EnSellnuts* enSellnuts = (EnSellnuts*)actor;
 
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
-            enSellnuts->actionFunc == func_80ADC118) {
-            CutsceneManager_Stop(enSellnuts->csId);
-            Player_SetCsActionWithHaltedActors(gPlayState, &enSellnuts->actor, PLAYER_CSACTION_END);
+            enSellnuts->actionFunc == func_80ADC118 && enSellnuts->unk_34A < 40) {
+            CutsceneManager_End();
             Actor_Kill(&enSellnuts->actor);
         }
     });
@@ -40,8 +40,7 @@ void RegisterSkipDekuSalesman() {
 
             if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0) &&
                 enAkindonuts->actionFunc == func_80BEF83C && enAkindonuts->unk_33A < 40) {
-                CutsceneManager_Stop(enAkindonuts->csId);
-                Player_SetCsActionWithHaltedActors(gPlayState, &enAkindonuts->actor, PLAYER_CSACTION_END);
+                CutsceneManager_End();
                 Actor_Kill(&enAkindonuts->actor);
             }
         });
