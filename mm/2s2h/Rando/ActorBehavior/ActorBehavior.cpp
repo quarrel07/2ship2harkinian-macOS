@@ -23,6 +23,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitDmStkBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
+    Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnItem00Behavior();
@@ -31,6 +32,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
+    Rando::ActorBehavior::InitObjTsuboBehavior();
 
     static uint32_t onVanillaBehaviorHook = 0;
 

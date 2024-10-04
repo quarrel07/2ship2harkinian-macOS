@@ -13,6 +13,7 @@ void OnFileLoad();
 void InitDmStkBehavior();
 void InitEnAkindonutsBehavior();
 void InitEnBoxBehavior();
+void InitEnCowBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnItem00Behavior();
@@ -21,6 +22,7 @@ void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitItemBHeartBehavior();
 void InitObjMoonStoneBehavior();
+void InitObjTsuboBehavior();
 
 } // namespace ActorBehavior
 
