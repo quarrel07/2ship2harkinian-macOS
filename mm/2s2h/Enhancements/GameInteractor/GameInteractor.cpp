@@ -433,7 +433,7 @@ void GameInteractor::Init() {
     GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(ACTOR_PLAYER,
                                                                                    GameInteractor_ProcessEvents);
 
-    REGISTER_VB_SHOULD(GI_VB_GIVE_ITEM_FROM_ITEM00, {
+    REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_ITEM00, {
         EnItem00* item00 = va_arg(args, EnItem00*);
         if (item00->actor.params == ITEM00_NOTHING || item00->actor.params == (ITEM00_NOTHING | 0x8000)) {
             *should = false;

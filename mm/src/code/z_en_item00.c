@@ -543,7 +543,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
         }
     }
 
-    if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_ITEM00, true, this)) {
+    if (!GameInteractor_Should(VB_GIVE_ITEM_FROM_ITEM00, true, this)) {
         return;
     }
 

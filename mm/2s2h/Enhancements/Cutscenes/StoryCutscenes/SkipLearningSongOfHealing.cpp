@@ -20,7 +20,7 @@ void PlayerCall_Draw(Actor* thisx, PlayState* play);
 #define OSN_STATE_END_CONVERSATION (1 << 5)
 
 void RegisterSkipLearningSongOfHealing() {
-    REGISTER_VB_SHOULD(GI_VB_OSN_TEACH_SONG_OF_HEALING, {
+    REGISTER_VB_SHOULD(VB_OSN_TEACH_SONG_OF_HEALING, {
         // TODO: Currently forced on for rando, maybe won't be when you shuffle only song locations (need to override
         // learning mechanism)
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) || IS_RANDO) {
@@ -68,7 +68,7 @@ void RegisterSkipLearningSongOfHealing() {
                     }
                 });
 
-            if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_OSN, true, enOsn)) {
+            if (GameInteractor_Should(VB_GIVE_ITEM_FROM_OSN, true, enOsn)) {
                 // Queue up the item gives
                 GameInteractor::Instance->events.emplace_back(
                     GIEventGiveItem{ .showGetItemCutscene = true,

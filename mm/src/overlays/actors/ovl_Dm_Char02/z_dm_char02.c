@@ -160,11 +160,11 @@ void DmChar02_Update(Actor* thisx, PlayState* play) {
 }
 
 s32 DmChar02_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx) {
-    return GameInteractor_Should(GI_VB_OVERRIDE_CHAR02_LIMB, false, dList);
+    return GameInteractor_Should(VB_OVERRIDE_CHAR02_LIMB, false, dList);
 }
 
 void DmChar02_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
-    GameInteractor_Should(GI_VB_POST_CHAR02_LIMB, true, thisx); // no-op
+    GameInteractor_Should(VB_POST_CHAR02_LIMB, true, thisx); // no-op
 }
 
 void DmChar02_TransformLimbDraw(PlayState* play, s32 limbIndex, Actor* thisx) {

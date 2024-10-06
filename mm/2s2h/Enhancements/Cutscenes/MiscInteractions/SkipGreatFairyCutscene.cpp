@@ -15,7 +15,7 @@ void func_80A3A210(EnElfgrp* elfgrp, PlayState* play);
 #define ELFGRP_STATE_3 (1 << 3)
 
 void RegisterSkipGreatFairyCutscene() {
-    REGISTER_VB_SHOULD(GI_VB_START_GREAT_FAIRY_CUTSCENE, {
+    REGISTER_VB_SHOULD(VB_START_GREAT_FAIRY_CUTSCENE, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipMiscInteractions", 0)) {
             EnElfgrp* elfgrp = va_arg(args, EnElfgrp*);
 
@@ -33,7 +33,7 @@ void RegisterSkipGreatFairyCutscene() {
                 elfgrp->stateFlags &= ~ELFGRP_STATE_3;
                 elfgrp->timer = 90;
 
-                if (GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, elfgrp)) {
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_STRAY_FAIRY_MANAGER, true, elfgrp)) {
                     switch (elfgrp->type) {
                         case ENELFGRP_TYPE_POWER:
                             if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK)) {

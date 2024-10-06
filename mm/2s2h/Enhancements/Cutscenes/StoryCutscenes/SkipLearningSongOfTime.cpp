@@ -13,7 +13,7 @@ extern PlayState* gPlayState;
 }
 
 void RegisterSkipLearningSongOfTime() {
-    REGISTER_VB_SHOULD(GI_VB_PLAY_SONG_OF_TIME_CS, {
+    REGISTER_VB_SHOULD(VB_PLAY_SONG_OF_TIME_CS, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) && *should) {
             *should = false;
             // This typically gets set in the cutscene

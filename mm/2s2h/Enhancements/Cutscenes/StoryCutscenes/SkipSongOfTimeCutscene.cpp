@@ -6,7 +6,7 @@ extern "C" {
 }
 
 void RegisterSkipSongOfTimeCutscene() {
-    REGISTER_VB_SHOULD(GI_VB_PLAY_TRANSITION_CS, {
+    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
         if (CVarGetInteger("gEnhancements.Cutscenes.SkipStoryCutscenes", 0) &&
             gSaveContext.save.cutsceneIndex == 0xFFF7 &&
             (gSaveContext.save.entrance == ENTRANCE(CUTSCENE, 0) ||

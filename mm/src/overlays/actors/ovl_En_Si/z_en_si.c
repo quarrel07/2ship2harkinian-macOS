@@ -105,7 +105,7 @@ void EnSi_GiveToken(EnSi* this, PlayState* play) {
         Flags_SetTreasure(play, chestFlag);
     }
 
-    if (!GameInteractor_Should(GI_VB_GIVE_ITEM_FROM_SI, true, this)) {
+    if (!GameInteractor_Should(VB_GIVE_ITEM_FROM_SI, true, this)) {
         return;
     }
 
