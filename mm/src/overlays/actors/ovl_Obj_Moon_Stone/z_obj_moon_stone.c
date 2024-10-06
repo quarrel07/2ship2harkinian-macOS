@@ -6,7 +6,7 @@
 
 #include "z_obj_moon_stone.h"
 #include "objects/object_gi_reserve00/object_gi_reserve00.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_100000)
 

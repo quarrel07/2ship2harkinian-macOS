@@ -97,9 +97,6 @@ typedef enum {
     VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_BOMB_BAG,
     VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL,
     VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED,
-    VB_CLOCK_TOWER_OPENING_CONSIDER_THIS_FIRST_CYCLE,
-    VB_DRAW_SLIME_BODY_ITEM,
-    VB_ZTARGET_SPEED_CHECK,
 } GIVanillaBehavior;
 
 typedef enum {
@@ -129,6 +126,7 @@ typedef enum {
 
 #ifdef __cplusplus
 
+#include "2s2h/CustomMessage/CustomMessage.h"
 #include <vector>
 #include <functional>
 #include <unordered_map>
@@ -143,31 +141,33 @@ typedef uint32_t HOOK_ID;
         typedef std::function<bool args> filter; \
     }
 
-struct GIEventNone {
-    GIEventType type = GI_EVENT_NONE;
-};
+struct GIEventNone {};
 
 struct GIEventGiveItem {
-    GIEventType type = GI_EVENT_GIVE_ITEM;
+    // Whether or not to show the get item cutscene. If true and the player is in the air, the
+    // player will instead be frozen for a few seconds. If this is true you _must_ call
+    // CustomMessage::SetActiveCustomMessage in the giveItem function otherwise you'll just see a blank message.
     bool showGetItemCutscene;
-    std::string getItemText;
-    std::function<void()> drawItem;
-    std::function<void()> giveItem;
+    // Arbitrary s16 that can be accessed from within the give/draw functions with CUSTOM_ITEM_PARAM
+    s16 param;
+    // These are run in the context of an item00 actor. This isn't super important but can be useful in some cases
+    ActorFunc giveItem;
+    ActorFunc drawItem;
 };
 
 struct GIEventSpawnActor {
-    GIEventType type = GI_EVENT_SPAWN_ACTOR;
     s16 actorId;
     f32 posX;
     f32 posY;
     f32 posZ;
     s16 rot;
     s32 params;
+    // if true, the coordinates are made relative to the player's position and rotation, 0 rotation is facing the same
+    // direction as the player, x+ is to the players right, y+ is up, z+ is in front of the player
     bool relativeCoords;
 };
 
 struct GIEventTransition {
-    GIEventType type = GI_EVENT_TRANSITION;
     u16 entrance;
     u16 cutsceneIndex;
     s8 transitionTrigger;
@@ -179,6 +179,8 @@ typedef std::variant<GIEventNone, GIEventGiveItem, GIEventSpawnActor, GIEventTra
 class GameInteractor {
   public:
     static GameInteractor* Instance;
+
+    void RegisterOwnHooks();
 
     // Game State
     std::vector<GIEvent> events = {};
@@ -328,8 +330,6 @@ class GameInteractor {
         }
     }
 
-    void Init();
-
     class HookFilter {
       public:
         static auto ActorNotPlayer(Actor* actor) {
@@ -391,8 +391,7 @@ class GameInteractor {
 
     DEFINE_HOOK(OnPassPlayerInputs, (Input * input));
 
-    DEFINE_HOOK(OnOpenText, (u16 * textId));
-    DEFINE_HOOK(OnHandleCustomMessage, (s32 modId, s32 textId, std::string* msg));
+    DEFINE_HOOK(OnOpenText, (u16 * textId, bool* loadFromMessageTable));
 
     DEFINE_HOOK(ShouldItemGive, (u8 item, bool* should));
     DEFINE_HOOK(OnItemGive, (u8 item));
@@ -444,7 +443,7 @@ void GameInteractor_ExecuteOnCameraChangeSettingsFlags(Camera* camera);
 
 void GameInteractor_ExecuteOnPassPlayerInputs(Input* input);
 
-void GameInteractor_ExecuteOnOpenText(u16* textId);
+void GameInteractor_ExecuteOnOpenText(u16* textId, bool* loadFromMessageTable);
 
 bool GameInteractor_ShouldItemGive(u8 item);
 void GameInteractor_ExecuteOnItemGive(u8 item);
@@ -462,12 +461,8 @@ bool GameInteractor_Should(GIVanillaBehavior flag, uint32_t result, ...);
 int GameInteractor_InvertControl(GIInvertType type);
 uint32_t GameInteractor_Dpad(GIDpadType type, uint32_t buttonCombo);
 
-void GameInteractor_GetItemDraw(PlayState* play, s16 drawId);
-
 #ifdef __cplusplus
 }
-
-void GameInteractor_ExecuteOnHandleCustomMessage(s32 modId, s32 textId, std::string* msg);
 
 #endif
 

@@ -6,7 +6,7 @@
 
 #include "z_dm_char02.h"
 #include "objects/object_stk2/object_stk2.h"
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_10 | ACTOR_FLAG_20)
 

@@ -2568,7 +2568,7 @@ GetItemEntry sGetItemTable[GI_MAX - 1] = {
              CHEST_ANIM_LONG),
     // #region 2S2H [Enhancement] Added to enable custom item gives
     // GI_SHIP
-    GET_ITEM(ITEM_SHIP, OBJECT_UNSET_0, GID_SHIP, CUSTOM_MESSAGE_ID, GIFIELD(GIFIELD_20 | GIFIELD_NO_COLLECTIBLE, 0),
+    GET_ITEM(ITEM_SHIP, OBJECT_UNSET_0, GID_NONE, CUSTOM_MESSAGE_ID, GIFIELD(GIFIELD_20 | GIFIELD_NO_COLLECTIBLE, 0),
              0),
     // #endregion
 };

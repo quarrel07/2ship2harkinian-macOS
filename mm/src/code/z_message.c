@@ -3281,7 +3281,8 @@ void Message_OpenText(PlayState* play, u16 textId) {
     Player* player = GET_PLAYER(play);
     f32 var_fv0;
 
-    GameInteractor_ExecuteOnOpenText(&textId);
+    bool loadFromMessageTable = true;
+    GameInteractor_ExecuteOnOpenText(&textId, &loadFromMessageTable);
 
     // BENTODO do this somewhere else
     gSaveContext.options.language = LANGUAGE_ENG;
@@ -3358,8 +3359,9 @@ void Message_OpenText(PlayState* play, u16 textId) {
     sCharTexSize = msgCtx->textCharScale * 16.0f;
     sCharTexScale = 1024.0f / msgCtx->textCharScale;
     D_801F6B08 = 1024.0f / var_fv0;
-    if (textId == CUSTOM_MESSAGE_ID) {
-        CustomMessage_HandleCustomMessage();
+    // BENTODO all of these
+    if (!loadFromMessageTable) {
+        // no-op
     } else if (msgCtx->textIsCredits) {
         Message_FindCreditsMessage(play, textId);
         MessageTableEntry* msgEntry = (MessageTableEntry*)font->messageStart;
