@@ -347,8 +347,7 @@ s32 func_80BED208(EnAkindonuts* this) {
 }
 
 s32 func_80BED27C(EnAkindonuts* this) {
-    if (GameInteractor_Should(VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED, GET_CUR_UPG_VALUE(UPG_BOMB_BAG) == 3,
-                              this)) {
+    if (GameInteractor_Should(VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED, GET_CUR_UPG_VALUE(UPG_BOMB_BAG) == 3, this)) {
         return 2;
     }
 
@@ -367,8 +366,7 @@ s32 func_80BED27C(EnAkindonuts* this) {
 }
 
 s32 func_80BED2FC(EnAkindonuts* this) {
-    if (!GameInteractor_Should(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, Inventory_HasEmptyBottle(),
-                               this)) {
+    if (!GameInteractor_Should(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, Inventory_HasEmptyBottle(), this)) {
         return 2;
     }
 
@@ -382,8 +380,7 @@ s32 func_80BED2FC(EnAkindonuts* this) {
 }
 
 s32 func_80BED35C(EnAkindonuts* this) {
-    if (!GameInteractor_Should(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, Inventory_HasEmptyBottle(),
-                               this)) {
+    if (!GameInteractor_Should(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, Inventory_HasEmptyBottle(), this)) {
         return 2;
     }
 

@@ -1,6 +1,5 @@
-#include "DebugCam.h"
 #include <libultraship/bridge.h>
-#include "Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 #include "CameraUtils.h"
 
 extern "C" {
@@ -172,7 +171,7 @@ void Camera_DebugCam(Camera* camera) {
     if (CVarGetInteger("gEnhancements.Camera.DebugCam.6DOF", 0)) {
         camera->roll += (CHECK_BTN_ANY(sCamPlayState->state.input[controllerPort].cur.button, BTN_DLEFT) -
                          CHECK_BTN_ANY(sCamPlayState->state.input[controllerPort].cur.button, BTN_DRIGHT)) *
-                        1200.0f * camSpeed;
+                        1200.0f * camSpeed * GameInteractor_InvertControl(GI_INVERT_DEBUG_DPAD_X);
     } else {
         camera->roll = Camera_ScaledStepToCeilS(0, camera->roll, 0.1f, 5);
     }

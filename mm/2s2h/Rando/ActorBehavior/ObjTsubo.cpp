@@ -85,5 +85,4 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         randoSaveCheck.eligible = true;
         *should = false;
     });
-
 }

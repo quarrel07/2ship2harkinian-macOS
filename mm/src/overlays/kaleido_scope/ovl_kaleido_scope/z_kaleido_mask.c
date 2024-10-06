@@ -8,7 +8,7 @@
 #include "interface/parameter_static/parameter_static.h"
 
 #include "BenGui/HudEditor.h"
-#include "2s2h/Enhancements/GameInteractor/GameInteractor.h"
+#include "2s2h/GameInteractor/GameInteractor.h"
 
 s16 sMaskEquipState = EQUIP_STATE_MAGIC_ARROW_GROW_ORB;
 
@@ -675,8 +675,7 @@ void KaleidoScope_UpdateMaskCursor(PlayState* play) {
                 } else if ((pauseCtx->debugEditor == DEBUG_EDITOR_NONE) && (pauseCtx->state == PAUSE_STATE_MAIN) &&
                            (pauseCtx->mainState == PAUSE_MAIN_STATE_IDLE) &&
                            CHECK_BTN_ALL(input->press.button, BTN_A) && (msgCtx->msgLength == 0)) {
-                    if (GameInteractor_Should(VB_KALEIDO_DISPLAY_ITEM_TEXT, true,
-                                              &pauseCtx->cursorItem[PAUSE_MASK])) {
+                    if (GameInteractor_Should(VB_KALEIDO_DISPLAY_ITEM_TEXT, true, &pauseCtx->cursorItem[PAUSE_MASK])) {
                         // Give description on item through a message box
                         pauseCtx->itemDescriptionOn = true;
                         if (pauseCtx->cursorYIndex[PAUSE_MASK] < 2) {

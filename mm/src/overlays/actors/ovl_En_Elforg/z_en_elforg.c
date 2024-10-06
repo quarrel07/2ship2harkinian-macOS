@@ -81,8 +81,7 @@ void EnElforg_Init(Actor* thisx, PlayState* play) {
 
     switch (STRAY_FAIRY_TYPE(thisx)) {
         case STRAY_FAIRY_TYPE_CLOCK_TOWN:
-            if (GameInteractor_Should(VB_KILL_CLOCK_TOWN_STRAY_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80),
-                                      this)) {
+            if (GameInteractor_Should(VB_KILL_CLOCK_TOWN_STRAY_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80), this)) {
                 Actor_Kill(thisx);
                 return;
             }
