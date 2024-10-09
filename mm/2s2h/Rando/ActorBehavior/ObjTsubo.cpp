@@ -12,7 +12,6 @@ extern "C" {
 #define IS_AT(xx, zz) (actor->home.pos.x == xx && actor->home.pos.z == zz)
 
 RandoCheckId IdentifyPot(Actor* actor) {
-    SPDLOG_INFO("Flag: {}", OBJ_TSUBO_PFE00(actor));
     auto randoStaticCheck =
         Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, OBJ_TSUBO_PFE00(actor), gPlayState->sceneId);
     if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
