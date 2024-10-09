@@ -17,13 +17,16 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
     static uint32_t onActorUpdateHookId = 0;
     static uint32_t shouldHookId1 = 0;
     static uint32_t shouldHookId2 = 0;
+    static uint32_t shouldHookId3 = 0;
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(onActorUpdateHookId);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
     GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId2);
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId3);
 
     onActorUpdateHookId = 0;
     shouldHookId1 = 0;
     shouldHookId2 = 0;
+    shouldHookId3 = 0;
 
     if (!IS_RANDO) {
         return;
@@ -74,5 +77,5 @@ void Rando::ActorBehavior::InitEnAkindonutsBehavior() {
     shouldHookId2 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_BOMB_BAG_PURCHASED, {
         *should = Flags_GetRandoInf(RANDO_INF_PURCHASED_BOMB_BAG_FROM_GORON_VILLAGE_SCRUB);
     });
-    shouldHookId1 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, { *should = true; });
+    shouldHookId3 = REGISTER_VB_SHOULD(VB_AKINDONUTS_CONSIDER_ELIGIBLE_FOR_POTION_REFILL, { *should = true; });
 }

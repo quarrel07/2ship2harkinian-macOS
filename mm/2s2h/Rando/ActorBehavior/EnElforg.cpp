@@ -123,7 +123,7 @@ void Rando::ActorBehavior::InitEnElforgBehavior() {
     });
 
     // Stray fairies that are trapped by enemies have their draw func set later on, so we need to override that as well
-    shouldHook2Id = REGISTER_VB_SHOULD(VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
+    shouldHook3Id = REGISTER_VB_SHOULD(VB_SET_DRAW_FOR_SAVED_STRAY_FAIRY, {
         *should = false;
 
         Actor* actor = va_arg(args, Actor*);
