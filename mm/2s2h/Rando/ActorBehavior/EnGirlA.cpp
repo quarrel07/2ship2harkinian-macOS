@@ -215,7 +215,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             EnGirlA* enGirlA = (EnGirlA*)actor;
 
             RandoCheckId randoCheckId = IdentifyShopItem(actor);
-            if (randoCheckId != RC_UNKNOWN) {
+            if (randoCheckId != RC_UNKNOWN && RANDO_SAVE_CHECKS[randoCheckId].shuffled) {
                 enGirlA->actor.world.rot.z = randoCheckId;
                 enGirlA->mainActionFunc = EnGirlA_RandoInit;
             }
@@ -236,7 +236,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             entry.autoFormat = false;
 
             CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": 20 Rupees");
+                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) + " Rupees");
 
             if (randoSaveCheck.eligible) {
                 CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
@@ -261,9 +261,10 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
 
             auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
             entry.autoFormat = false;
+            entry.firstItemCost = randoSaveCheck.price;
 
             CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": 20 Rupees");
+                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) + " Rupees");
 
             CustomMessage::LoadCustomMessageIntoFont(entry);
             *loadFromMessageTable = false;

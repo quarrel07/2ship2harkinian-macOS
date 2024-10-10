@@ -938,6 +938,7 @@ typedef enum {
     RO_LOGIC,
     RO_SHUFFLE_GOLD_SKULLTULAS,
     RO_SHUFFLE_POTS,
+    RO_SHUFFLE_SHOPS,
     RO_MAX,
 } RandoOptionId;
 
