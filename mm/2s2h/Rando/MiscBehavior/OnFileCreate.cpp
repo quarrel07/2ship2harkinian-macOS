@@ -176,7 +176,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
 
                         // If it has a price, set it
                         if (j["checks"][randoStaticCheck.name].contains("price")) {
-                            RANDO_SAVE_CHECKS[randoCheckId].price = j["checks"][randoStaticCheck.name]["price"].get<uint16_t>();
+                            RANDO_SAVE_CHECKS[randoCheckId].price =
+                                j["checks"][randoStaticCheck.name]["price"].get<uint16_t>();
                         }
                     } else {
                         std::string itemName = j["checks"][randoStaticCheck.name].get<std::string>();

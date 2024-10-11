@@ -236,7 +236,8 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             entry.autoFormat = false;
 
             CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) + " Rupees");
+                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                       " Rupees");
 
             if (randoSaveCheck.eligible) {
                 CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
@@ -264,7 +265,8 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             entry.firstItemCost = randoSaveCheck.price;
 
             CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) + " Rupees");
+                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                       " Rupees");
 
             CustomMessage::LoadCustomMessageIntoFont(entry);
             *loadFromMessageTable = false;
@@ -287,43 +289,45 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
             entry.firstItemCost = randoSaveCheck.price;
 
             CustomMessage::Replace(&entry.msg, "Blue Potion: 60 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) + " Rupees");
+                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                       " Rupees");
 
             CustomMessage::LoadCustomMessageIntoFont(entry);
             *loadFromMessageTable = false;
         });
 
     // Magic Potion Shop Hag "Well, I can use this to make something, come back later"
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(
-        0x884, [](u16* textId, bool* loadFromMessageTable) {
-            RandoCheckId randoCheckId = RC_HAGS_POTION_SHOP_ITEM_1;
-            auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(0x884, [](u16* textId,
+                                                                                          bool* loadFromMessageTable) {
+        RandoCheckId randoCheckId = RC_HAGS_POTION_SHOP_ITEM_1;
+        auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-            if (!randoSaveCheck.shuffled || randoSaveCheck.eligible) {
-                return;
-            }
+        if (!randoSaveCheck.shuffled || randoSaveCheck.eligible) {
+            return;
+        }
 
-            auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
-            auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-            entry.autoFormat = false;
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.autoFormat = false;
 
-            CustomMessage::Replace(&entry.msg, "something, so come back later.",
-                                   std::string(randoStaticItem.name) + ", take it!");
+        CustomMessage::Replace(&entry.msg, "something, so come back later.",
+                               std::string(randoStaticItem.name) + ", take it!");
 
-            // Mark the item as eligible for purchase
-            randoSaveCheck.eligible = true;
-            // Set flag that is normally set in the return experience that this skips
-            SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_FREE_BLUE_POTION);
-            // Mark the item as out of stock
-            EnTrt* enTrt = (EnTrt*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_EN_TRT, ACTORCAT_NPC, 100.0f);
-            if (enTrt != nullptr) {
-                EnGirlA* enGirlA = enTrt->items[2];
-                enGirlA->isOutOfStock = true;
-                enGirlA->actor.draw = NULL;
-            }
+        // Mark the item as eligible for purchase
+        randoSaveCheck.eligible = true;
+        // Set flag that is normally set in the return experience that this skips
+        SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_FREE_BLUE_POTION);
+        // Mark the item as out of stock
+        EnTrt* enTrt =
+            (EnTrt*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor, ACTOR_EN_TRT, ACTORCAT_NPC, 100.0f);
+        if (enTrt != nullptr) {
+            EnGirlA* enGirlA = enTrt->items[2];
+            enGirlA->isOutOfStock = true;
+            enGirlA->actor.draw = NULL;
+        }
 
-            CustomMessage::LoadCustomMessageIntoFont(entry);
-            *loadFromMessageTable = false;
-        });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 }
