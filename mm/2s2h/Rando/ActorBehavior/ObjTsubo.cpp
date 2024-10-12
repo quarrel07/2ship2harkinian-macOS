@@ -890,7 +890,8 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         }
 
         CustomItem::Spawn(
-            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoCheckId,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
+            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoCheckId,
             [](Actor* actor, PlayState* play) {
                 RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                 if (randoSaveCheck.eligible) {

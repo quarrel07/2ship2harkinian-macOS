@@ -53,7 +53,7 @@ void CustomItem00_Init(Actor* actor, PlayState* play) {
     if (CUSTOM_ITEM_FLAGS & CustomItem::TOSS_ON_SPAWN) {
         actor->velocity.y = 8.0f;
         actor->speed = 2.0f;
-        actor->gravity = -1.0f;
+        actor->gravity = -1.4f;
         actor->world.rot.y = Rand_ZeroOne() * 40000.0f;
     }
 
