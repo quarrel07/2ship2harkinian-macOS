@@ -18,7 +18,6 @@ void Window::Draw() {
 
     const float margin = 30.0f;
     const float padding = 10.0f;
-    ImGui::ShowDemoWindow();
 
     int position = CVarGetInteger("gNotifications.Position", 3);
 
