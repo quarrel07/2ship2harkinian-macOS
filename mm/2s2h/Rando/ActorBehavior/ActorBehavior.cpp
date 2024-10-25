@@ -38,16 +38,5 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
     Rando::ActorBehavior::InitObjTsuboBehavior();
 
-    static uint32_t onVanillaBehaviorHook = 0;
-
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::ShouldVanillaBehavior>(onVanillaBehaviorHook);
-
-    onVanillaBehaviorHook = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
-    onVanillaBehaviorHook =
-        GameInteractor::Instance->RegisterGameHook<GameInteractor::ShouldVanillaBehavior>(MiscVanillaBehaviorHandler);
+    COND_HOOK(ShouldVanillaBehavior, IS_RANDO, MiscVanillaBehaviorHandler);
 }

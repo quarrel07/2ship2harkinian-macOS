@@ -25,23 +25,12 @@ void func_80837C78_override(PlayState* play, Player* player) {
 // This simply prevents the player from getting an item from the chest, but still
 // plays the chest opening animation and ensure the treasure chest flag is set
 void Rando::ActorBehavior::InitEnBoxBehavior() {
-    static uint32_t shouldHook1Id = 0;
-    static uint32_t shouldHook2Id = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook1Id);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook2Id);
-
-    shouldHook1Id = 0;
-    shouldHook2Id = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
-    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_CHEST, {
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_CHEST, IS_RANDO, {
         EnBox* enBox = va_arg(args, EnBox*);
         Player* player = GET_PLAYER(gPlayState);
         func_80832558(gPlayState, player, func_80837C78_override);
         *should = false;
     });
-    shouldHook2Id = REGISTER_VB_SHOULD(VB_CHEST_SPAWN_FAIRY, { *should = false; });
+
+    COND_VB_SHOULD(VB_CHEST_SPAWN_FAIRY, IS_RANDO, { *should = false; });
 }

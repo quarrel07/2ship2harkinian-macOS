@@ -30,31 +30,10 @@ void DmChar02_UpdateCustom(Actor* actor, PlayState* play) {
 // This handles the two checks for the Clock Tower Roof, the Ocarina and Song of Time checks. It also handles
 // overriding the drawing of the Ocarina in the hand of the Skull Kid.
 void Rando::ActorBehavior::InitDmStkBehavior() {
-    static uint32_t onActorInit = 0;
-    static uint32_t shouldHookId1 = 0;
-    static uint32_t shouldHookId2 = 0;
-    static uint32_t shouldHookId3 = 0;
-    static uint32_t shouldHookId4 = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldActorInit>(onActorInit);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId2);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId3);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId4);
+    COND_ID_HOOK(ShouldActorInit, ACTOR_DM_CHAR02, IS_RANDO,
+                 [](Actor* actor, bool* should) { actor->update = DmChar02_UpdateCustom; });
 
-    onActorInit = 0;
-    shouldHookId1 = 0;
-    shouldHookId2 = 0;
-    shouldHookId3 = 0;
-    shouldHookId4 = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
-    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::ShouldActorInit>(
-        ACTOR_DM_CHAR02, [](Actor* actor, bool* should) { actor->update = DmChar02_UpdateCustom; });
-
-    shouldHookId1 = REGISTER_VB_SHOULD(VB_DRAW_OCARINA_IN_STK_HAND, {
+    COND_VB_SHOULD(VB_DRAW_OCARINA_IN_STK_HAND, IS_RANDO, {
         if (*should) {
             *should = false;
 
@@ -74,13 +53,13 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         }
     });
 
-    shouldHookId2 = REGISTER_VB_SHOULD(VB_OVERRIDE_CHAR02_LIMB, {
+    COND_VB_SHOULD(VB_OVERRIDE_CHAR02_LIMB, IS_RANDO, {
         Gfx** dList = va_arg(args, Gfx**);
 
         *dList = NULL;
     });
 
-    shouldHookId3 = REGISTER_VB_SHOULD(VB_POST_CHAR02_LIMB, {
+    COND_VB_SHOULD(VB_POST_CHAR02_LIMB, IS_RANDO, {
         Matrix_Scale(15.0f, 15.0f, 15.0f, MTXMODE_APPLY);
         Vec3s rot;
         rot.x = -11554;
@@ -94,7 +73,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         Rando::DrawItem(randoSaveCheck.randoItemId);
     });
 
-    shouldHookId4 = REGISTER_VB_SHOULD(VB_STK_HAVE_OCARINA, {
+    COND_VB_SHOULD(VB_STK_HAVE_OCARINA, IS_RANDO, {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
         *should = !randoSaveCheck.eligible;
     });

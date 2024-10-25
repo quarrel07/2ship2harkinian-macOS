@@ -18,25 +18,12 @@ void ObjMoonstone_DrawCustom(Actor* thisx, PlayState* play) {
 }
 
 void Rando::ActorBehavior::InitObjMoonStoneBehavior() {
-    static uint32_t shouldHook1Id = 0;
-    static uint32_t onActorInit = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInit);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook1Id);
+    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_MOON_STONE, IS_RANDO, [](Actor* actor) {
+        actor->world.pos.z += 5.0f;
+        actor->draw = ObjMoonstone_DrawCustom;
+    });
 
-    onActorInit = 0;
-    shouldHook1Id = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
-    onActorInit = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(
-        ACTOR_OBJ_MOON_STONE, [](Actor* actor) {
-            actor->world.pos.z += 5.0f;
-            actor->draw = ObjMoonstone_DrawCustom;
-        });
-
-    shouldHook1Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_MOONS_TEAR, {
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_MOONS_TEAR, IS_RANDO, {
         ObjMoonStone* objMoonStone = va_arg(args, ObjMoonStone*);
         if (objMoonStone->actor.xzDistToPlayer < 25.0f) {
             *should = false;

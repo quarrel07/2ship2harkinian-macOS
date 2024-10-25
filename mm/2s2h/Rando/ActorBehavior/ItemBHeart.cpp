@@ -35,33 +35,23 @@ void ItemBHeart_UpdateCustom(Actor* thisx, PlayState* play) {
 }
 
 void Rando::ActorBehavior::InitItemBHeartBehavior() {
-    static uint32_t onActorInitHookId = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInitHookId);
+    COND_ID_HOOK(OnActorInit, ACTOR_ITEM_B_HEART, IS_RANDO, [](Actor* actor) {
+        ItemBHeart* itemBHeart = (ItemBHeart*)actor;
 
-    onActorInitHookId = 0;
+        auto randoStaticCheck =
+            Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, 0x1F, gPlayState->sceneId);
+        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
-    if (!IS_RANDO) {
-        return;
-    }
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-    onActorInitHookId = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(
-        ACTOR_ITEM_B_HEART, [](Actor* actor) {
-            ItemBHeart* itemBHeart = (ItemBHeart*)actor;
+        if (randoSaveCheck.obtained) {
+            Actor_Kill(&itemBHeart->actor);
+            return;
+        }
 
-            auto randoStaticCheck =
-                Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, 0x1F, gPlayState->sceneId);
-            if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
-                return;
-            }
-
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-
-            if (randoSaveCheck.obtained) {
-                Actor_Kill(&itemBHeart->actor);
-                return;
-            }
-
-            actor->draw = ItemBHeart_DrawCustom;
-            actor->update = ItemBHeart_UpdateCustom;
-        });
+        actor->draw = ItemBHeart_DrawCustom;
+        actor->update = ItemBHeart_UpdateCustom;
+    });
 }

@@ -10,15 +10,7 @@ extern "C" {
 
 // Currently this enables a simple "press a" to cycle through the available trade items
 void Rando::MiscBehavior::InitKaleidoItemPage() {
-    static uint32_t shouldHook1 = 0;
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::ShouldVanillaBehavior>(shouldHook1);
-    shouldHook1 = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
-    shouldHook1 = REGISTER_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, {
+    COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, IS_RANDO, {
         ItemId* itemId = va_arg(args, ItemId*);
 
         if (SLOT(*itemId) != SLOT_TRADE_COUPLE && SLOT(*itemId) != SLOT_TRADE_DEED &&

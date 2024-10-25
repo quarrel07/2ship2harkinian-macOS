@@ -11,40 +11,13 @@ void Rando::MiscBehavior::Init() {
 }
 
 void Rando::MiscBehavior::OnFileLoad() {
-    static uint32_t onFlagSetHook = 0;
-    static uint32_t onSceneFlagSetHook = 0;
-    static uint32_t onPlayerUpdateHook = 0;
-    static uint32_t beforeEndOfCycleSaveHook = 0;
-    static uint32_t afterEndOfCycleSaveHook = 0;
-
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnFlagSet>(onFlagSetHook);
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneFlagSet>(onSceneFlagSetHook);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorUpdate>(onPlayerUpdateHook);
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::BeforeEndOfCycleSave>(beforeEndOfCycleSaveHook);
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::AfterEndOfCycleSave>(afterEndOfCycleSaveHook);
-
-    onFlagSetHook = 0;
-    onSceneFlagSetHook = 0;
-    onPlayerUpdateHook = 0;
-    beforeEndOfCycleSaveHook = 0;
-    afterEndOfCycleSaveHook = 0;
-
     Rando::MiscBehavior::CheckQueueReset();
     Rando::MiscBehavior::InitKaleidoItemPage();
     Rando::MiscBehavior::InitOfferGetItemBehavior();
 
-    if (!IS_RANDO) {
-        return;
-    }
-
-    onFlagSetHook =
-        GameInteractor::Instance->RegisterGameHook<GameInteractor::OnFlagSet>(Rando::MiscBehavior::OnFlagSet);
-    onSceneFlagSetHook =
-        GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(Rando::MiscBehavior::OnSceneFlagSet);
-    onPlayerUpdateHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorUpdate>(
-        ACTOR_PLAYER, [](Actor* actor) { Rando::MiscBehavior::CheckQueue(); });
-    beforeEndOfCycleSaveHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::BeforeEndOfCycleSave>(
-        Rando::MiscBehavior::BeforeEndOfCycleSave);
-    afterEndOfCycleSaveHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::AfterEndOfCycleSave>(
-        Rando::MiscBehavior::AfterEndOfCycleSave);
+    COND_HOOK(OnFlagSet, IS_RANDO, Rando::MiscBehavior::OnFlagSet);
+    COND_HOOK(OnSceneFlagSet, IS_RANDO, Rando::MiscBehavior::OnSceneFlagSet);
+    COND_HOOK(BeforeEndOfCycleSave, IS_RANDO, Rando::MiscBehavior::BeforeEndOfCycleSave);
+    COND_HOOK(AfterEndOfCycleSave, IS_RANDO, Rando::MiscBehavior::AfterEndOfCycleSave);
+    COND_ID_HOOK(OnActorUpdate, ACTOR_PLAYER, IS_RANDO, [](Actor* actor) { Rando::MiscBehavior::CheckQueue(); });
 }

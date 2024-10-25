@@ -851,33 +851,20 @@ RandoCheckId IdentifyPot(Actor* actor) {
 }
 
 void Rando::ActorBehavior::InitObjTsuboBehavior() {
-    static uint32_t onActorInit = 0;
-    static uint32_t shouldHookId1 = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInit);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
+    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_TSUBO, IS_RANDO, [](Actor* actor) {
+        RandoCheckId randoCheckId = IdentifyPot(actor);
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
-    onActorInit = 0;
-    shouldHookId1 = 0;
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].eligible) {
+            return;
+        }
 
-    if (!IS_RANDO) {
-        return;
-    }
+        actor->home.rot.x = randoCheckId;
+    });
 
-    onActorInit =
-        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_OBJ_TSUBO, [](Actor* actor) {
-            RandoCheckId randoCheckId = IdentifyPot(actor);
-            if (randoCheckId == RC_UNKNOWN) {
-                return;
-            }
-
-            if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].eligible) {
-                return;
-            }
-
-            actor->home.rot.x = randoCheckId;
-        });
-
-    shouldHookId1 = REGISTER_VB_SHOULD(VB_POT_DROP_COLLECTIBLE, {
+    COND_VB_SHOULD(VB_POT_DROP_COLLECTIBLE, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
         RandoCheckId randoCheckId = (RandoCheckId)actor->home.rot.x;
         if (randoCheckId == RC_UNKNOWN) {

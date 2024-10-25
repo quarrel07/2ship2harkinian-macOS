@@ -12,20 +12,8 @@ s32 func_80832558(PlayState* play, Player* player, PlayerFuncD58 arg2);
 // This prevents actors from giving items with Actor_OfferGetItem, along with preventing them from waiting on the
 // GetItem textbox to close
 void Rando::MiscBehavior::InitOfferGetItemBehavior() {
-    static uint32_t shouldHook1Id = 0;
-    static uint32_t shouldHook2Id = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook1Id);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHook2Id);
-
-    shouldHook1Id = 0;
-    shouldHook2Id = 0;
-
-    if (!IS_RANDO) {
-        return;
-    }
-
     // Scripted Actors
-    shouldHook1Id = REGISTER_VB_SHOULD(VB_EXEC_MSG_EVENT, {
+    COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO, {
         u8 cmdId = va_arg(args, u8);
         Actor* actor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
@@ -59,7 +47,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
     });
 
     // Non-scripted actors
-    shouldHook2Id = REGISTER_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, {
+    COND_VB_SHOULD(VB_GIVE_ITEM_FROM_OFFER, IS_RANDO, {
         GetItemId* item = va_arg(args, GetItemId*);
         Actor* actor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);

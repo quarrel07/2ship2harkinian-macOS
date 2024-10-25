@@ -195,110 +195,90 @@ RandoCheckId IdentifyActiveShopItem() {
 }
 
 void Rando::ActorBehavior::InitEnGirlABehavior() {
-    static uint32_t shouldHookId1 = 0;
-    static uint32_t shouldHookId2 = 0;
-    static uint32_t onActorInit = 0;
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId1);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::ShouldVanillaBehavior>(shouldHookId2);
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnActorInit>(onActorInit);
+    COND_ID_HOOK(OnActorInit, ACTOR_EN_GIRLA, IS_RANDO, [](Actor* actor) {
+        EnGirlA* enGirlA = (EnGirlA*)actor;
 
-    shouldHookId1 = 0;
-    shouldHookId2 = 0;
-    onActorInit = 0;
+        RandoCheckId randoCheckId = IdentifyShopItem(actor);
+        if (randoCheckId != RC_UNKNOWN && RANDO_SAVE_CHECKS[randoCheckId].shuffled) {
+            enGirlA->actor.world.rot.z = randoCheckId;
+            enGirlA->mainActionFunc = EnGirlA_RandoInit;
+        }
+    });
 
-    if (!IS_RANDO) {
-        return;
-    }
+    COND_ID_HOOK(OnOpenText, RANDO_DESC_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        RandoCheckId randoCheckId = IdentifyActiveShopItem();
 
-    onActorInit =
-        GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnActorInit>(ACTOR_EN_GIRLA, [](Actor* actor) {
-            EnGirlA* enGirlA = (EnGirlA*)actor;
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
-            RandoCheckId randoCheckId = IdentifyShopItem(actor);
-            if (randoCheckId != RC_UNKNOWN && RANDO_SAVE_CHECKS[randoCheckId].shuffled) {
-                enGirlA->actor.world.rot.z = randoCheckId;
-                enGirlA->mainActionFunc = EnGirlA_RandoInit;
-            }
-        });
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(
-        RANDO_DESC_TEXT_ID, [](u16* textId, bool* loadFromMessageTable) {
-            RandoCheckId randoCheckId = IdentifyActiveShopItem();
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.autoFormat = false;
 
-            if (randoCheckId == RC_UNKNOWN) {
-                return;
-            }
+        CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
+                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                   " Rupees");
 
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-            auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+        if (randoSaveCheck.eligible) {
+            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
+        } else {
+            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Buy it, you won't regret it!");
+        }
 
-            auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-            entry.autoFormat = false;
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
-            CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                       " Rupees");
+    COND_ID_HOOK(OnOpenText, RANDO_CHOICE_TEXT_ID, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        RandoCheckId randoCheckId = IdentifyActiveShopItem();
 
-            if (randoSaveCheck.eligible) {
-                CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
-            } else {
-                CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Buy it, you won't regret it!");
-            }
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
-            CustomMessage::LoadCustomMessageIntoFont(entry);
-            *loadFromMessageTable = false;
-        });
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(
-        RANDO_CHOICE_TEXT_ID, [](u16* textId, bool* loadFromMessageTable) {
-            RandoCheckId randoCheckId = IdentifyActiveShopItem();
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.autoFormat = false;
+        entry.firstItemCost = randoSaveCheck.price;
 
-            if (randoCheckId == RC_UNKNOWN) {
-                return;
-            }
+        CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
+                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                   " Rupees");
 
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-            auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
-
-            auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-            entry.autoFormat = false;
-            entry.firstItemCost = randoSaveCheck.price;
-
-            CustomMessage::Replace(&entry.msg, "Red Potion: 20 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                       " Rupees");
-
-            CustomMessage::LoadCustomMessageIntoFont(entry);
-            *loadFromMessageTable = false;
-        });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Magic Potion Shop Hag "I can't get the ingredients for this"
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(
-        0x880, [](u16* textId, bool* loadFromMessageTable) {
-            RandoCheckId randoCheckId = IdentifyActiveShopItem();
+    COND_ID_HOOK(OnOpenText, 0x880, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
+        RandoCheckId randoCheckId = IdentifyActiveShopItem();
 
-            if (randoCheckId == RC_UNKNOWN) {
-                return;
-            }
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
-            auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-            auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
+        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        auto randoStaticItem = Rando::StaticData::Items[randoSaveCheck.randoItemId];
 
-            auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
-            entry.autoFormat = false;
-            entry.firstItemCost = randoSaveCheck.price;
+        auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
+        entry.autoFormat = false;
+        entry.firstItemCost = randoSaveCheck.price;
 
-            CustomMessage::Replace(&entry.msg, "Blue Potion: 60 Rupees",
-                                   std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
-                                       " Rupees");
+        CustomMessage::Replace(&entry.msg, "Blue Potion: 60 Rupees",
+                               std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
+                                   " Rupees");
 
-            CustomMessage::LoadCustomMessageIntoFont(entry);
-            *loadFromMessageTable = false;
-        });
+        CustomMessage::LoadCustomMessageIntoFont(entry);
+        *loadFromMessageTable = false;
+    });
 
     // Magic Potion Shop Hag "Well, I can use this to make something, come back later"
-    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(0x884, [](u16* textId,
-                                                                                          bool* loadFromMessageTable) {
+    COND_ID_HOOK(OnOpenText, 0x884, IS_RANDO, [](u16* textId, bool* loadFromMessageTable) {
         RandoCheckId randoCheckId = RC_HAGS_POTION_SHOP_ITEM_1;
         auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
