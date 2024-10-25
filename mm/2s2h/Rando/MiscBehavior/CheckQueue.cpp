@@ -3,9 +3,12 @@
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
+#include "2s2h/BenGui/Notification.h"
 
 extern "C" {
 #include "variables.h"
+extern TexturePtr gItemIcons[131];
+extern s16 D_801CFF94[250];
 }
 
 static bool queued = false;
@@ -38,23 +41,48 @@ void Rando::MiscBehavior::CheckQueue() {
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                         RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
 
-                        std::string message = "You received {{item}}!";
-                        CustomMessage::Replace(&message, "{{item}}", Rando::StaticData::Items[randoItemId].name);
+                        CustomMessage::Entry entry = {
+                            .msg = "You received {{item}}!",
+                            .textboxType = 2,
+                        };
+                        CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoItemId].name);
+                        if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
+                            entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
+                        }
 
                         if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
-                            CustomMessage::SetActiveCustomMessage(message, { .textboxType = 2 });
+                            CustomMessage::SetActiveCustomMessage(entry.msg, entry);
+                        } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+                            CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                         } else {
-                            CustomMessage::StartTextbox(message + "\x1C\x02\x10", { .textboxType = 2 });
+                            s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
+                            if (itemId >= ITEM_RECOVERY_HEART) {
+                                itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
+                            }
+
+                            Notification::Emit({
+                                .itemIcon = itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
+                                .message = "You found",
+                                .suffix = Rando::StaticData::Items[randoItemId].name,
+                            });
                         }
                         Rando::GiveItem(randoItemId);
                         randoSaveCheck.obtained = true;
                         queued = false;
+                        CUSTOM_ITEM_PARAM = randoItemId;
                     },
                 .drawItem =
                     [](Actor* actor, PlayState* play) {
-                        auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                        // Do we want to convert here? Maybe not?
-                        RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                        RandoItemId randoItemId;
+
+                        // If the item has been given, the CUSTOM_ITEM_PARAM is set to the RI, prior to that it's the RC
+                        if (CUSTOM_ITEM_FLAGS & CustomItem::CALLED_ACTION) {
+                            randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
+                        } else {
+                            auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                            randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                        }
+
                         Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
                         Rando::DrawItem(randoItemId);
                     } });
