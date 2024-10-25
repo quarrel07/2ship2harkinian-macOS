@@ -55,6 +55,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
         switch (actor->id) {
             case ACTOR_EN_KENDO_JS:
             case ACTOR_EN_GURUGURU:
+            case ACTOR_EN_HS:
                 *should = false;
                 actor->parent = &player->actor;
                 player->talkActor = actor;
