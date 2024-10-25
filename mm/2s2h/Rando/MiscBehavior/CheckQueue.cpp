@@ -42,8 +42,8 @@ void Rando::MiscBehavior::CheckQueue() {
                         RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
 
                         CustomMessage::Entry entry = {
-                            .msg = "You received {{item}}!",
                             .textboxType = 2,
+                            .msg = "You received {{item}}!",
                         };
                         CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoItemId].name);
                         if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
