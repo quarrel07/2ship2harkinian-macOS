@@ -2258,7 +2258,9 @@ s32 Actor_OfferGetItem(Actor* actor, PlayState* play, GetItemId getItemId, f32 x
                 s16 yawDiff = actor->yawTowardsPlayer - player->actor.shape.rot.y;
                 s32 absYawDiff = ABS_ALT(yawDiff);
 
-                if ((getItemId != GI_NONE) || (player->getItemDirection < absYawDiff)) {
+                if (GameInteractor_Should(VB_GIVE_ITEM_FROM_OFFER,
+                                          ((getItemId != GI_NONE) || (player->getItemDirection < absYawDiff)),
+                                          getItemId, actor)) {
                     player->getItemId = getItemId;
                     player->interactRangeActor = actor;
                     player->getItemDirection = absYawDiff;

@@ -14,6 +14,7 @@ void CheckQueue();
 void CheckQueueReset();
 void InitFileSelect();
 void InitKaleidoItemPage();
+void InitOfferGetItemBehavior();
 void BeforeEndOfCycleSave();
 void AfterEndOfCycleSave();
 void OnFileCreate(s16 fileNum);

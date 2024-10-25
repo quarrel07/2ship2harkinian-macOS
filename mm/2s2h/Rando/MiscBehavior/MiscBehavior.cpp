@@ -31,6 +31,7 @@ void Rando::MiscBehavior::OnFileLoad() {
 
     Rando::MiscBehavior::CheckQueueReset();
     Rando::MiscBehavior::InitKaleidoItemPage();
+    Rando::MiscBehavior::InitOfferGetItemBehavior();
 
     if (!IS_RANDO) {
         return;

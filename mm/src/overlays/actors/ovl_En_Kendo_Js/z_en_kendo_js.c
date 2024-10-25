@@ -6,7 +6,6 @@
 
 #include "z_en_kendo_js.h"
 #include "overlays/actors/ovl_En_Maruta/z_en_maruta.h"
-#include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS \
     (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_10 | ACTOR_FLAG_2000000 | ACTOR_FLAG_CANT_LOCK_ON)
@@ -670,7 +669,7 @@ void func_80B276C4(EnKendoJs* this) {
 }
 
 void func_80B276D8(EnKendoJs* this, PlayState* play) {
-    if (Actor_HasParent(&this->actor, play) || !GameInteractor_Should(VB_GIVE_ITEM_FROM_SWORDSMAN, true, this)) {
+    if (Actor_HasParent(&this->actor, play)) {
         this->actor.parent = NULL;
         func_80B27760(this);
     } else if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_63_20)) {
@@ -687,8 +686,7 @@ void func_80B27760(EnKendoJs* this) {
 void func_80B27774(EnKendoJs* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if (Actor_ProcessTalkRequest(&this->actor, &play->state) ||
-        !GameInteractor_Should(VB_GIVE_ITEM_FROM_SWORDSMAN, true, this)) {
+    if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
         if (!CHECK_WEEKEVENTREG(WEEKEVENTREG_63_20)) {
             SET_WEEKEVENTREG(WEEKEVENTREG_63_20);
             Message_StartTextbox(play, 0x272F, &this->actor);

@@ -8,9 +8,6 @@ extern "C" {
 // This is kind of a catch-all for things that are simple enough to not need their own file.
 void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
     switch (id) {
-        case VB_GIVE_ITEM_FROM_GURUGURU:
-        case VB_GIVE_ITEM_FROM_SCRIPT:
-        case VB_GIVE_ITEM_FROM_SWORDSMAN:
         case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
             *should = false;
             break;
