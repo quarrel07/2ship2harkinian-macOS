@@ -728,7 +728,7 @@ void AddSettings() {
                                       "gNotifications.Position",
                                       "Which corner of the screen notifications appear in.",
                                       WIDGET_CVAR_COMBOBOX,
-                                      { .comboBoxOptions = notificationPosition, .defaultVariant = 3 } },
+                                      { .defaultVariant = 3, .comboBoxOptions = notificationPosition } },
                                     { "Duration: %.0f seconds",
                                       "gNotifications.Duration",
                                       "How long notifications are displayed for.",
