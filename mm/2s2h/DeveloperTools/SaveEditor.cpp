@@ -4,6 +4,7 @@
 #include "2s2h/Rando/Rando.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
+#include "2s2h/BenGui/Notification.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -2040,24 +2041,6 @@ void SaveEditorWindow::DrawElement() {
     }
 }
 
-const char* textureLoad[8] = { gDungeonStrayFairyWoodfallIconTex,
-                               gDungeonStrayFairySnowheadIconTex,
-                               gDungeonStrayFairyGreatBayIconTex,
-                               gDungeonStrayFairyStoneTowerIconTex,
-                               gQuestIconDungeonMapTex,
-                               gQuestIconCompassTex,
-                               gQuestIconSmallKeyTex,
-                               gQuestIconBossKeyTex };
-
 void SaveEditorWindow::InitElement() {
     initSafeItemsForInventorySlot();
-
-    for (TexturePtr entry : gItemIcons) {
-        const char* path = static_cast<const char*>(entry);
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
-    }
-    for (int i = 0; i <= 7; i++) {
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(textureLoad[i], textureLoad[i],
-                                                                            ImVec4(1, 1, 1, 1));
-    }
 }

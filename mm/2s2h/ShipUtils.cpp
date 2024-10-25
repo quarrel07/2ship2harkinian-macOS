@@ -1,6 +1,5 @@
 #include "ShipUtils.h"
-#include <libultraship/libultra.h>
-#include "PR/ultratypes.h"
+#include <libultraship/libultraship.h>
 #include "assets/2s2h_assets.h"
 #include <string>
 #include <random>
@@ -14,6 +13,9 @@ extern "C" {
 
 extern f32 sNESFontWidths[160];
 extern const char* fontTbl[156];
+extern TexturePtr gItemIcons[131];
+extern TexturePtr gQuestIcons[14];
+extern TexturePtr gBombersNotebookPhotos[24];
 }
 
 // Build vertex coordinates for a quad command
@@ -76,4 +78,19 @@ extern "C" s32 Ship_Random(s32 min, s32 max) {
     }
     boost::random::uniform_int_distribution<uint32_t> distribution(min, max - 1);
     return distribution(generator);
+}
+
+void LoadGuiTextures() {
+    for (TexturePtr entry : gItemIcons) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
+    for (TexturePtr entry : gQuestIcons) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
+    for (TexturePtr entry : gBombersNotebookPhotos) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
 }

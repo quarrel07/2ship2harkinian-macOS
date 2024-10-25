@@ -59,6 +59,7 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/SaveManager/SaveManager.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
+#include "2s2h/ShipUtils.h"
 
 // Resource Types/Factories
 #include "resource/type/Blob.h"
@@ -516,6 +517,7 @@ extern "C" void InitOTR() {
 
     OTRGlobals::Instance = new OTRGlobals();
     GameInteractor::Instance = new GameInteractor();
+    LoadGuiTextures();
     BenGui::SetupGuiElements();
     InitEnhancements();
     InitDeveloperTools();
