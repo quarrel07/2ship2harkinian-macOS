@@ -28,6 +28,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                     skipCmds.clear();
                     skipCmds.push_back(MSCRIPT_CMD_12);
                     [[fallthrough]];
+                case ACTOR_EN_BJT:
                 case ACTOR_EN_NB:
                 case ACTOR_EN_AL:
                     func_80832558(gPlayState, player, func_80837B60);
