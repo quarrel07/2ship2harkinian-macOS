@@ -37,20 +37,17 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         *should = false;
 
         // If it hasn't been collected yet, spawn a dummy item
-        if (!randoSaveCheck.eligible) {
-            CustomItem::Spawn(
-                actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
-                randoStaticCheck.randoCheckId,
-                [](Actor* actor, PlayState* play) {
-                    RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                    randoSaveCheck.eligible = true;
-                },
-                [](Actor* actor, PlayState* play) {
-                    auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                    RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
-                    Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                    Rando::DrawItem(randoItemId);
-                });
-        }
+        CustomItem::Spawn(
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
+            randoStaticCheck.randoCheckId,
+            [](Actor* actor, PlayState* play) {
+                RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                randoSaveCheck.eligible = true;
+            },
+            [](Actor* actor, PlayState* play) {
+                auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
+                Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
+                Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
+            });
     });
 }

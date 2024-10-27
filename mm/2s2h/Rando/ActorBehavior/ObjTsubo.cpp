@@ -857,7 +857,7 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
             return;
         }
 
-        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].eligible) {
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
             return;
         }
 
@@ -872,25 +872,19 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         }
 
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-        if (randoSaveCheck.eligible) {
-            return;
-        }
 
         CustomItem::Spawn(
             actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
             CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoCheckId,
             [](Actor* actor, PlayState* play) {
                 RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                if (randoSaveCheck.eligible) {
-                    return;
-                }
                 randoSaveCheck.eligible = true;
             },
             [](Actor* actor, PlayState* play) {
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                 RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
                 Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                Rando::DrawItem(randoItemId);
+                Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
         *should = false;
     });

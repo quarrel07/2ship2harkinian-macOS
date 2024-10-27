@@ -30,7 +30,7 @@ void Rando::MiscBehavior::CheckQueue() {
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
 
-        if (randoSaveCheck.eligible && !randoSaveCheck.obtained) {
+        if (randoSaveCheck.eligible) {
             queued = true;
 
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
@@ -39,7 +39,8 @@ void Rando::MiscBehavior::CheckQueue() {
                 .giveItem =
                     [](Actor* actor, PlayState* play) {
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                        RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                        RandoItemId randoItemId =
+                            Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
 
                         CustomMessage::Entry entry = {
                             .textboxType = 2,
@@ -68,6 +69,7 @@ void Rando::MiscBehavior::CheckQueue() {
                         }
                         Rando::GiveItem(randoItemId);
                         randoSaveCheck.obtained = true;
+                        randoSaveCheck.eligible = false;
                         queued = false;
                         CUSTOM_ITEM_PARAM = randoItemId;
                     },
@@ -80,7 +82,8 @@ void Rando::MiscBehavior::CheckQueue() {
                             randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
                         } else {
                             auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
-                            randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId);
+                            randoItemId =
+                                Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
                         }
 
                         Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);

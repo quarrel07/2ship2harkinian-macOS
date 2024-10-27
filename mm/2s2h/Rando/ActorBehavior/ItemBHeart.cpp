@@ -17,7 +17,7 @@ void ItemBHeart_DrawCustom(Actor* thisx, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, randoStaticCheck.randoCheckId));
 }
 
 void ItemBHeart_UpdateCustom(Actor* thisx, PlayState* play) {
@@ -45,11 +45,6 @@ void Rando::ActorBehavior::InitItemBHeartBehavior() {
         }
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-
-        if (randoSaveCheck.obtained) {
-            Actor_Kill(&itemBHeart->actor);
-            return;
-        }
 
         actor->draw = ItemBHeart_DrawCustom;
         actor->update = ItemBHeart_UpdateCustom;

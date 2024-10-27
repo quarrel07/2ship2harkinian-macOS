@@ -16,6 +16,9 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
     if (CVarGetInteger("gRando.Enabled", 0)) {
         gSaveContext.save.shipSaveInfo.saveType = SAVETYPE_RANDO;
         memset(&gSaveContext.save.shipSaveInfo.rando, 0, sizeof(gSaveContext.save.shipSaveInfo.rando));
+        memcpy(&gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys,
+               &gSaveContext.save.saveInfo.inventory.dungeonKeys,
+               sizeof(gSaveContext.save.saveInfo.inventory.dungeonKeys));
 
         try {
             if (CVarGetInteger("gRando.SpoilerFileIndex", 0) == 0) {

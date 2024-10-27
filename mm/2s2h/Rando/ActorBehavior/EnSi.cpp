@@ -19,7 +19,7 @@ void EnSi_DrawCustom(Actor* thisx, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, randoStaticCheck.randoCheckId));
 }
 
 void Rando::ActorBehavior::InitEnSiBehavior() {
@@ -35,11 +35,6 @@ void Rando::ActorBehavior::InitEnSiBehavior() {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
 
         if (!randoSaveCheck.shuffled) {
-            return;
-        }
-
-        if (randoSaveCheck.eligible) {
-            Actor_Kill(&enSi->actor);
             return;
         }
 

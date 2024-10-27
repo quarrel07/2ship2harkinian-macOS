@@ -49,7 +49,7 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
             Matrix_TranslateRotateZYX(&pos, &rot);
 
             auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
-            Rando::DrawItem(randoSaveCheck.randoItemId);
+            Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, RC_CLOCK_TOWER_ROOF_OCARINA));
         }
     });
 
@@ -70,11 +70,11 @@ void Rando::ActorBehavior::InitDmStkBehavior() {
         Matrix_TranslateRotateZYX(&pos, &rot);
 
         auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
-        Rando::DrawItem(randoSaveCheck.randoItemId);
+        Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, RC_CLOCK_TOWER_ROOF_OCARINA));
     });
 
     COND_VB_SHOULD(VB_STK_HAVE_OCARINA, IS_RANDO, {
         auto randoSaveCheck = RANDO_SAVE_CHECKS[RC_CLOCK_TOWER_ROOF_OCARINA];
-        *should = !randoSaveCheck.eligible;
+        *should = !randoSaveCheck.obtained;
     });
 }

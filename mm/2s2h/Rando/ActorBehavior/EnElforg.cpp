@@ -37,7 +37,7 @@ void EnElforg_DrawCustom(Actor* thisx, PlayState* play) {
     EnElforg_SpawnSparkles(enElforg, play, 16);
     thisx->shape.rot.y = thisx->shape.rot.y + 960;
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, randoCheckId));
 }
 
 // This handles the Stray fairy checks, as well as overriding the draw function for the Stray Fairies

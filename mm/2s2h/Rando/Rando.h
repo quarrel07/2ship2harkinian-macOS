@@ -13,7 +13,7 @@ namespace Rando {
 void Init();
 void DrawItem(RandoItemId randoItemId);
 void GiveItem(RandoItemId randoItemId);
-RandoItemId ConvertItem(RandoItemId randoItemId);
+RandoItemId ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
 void DrawMenu();
 
 } // namespace Rando

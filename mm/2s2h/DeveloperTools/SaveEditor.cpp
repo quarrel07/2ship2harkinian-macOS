@@ -20,6 +20,7 @@ extern "C" {
 extern PlayState* gPlayState;
 extern SaveContext gSaveContext;
 extern TexturePtr gItemIcons[131];
+extern s16 D_801CFF94[250];
 extern u8 gItemSlots[77];
 void Interface_LoadItemIconImpl(PlayState* play, u8 btn);
 void Interface_NewDay(PlayState* play, s32 day);
@@ -839,21 +840,51 @@ void DrawItemsAndMasksTab() {
                     .param = (int16_t)randoItemId,
                     .giveItem =
                         [](Actor* actor, PlayState* play) {
-                            std::string message = "You received the {{item}}!";
-                            CustomMessage::Replace(&message, "{{item}}",
-                                                   Rando::StaticData::Items[(RandoItemId)CUSTOM_ITEM_PARAM].name);
+                            RandoItemId randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
+
+                            CustomMessage::Entry entry = {
+                                .textboxType = 2,
+                                .msg = "You received {{item}}!",
+                            };
+                            CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoItemId].name);
+                            if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
+                                entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
+                            }
 
                             if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
-                                CustomMessage::SetActiveCustomMessage(message, { .textboxType = 2 });
+                                CustomMessage::SetActiveCustomMessage(entry.msg, entry);
+                            } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+                                CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                             } else {
-                                CustomMessage::StartTextbox(message + "\x1C\x02\x10", { .textboxType = 2 });
+                                s16 itemId = Rando::StaticData::Items[randoItemId].itemId;
+                                if (itemId >= ITEM_RECOVERY_HEART) {
+                                    itemId = D_801CFF94[Rando::StaticData::Items[randoItemId].getItemId];
+                                }
+
+                                Notification::Emit({
+                                    .itemIcon =
+                                        itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
+                                    .message = "You found",
+                                    .suffix = Rando::StaticData::Items[randoItemId].name,
+                                });
                             }
-                            Rando::GiveItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                            Rando::GiveItem(randoItemId);
+                            CUSTOM_ITEM_PARAM = randoItemId;
                         },
                     .drawItem =
                         [](Actor* actor, PlayState* play) {
+                            RandoItemId randoItemId;
+
+                            // If the item has been given, the CUSTOM_ITEM_PARAM is set to the RI, prior to that it's
+                            // the RC
+                            if (CUSTOM_ITEM_FLAGS & CustomItem::CALLED_ACTION) {
+                                randoItemId = (RandoItemId)CUSTOM_ITEM_PARAM;
+                            } else {
+                                randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                            }
+
                             Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                            Rando::DrawItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                            Rando::DrawItem(randoItemId);
                         } });
             }
         }

@@ -14,19 +14,25 @@ void Rando::MiscBehavior::BeforeEndOfCycleSave() {
 void Rando::MiscBehavior::AfterEndOfCycleSave() {
     for (int i = 0; i < 8; i++) {
         gSaveContext.save.saveInfo.inventory.dungeonItems[i] = saveContextCopy.save.saveInfo.inventory.dungeonItems[i];
-        gSaveContext.save.saveInfo.inventory.dungeonKeys[i] = saveContextCopy.save.saveInfo.inventory.dungeonKeys[i];
+        gSaveContext.save.saveInfo.inventory.dungeonKeys[i] =
+            saveContextCopy.save.shipSaveInfo.rando.foundDungeonKeys[i];
         gSaveContext.save.saveInfo.inventory.strayFairies[i] = saveContextCopy.save.saveInfo.inventory.strayFairies[i];
-    }
-
-    // Naively persist all cycle scene flags, we'll likely need to be more selective.
-    for (int i = 0; i < SCENE_MAX; i++) {
-        gSaveContext.cycleSceneFlags[i].chest = saveContextCopy.cycleSceneFlags[i].chest;
-        gSaveContext.cycleSceneFlags[i].collectible = saveContextCopy.cycleSceneFlags[i].collectible;
-        gSaveContext.cycleSceneFlags[i].switch0 = saveContextCopy.cycleSceneFlags[i].switch0;
-        gSaveContext.cycleSceneFlags[i].switch1 = saveContextCopy.cycleSceneFlags[i].switch1;
     }
 
     if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS]) {
         gSaveContext.save.saveInfo.skullTokenCount = saveContextCopy.save.saveInfo.skullTokenCount;
+    }
+
+    // Unset any flags used for checks, whether or not they get the item or junk is determined on our end instead.
+    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        switch (randoStaticCheck.flagType) {
+            case FLAG_WEEK_EVENT_REG:
+                // Clear the flag without triggering hook
+                WEEKEVENTREG((randoStaticCheck.flag) >> 8) =
+                    GET_WEEKEVENTREG((randoStaticCheck.flag) >> 8) & (u8) ~((randoStaticCheck.flag) & 0xFF);
+                break;
+                // most of the others are handled by the game, with the exception of PERSISTENT_CYCLE_FLAGS_SET, not
+                // sure if any of these cases affect us yet so ignoring for now
+        }
     }
 }

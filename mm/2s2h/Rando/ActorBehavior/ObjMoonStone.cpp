@@ -14,7 +14,7 @@ void ObjMoonstone_DrawCustom(Actor* thisx, PlayState* play) {
 
     thisx->shape.rot.y = thisx->shape.rot.y + 960;
 
-    Rando::DrawItem(randoSaveCheck.randoItemId);
+    Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, RC_ASTRAL_OBSERVATORY_MOON_TEAR));
 }
 
 void Rando::ActorBehavior::InitObjMoonStoneBehavior() {

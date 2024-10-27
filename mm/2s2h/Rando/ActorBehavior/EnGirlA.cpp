@@ -32,10 +32,8 @@ s32 EnGirlA_RandoCanBuyFunc(PlayState* play, EnGirlA* enGirlA) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
 
-    // Probably need to have a more robust check here but this effectively checks if the player can receive the item for
-    // now
     if (randoSaveCheck.randoItemId != RI_RUPEE_BLUE &&
-        Rando::ConvertItem(randoSaveCheck.randoItemId) == RI_RUPEE_BLUE) {
+        Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z) == RI_RUPEE_BLUE) {
         return CANBUY_RESULT_CANNOT_GET_NOW;
     }
 
