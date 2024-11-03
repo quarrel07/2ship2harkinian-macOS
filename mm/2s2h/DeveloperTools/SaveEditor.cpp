@@ -1187,9 +1187,13 @@ void DrawQuestStatusTab() {
         ImGui::SeparatorText("Randomizer Check Status");
 
         for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+            if (!randoSaveCheck.shuffled) {
+                continue;
+            }
+
             std::string hiddenName = "##";
             hiddenName += randoStaticCheck.name;
-            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
             UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
             ImGui::SetItemTooltip("Eligible");
             ImGui::SameLine();

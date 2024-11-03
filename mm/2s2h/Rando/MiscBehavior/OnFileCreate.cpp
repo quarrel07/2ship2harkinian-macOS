@@ -10,6 +10,27 @@ extern "C" {
 #include "ShipUtils.h"
 }
 
+void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& reachableRegions) {
+    auto& randoStaticRegion = Rando::StaticData::Regions[currentRegion];
+
+    for (auto& [neighborRegionId, accessLogicFunc] : randoStaticRegion.regions) {
+        // Check if the region is accessible and hasn’t been visited yet
+        if (reachableRegions.count(neighborRegionId) == 0 && accessLogicFunc()) {
+            reachableRegions.insert(neighborRegionId);                // Mark region as visited
+            FindReachableRegions(neighborRegionId, reachableRegions); // Recursively visit neighbors
+        }
+    }
+}
+
+struct RandoPoolEntry {
+    bool shuffled;
+    RandoItemId vanillaItemId;
+    RandoItemId placedItemId;
+    bool itemPlaced;
+    bool checkFilled;
+    bool inPool;
+};
+
 // Very primitive randomizer implementation, when a save is created, if rando is enabled
 // we set the save type to rando and shuffle all checks and persist the results to the save
 void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
@@ -80,6 +101,158 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     for (size_t i = 0; i < checkPool.size(); i++) {
                         RANDO_SAVE_CHECKS[checkPool[i]].shuffled = true;
                         RANDO_SAVE_CHECKS[checkPool[i]].randoItemId = itemPool[i];
+                    }
+                } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_GLITCHLESS) {
+                    std::unordered_map<RandoCheckId, RandoPoolEntry> randoCheckPool;
+                    SaveContext copiedSaveContext;
+                    memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
+
+                    // As far as logic is concerned, we start in Deku form
+                    gSaveContext.save.playerForm = PLAYER_FORM_DEKU;
+
+                    // First loop through all regions and add checks/items to the pool
+                    for (auto& [randoRegionId, randoStaticRegion] : Rando::StaticData::Regions) {
+                        for (auto& [randoCheckId, _] : randoStaticRegion.checks) {
+                            auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+
+                            if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
+                                RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
+                                continue;
+                            }
+
+                            if (randoStaticCheck.randoCheckType == RCTYPE_POT &&
+                                RANDO_SAVE_OPTIONS[RO_SHUFFLE_POTS] == RO_GENERIC_NO) {
+                                continue;
+                            }
+
+                            if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
+                                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
+                                    continue;
+                                } else {
+                                    RANDO_SAVE_CHECKS[randoCheckId].price = Ship_Random(0, 200);
+                                }
+                            }
+
+                            randoCheckPool[randoCheckId] = { true,       randoStaticCheck.randoItemId,
+                                                             RI_UNKNOWN, false,
+                                                             false,      false };
+                        }
+                    }
+
+                    // Recursive lambda for backtracking placement
+                    std::function<bool(std::set<RandoRegionId>)> PlaceItems =
+                        [&](std::set<RandoRegionId> reachableRegions) -> bool {
+                        // Crawl through all reachable regions and add any new reachable regions
+                        std::set<RandoRegionId> currentReachableRegions = reachableRegions;
+                        for (RandoRegionId regionId : reachableRegions) {
+                            FindReachableRegions(regionId, currentReachableRegions);
+                        }
+
+                        // Mark newly accessible checks
+                        std::vector<RandoCheckId> newChecksInPool;
+                        for (RandoRegionId regionId : currentReachableRegions) {
+                            auto& randoStaticRegion = Rando::StaticData::Regions[regionId];
+                            for (auto& [randoCheckId, accessLogicFunc] : randoStaticRegion.checks) {
+                                if (
+                                    // Check is shuffled
+                                    randoCheckPool[randoCheckId].shuffled &&
+                                    // Check is not already in the pool
+                                    randoCheckPool[randoCheckId].inPool == false) {
+                                    // Check is accessible
+                                    if (accessLogicFunc()) {
+                                        randoCheckPool[randoCheckId].inPool = true;
+                                        newChecksInPool.push_back(randoCheckId);
+                                    } else {
+                                        SPDLOG_INFO("Check {} is not accessible",
+                                                    Rando::StaticData::Checks[randoCheckId].name);
+                                    }
+                                }
+                            }
+                        }
+
+                        int checksLeft = 0;
+                        std::vector<RandoCheckId> currentCheckPool;
+                        std::vector<std::pair<RandoItemId, RandoCheckId>> currentItemPool;
+                        for (auto& [randoCheckId, randoPoolEntry] : randoCheckPool) {
+                            if (randoPoolEntry.inPool) {
+                                if (!randoPoolEntry.itemPlaced) {
+                                    currentItemPool.push_back({ randoPoolEntry.vanillaItemId, randoCheckId });
+                                }
+                                if (!randoPoolEntry.checkFilled) {
+                                    currentCheckPool.push_back(randoCheckId);
+                                }
+                            }
+                            if (randoPoolEntry.shuffled && !randoPoolEntry.checkFilled) {
+                                checksLeft++;
+                            }
+                        }
+                        if (checksLeft == 0) {
+                            return true; // All items placed
+                        }
+
+                        if (currentItemPool.size() == 0) {
+                            for (RandoCheckId randoCheckId : newChecksInPool) {
+                                randoCheckPool[randoCheckId].inPool = false;
+                            }
+                            return false; // No more items to place
+                        }
+
+                        // Shuffle the pool
+                        if (currentItemPool.size() > 1) {
+                            for (size_t i = 0; i < currentItemPool.size(); i++) {
+                                std::swap(currentItemPool[i],
+                                          currentItemPool[Ship_Random(0, currentItemPool.size() - 1)]);
+                            }
+                        }
+
+                        for (size_t i = 0; i < currentItemPool.size(); i++) {
+                            // Place the item in the check
+                            RandoCheckId randoCheckId = currentCheckPool[i];
+                            auto [randoItemId, randoCheckIdFromItem] = currentItemPool[i];
+                            SPDLOG_INFO("Placing item {} in check {}",
+                                        Rando::StaticData::Items[randoItemId].spoilerName,
+                                        Rando::StaticData::Checks[randoCheckId].name);
+                            randoCheckPool[randoCheckId].checkFilled = true;
+                            randoCheckPool[randoCheckId].placedItemId = randoItemId;
+                            randoCheckPool[randoCheckIdFromItem].itemPlaced = true;
+                            RandoItemId convertedItemId = ConvertItem(randoItemId);
+                            GiveItem(convertedItemId);
+
+                            // Recurse to place the next item
+                            if (PlaceItems(currentReachableRegions)) {
+                                return true; // Found a solution
+                            }
+
+                            SPDLOG_INFO("Failed to place item {} in check {}",
+                                        Rando::StaticData::Items[randoItemId].spoilerName,
+                                        Rando::StaticData::Checks[randoCheckId].name);
+                            // Backtrack: remove the item and try another check
+                            randoCheckPool[randoCheckId].checkFilled = false;
+                            randoCheckPool[randoCheckId].placedItemId = RI_UNKNOWN;
+                            randoCheckPool[randoCheckIdFromItem].itemPlaced = false;
+                            RemoveItem(convertedItemId);
+                        }
+
+                        for (RandoCheckId randoCheckId : newChecksInPool) {
+                            randoCheckPool[randoCheckId].inPool = false;
+                        }
+
+                        return false; // No valid placements for this item
+                    };
+
+                    if (!PlaceItems({ RR_CLOCK_TOWN_SOUTH })) {
+                        memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
+                        throw std::runtime_error("Failed to place all items in glitchless logic, input seed: " +
+                                                 inputSeed);
+                    } else {
+                        memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
+
+                        for (auto& [randoCheckId, randoPoolEntry] : randoCheckPool) {
+                            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoPoolEntry.placedItemId;
+                            RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
+                        }
+
+                        SPDLOG_INFO("Successfully placed all items in glitchless logic, input seed: {}", inputSeed);
                     }
                 }
 

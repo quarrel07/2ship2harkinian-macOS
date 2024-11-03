@@ -2,10 +2,16 @@
 #include "Rando/Spoiler/Spoiler.h"
 #include <libultraship/libultraship.h>
 #include "2s2h/BenGui/UIWidgets.hpp"
+#include "Rando/CheckTracker/CheckTracker.h"
 #include "BenPort.h"
 
 // TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
-std::vector<std::string> logicOptions = { "No Logic", "Vanilla" };
+std::vector<std::string> logicOptions = { "No Logic", "Vanilla", "Glitchless" };
+
+namespace BenGui {
+extern std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
+extern std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
+} // namespace BenGui
 
 void Rando::DrawMenu() {
     if (UIWidgets::BeginMenu("Rando", UIWidgets::Colors::Green)) {
@@ -47,6 +53,13 @@ void Rando::DrawMenu() {
                 UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
             }
         }
+
+        UIWidgets::WindowButton("Check Tracker", "gWindows.CheckTracker", BenGui::mRandoCheckTrackerWindow);
+        // TODO: Implement Check Tracker Settings
+        // ImGui::SameLine();
+        // UIWidgets::WindowButton(ICON_FA_COG, "gWindows.CheckTrackerSettings",
+        // BenGui::mRandoCheckTrackerSettingsWindow,
+        //                         { .size = UIWidgets::Sizes::Inline });
 
         ImGui::EndMenu();
     }

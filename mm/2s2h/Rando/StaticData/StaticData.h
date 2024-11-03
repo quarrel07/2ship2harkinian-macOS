@@ -52,6 +52,16 @@ extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 
+struct RandoStaticRegion {
+    RandoRegionId randoRegionId;
+    const char* name;
+    SceneId sceneId;
+    std::unordered_map<RandoCheckId, std::function<bool()>> checks;
+    std::unordered_map<RandoRegionId, std::function<bool()>> regions;
+};
+
+extern std::map<RandoRegionId, RandoStaticRegion> Regions;
+
 } // namespace StaticData
 
 } // namespace Rando

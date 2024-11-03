@@ -11,6 +11,7 @@ void LoadGuiTextures();
 extern "C" {
 #endif
 
+const char* Ship_GetSceneName(s16 sceneId);
 void Ship_CreateQuadVertexGroup(Vtx* vtxList, s32 xStart, s32 yStart, s32 width, s32 height, u8 flippedH);
 f32 Ship_GetCharFontWidthNES(u8 character);
 TexturePtr Ship_GetCharFontTextureNES(u8 character);

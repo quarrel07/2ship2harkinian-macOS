@@ -3551,7 +3551,6 @@ s16 sRupeeRefillCounts[] = { 1, 5, 10, 20, 50, 100, 200 };
 
 // 2S2H [Enhancements] This was originally Item_Give, we wrapped it for hooking purposes
 u8 Item_GiveImpl(PlayState* play, u8 item) {
-    Player* player = GET_PLAYER(play);
     u8 i;
     u8 temp;
     u8 slot;
@@ -3605,7 +3604,11 @@ u8 Item_GiveImpl(PlayState* play, u8 item) {
     } else if ((item >= ITEM_SHIELD_HERO) && (item <= ITEM_SHIELD_MIRROR)) {
         if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) != (u16)(item - ITEM_SHIELD_HERO + EQUIP_VALUE_SHIELD_HERO)) {
             SET_EQUIP_VALUE(EQUIP_TYPE_SHIELD, item - ITEM_SHIELD_HERO + EQUIP_VALUE_SHIELD_HERO);
-            Player_SetEquipmentData(play, player);
+            // 2S2H [Randomizer] Added a nullptr check so that we can call this function outside of gameplay for logic
+            if (gPlayState != NULL) {
+                Player* player = GET_PLAYER(play);
+                Player_SetEquipmentData(play, player);
+            }
             return ITEM_NONE;
         }
         return item;

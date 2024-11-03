@@ -9,6 +9,7 @@
 #include "UIWidgets.hpp"
 #include "HudEditor.h"
 #include "Notification.h"
+#include "2s2h/Rando/CheckTracker/CheckTracker.h"
 
 #ifdef __APPLE__
 #include "graphic/Fast3D/gfx_metal.h"
@@ -38,6 +39,8 @@ std::shared_ptr<EventLogWindow> mEventLogWindow;
 std::shared_ptr<BenMenu> mBenMenu;
 std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
+std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
+std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
 
 void SetupGuiElements() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
@@ -99,6 +102,14 @@ void SetupGuiElements() {
     mNotificationWindow = std::make_shared<Notification::Window>("gWindows.Notifications", "Notifications Window");
     gui->AddGuiWindow(mNotificationWindow);
     mNotificationWindow->Show();
+
+    mRandoCheckTrackerWindow =
+        std::make_shared<Rando::CheckTracker::Window>("gWindows.CheckTracker", "Check Tracker", ImVec2(375, 460));
+    gui->AddGuiWindow(mRandoCheckTrackerWindow);
+
+    mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(
+        "gWindows.CheckTrackerSettings", "Check Tracker Settings");
+    gui->AddGuiWindow(mRandoCheckTrackerSettingsWindow);
 }
 
 void Destroy() {
@@ -111,6 +122,8 @@ void Destroy() {
     mCollisionViewerWindow = nullptr;
     mEventLogWindow = nullptr;
     mNotificationWindow = nullptr;
+    mRandoCheckTrackerWindow = nullptr;
+    mRandoCheckTrackerSettingsWindow = nullptr;
 
     mSaveEditorWindow = nullptr;
     mHudEditorWindow = nullptr;

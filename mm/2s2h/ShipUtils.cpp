@@ -10,12 +10,34 @@
 
 extern "C" {
 #include "macros.h"
+#include "z64.h"
 
 extern f32 sNESFontWidths[160];
 extern const char* fontTbl[156];
 extern TexturePtr gItemIcons[131];
 extern TexturePtr gQuestIcons[14];
 extern TexturePtr gBombersNotebookPhotos[24];
+}
+
+// 2S2H Added columns to scene table: entranceSceneId, betterMapSelectIndex, humanName
+#define DEFINE_SCENE(_name, enumValue, _textId, _drawConfig, _restrictionFlags, _persistentCycleFlags, \
+                     _entranceSceneId, _betterMapSelectIndex, humanName)                               \
+    { enumValue, humanName },
+#define DEFINE_SCENE_UNSET(_enumValue)
+
+std::unordered_map<s16, const char*> sceneNames = {
+#include "tables/scene_table.h"
+};
+
+#undef DEFINE_SCENE
+#undef DEFINE_SCENE_UNSET
+
+extern "C" const char* Ship_GetSceneName(s16 sceneId) {
+    if (sceneNames.contains(sceneId)) {
+        return sceneNames[sceneId];
+    }
+
+    return "Unknown";
 }
 
 // Build vertex coordinates for a quad command

@@ -1346,6 +1346,7 @@ void Flags_ClearEventInf(s32 flag);
 // #region 2S2H [Rando]
 s32 Flags_GetRandoInf(s32 flag);
 void Flags_SetRandoInf(s32 flag);
+void Flags_ClearRandoInf(s32 flag);
 // #endregion
 // #region 2S2H [Port] Stubbed methods
 void osSetThreadPri(OSThread* thread, OSPri p);
