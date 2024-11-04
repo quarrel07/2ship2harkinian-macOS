@@ -1,4 +1,4 @@
-#include "StaticData.h"
+#include "Logic.h"
 
 extern "C" {
 s32 Flags_GetRandoInf(s32 flag);
@@ -6,7 +6,7 @@ s32 Flags_GetRandoInf(s32 flag);
 
 namespace Rando {
 
-namespace StaticData {
+namespace Logic {
 
 #define IS_DEKU (GET_PLAYER_FORM == PLAYER_FORM_DEKU)
 #define IS_ZORA (GET_PLAYER_FORM == PLAYER_FORM_ZORA)
@@ -25,7 +25,7 @@ namespace StaticData {
 #define CAN_USE_EXPLOSIVE (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || (HAS_ITEM(ITEM_MASK_BLAST) && CAN_BE_HUMAN))
 
 // clang-format off
-std::map<RandoRegionId, RandoStaticRegion> Regions = {
+std::map<RandoRegionId, RandoRegion> Regions = {
     { RR_CLOCK_TOWN_SOUTH, { RR_CLOCK_TOWN_SOUTH, "", SCENE_CLOCKTOWER,
         { // Checks
             { RC_CLOCK_TOWN_SCRUB_DEED, []() { return Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR); } },
@@ -142,6 +142,6 @@ std::map<RandoRegionId, RandoStaticRegion> Regions = {
 };
 // clang-format on
 
-} // namespace StaticData
+} // namespace Logic
 
 } // namespace Rando

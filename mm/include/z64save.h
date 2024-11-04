@@ -344,6 +344,7 @@ typedef struct RandoSaveCheck {
 typedef struct RandoSaveInfo {
     u16 randoInf[(RANDO_INF_MAX + 15) / 16];
     RandoSaveCheck randoSaveChecks[RC_MAX];
+    u32 finalSeed;
     s8 randoSaveOptions[RO_MAX]; // Type here may change in the future
     s8 foundDungeonKeys[9]; // Tracks the number of dungeon keys found, opposed to the number of keys in the inventory
 } RandoSaveInfo;

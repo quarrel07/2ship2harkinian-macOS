@@ -1,32 +1,21 @@
 
 #include "CheckTracker.h"
+#include "2s2h/Rando/Logic/Logic.h"
 #include "2s2h/ShipUtils.h"
 
 namespace Rando {
 
 namespace CheckTracker {
 
-void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& reachableRegions) {
-    auto& randoStaticRegion = Rando::StaticData::Regions[currentRegion];
-
-    for (auto& [neighborRegionId, accessLogicFunc] : randoStaticRegion.regions) {
-        // Check if the region is accessible and hasn’t been visited yet
-        if (reachableRegions.count(neighborRegionId) == 0 && accessLogicFunc()) {
-            reachableRegions.insert(neighborRegionId);                // Mark region as visited
-            FindReachableRegions(neighborRegionId, reachableRegions); // Recursively visit neighbors
-        }
-    }
-}
-
 void Window::DrawElement() {
     std::set<RandoRegionId> reachableRegions = { RR_CLOCK_TOWN_SOUTH };
-    FindReachableRegions(RR_CLOCK_TOWN_SOUTH, reachableRegions);
+    Rando::Logic::FindReachableRegions(RR_CLOCK_TOWN_SOUTH, reachableRegions);
 
     for (RandoRegionId regionId : reachableRegions) {
-        auto& randoStaticRegion = Rando::StaticData::Regions[regionId];
+        auto& randoRegion = Rando::Logic::Regions[regionId];
         std::vector<RandoCheckId> availableChecks;
 
-        for (auto& [randoCheckId, accessLogicFunc] : randoStaticRegion.checks) {
+        for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
             auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
             if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc()) {
@@ -35,10 +24,10 @@ void Window::DrawElement() {
         }
 
         if (availableChecks.size() > 0) {
-            std::string regionName = Ship_GetSceneName(randoStaticRegion.sceneId);
-            if (randoStaticRegion.name != "") {
+            std::string regionName = Ship_GetSceneName(randoRegion.sceneId);
+            if (randoRegion.name != "") {
                 regionName += " - ";
-                regionName += randoStaticRegion.name;
+                regionName += randoRegion.name;
             }
             ImGui::SeparatorText(regionName.c_str());
 
