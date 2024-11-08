@@ -2,24 +2,26 @@
 #include "CheckTracker.h"
 #include "2s2h/Rando/Logic/Logic.h"
 #include "2s2h/ShipUtils.h"
+#include "2s2h/BenGui/UIWidgets.hpp"
 
 namespace Rando {
 
 namespace CheckTracker {
 
 void Window::DrawElement() {
-    std::set<RandoRegionId> reachableRegions = { RR_CLOCK_TOWN_SOUTH };
-    Rando::Logic::FindReachableRegions(RR_CLOCK_TOWN_SOUTH, reachableRegions);
+    std::set<RandoRegionId> reachableRegions = {};
+    RandoRegionId currentRegion = Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance);
+    Rando::Logic::FindReachableRegions(currentRegion, reachableRegions);
 
     for (RandoRegionId regionId : reachableRegions) {
         auto& randoRegion = Rando::Logic::Regions[regionId];
-        std::vector<RandoCheckId> availableChecks;
+        std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
 
         for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
             auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-            if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc()) {
-                availableChecks.push_back(randoCheckId);
+            if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc.first()) {
+                availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
             }
         }
 
@@ -31,9 +33,12 @@ void Window::DrawElement() {
             }
             ImGui::SeparatorText(regionName.c_str());
 
-            for (RandoCheckId checkId : availableChecks) {
+            for (auto& [checkId, accessLogicString] : availableChecks) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                 ImGui::Text("%s", randoStaticCheck.name);
+                if (accessLogicString != "") {
+                    UIWidgets::Tooltip(accessLogicString.c_str());
+                }
             }
         }
     }

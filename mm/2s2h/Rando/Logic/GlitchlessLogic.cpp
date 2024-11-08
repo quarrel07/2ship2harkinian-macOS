@@ -10,18 +10,6 @@ namespace Rando {
 
 namespace Logic {
 
-void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& reachableRegions) {
-    auto& randoRegion = Rando::Logic::Regions[currentRegion];
-
-    for (auto& [neighborRegionId, accessLogicFunc] : randoRegion.regions) {
-        // Check if the region is accessible and hasn’t been visited yet
-        if (reachableRegions.count(neighborRegionId) == 0 && accessLogicFunc()) {
-            reachableRegions.insert(neighborRegionId);                // Mark region as visited
-            FindReachableRegions(neighborRegionId, reachableRegions); // Recursively visit neighbors
-        }
-    }
-}
-
 struct RandoPoolEntry {
     bool shuffled;
     RandoItemId vanillaItemId;
@@ -84,7 +72,7 @@ void ApplyGlitchlessLogicToSaveContext() {
                     // Check is not already in the pool
                     randoCheckPool[randoCheckId].inPool == false) {
                     // Check is accessible
-                    if (accessLogicFunc()) {
+                    if (accessLogicFunc.first()) {
                         randoCheckPool[randoCheckId].inPool = true;
                         newChecksInPool.push_back(randoCheckId);
                     } else {
