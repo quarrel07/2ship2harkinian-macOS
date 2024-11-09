@@ -59,7 +59,7 @@ std::string LogicString(std::string condition) {
 
 // clang-format off
 std::map<RandoRegionId, RandoRegion> Regions = {
-    { RR_CLOCK_TOWN_SOUTH, RandoRegion{ RR_CLOCK_TOWN_SOUTH, "", SCENE_CLOCKTOWER,
+    { RR_CLOCK_TOWN_SOUTH, RandoRegion{ .name = "", .sceneId = SCENE_CLOCKTOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
@@ -80,7 +80,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_MAX, true), // TODO: We'll remove this eventually
         },
     } },
-    { RR_CLOCK_TOWER_INTERIOR, { RR_CLOCK_TOWER_INTERIOR, "", SCENE_INSIDETOWER,
+    { RR_CLOCK_TOWER_INTERIOR, RandoRegion{ .name = "", .sceneId = SCENE_INSIDETOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
             CHECK(RC_CLOCK_TOWER_INTERIOR_DEKU_MASK, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
@@ -89,7 +89,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0), ENTRANCE(CLOCK_TOWER_INTERIOR, 1), true),
         },
     } },
-    { RR_CLOCK_TOWN_SOUTH_PLATFORM, { RR_CLOCK_TOWN_SOUTH_PLATFORM, "Clock Tower Platform", SCENE_CLOCKTOWER,
+    { RR_CLOCK_TOWN_SOUTH_PLATFORM, RandoRegion{ .name = "Clock Tower Platform", .sceneId = SCENE_CLOCKTOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP, true),
         },
@@ -100,7 +100,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_CLOCK_TOWN_SOUTH, true),
         },
     } },
-    { RR_CLOCK_TOWER_ROOF, RandoRegion{ RR_CLOCK_TOWER_ROOF, "", SCENE_OKUJOU,
+    { RR_CLOCK_TOWER_ROOF, RandoRegion{ .name = "", .sceneId = SCENE_OKUJOU,
         .checks = {
             CHECK(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME, HAS_MAGIC && CAN_BE_DEKU),
             CHECK(RC_CLOCK_TOWER_ROOF_OCARINA, HAS_MAGIC && CAN_BE_DEKU),
@@ -109,7 +109,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
         },
     } },
-    { RR_CLOCK_TOWN_LAUNDRY, { RR_CLOCK_TOWN_LAUNDRY, "", SCENE_ALLEY,
+    { RR_CLOCK_TOWN_LAUNDRY, RandoRegion{ .name = "", .sceneId = SCENE_ALLEY,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, true),
             CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -118,7 +118,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 6), ENTRANCE(LAUNDRY_POOL, 0), true),
         },
     } },
-    { RR_CLOCK_TOWN_NORTH, { RR_CLOCK_TOWN_NORTH, "", SCENE_BACKTOWN,
+    { RR_CLOCK_TOWN_NORTH, RandoRegion{ .name = "", .sceneId = SCENE_BACKTOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -131,7 +131,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), ENTRANCE(NORTH_CLOCK_TOWN, 4), CAN_BE_DEKU),
         },
     } },
-    { RR_CLOCK_TOWN_GREAT_FAIRY_FOUNTAIN, { RR_CLOCK_TOWN_GREAT_FAIRY_FOUNTAIN, "Clock Town", SCENE_YOUSEI_IZUMI,
+    { RR_CLOCK_TOWN_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .name = "Clock Town", .sceneId = SCENE_YOUSEI_IZUMI,
         .checks = {
             CHECK(RC_CLOCK_TOWN_GREAT_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80)),
             CHECK(RC_CLOCK_TOWN_GREAT_FAIRY_ALT, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80) && CAN_BE_HUMAN),
@@ -140,7 +140,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 3), ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
         },
     } },
-    { RR_CLOCK_TOWN_EAST, { RR_CLOCK_TOWN_EAST, "", SCENE_TOWN,
+    { RR_CLOCK_TOWN_EAST, RandoRegion{ .name = "", .sceneId = SCENE_TOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU), // Same check in two places, is this okay?
         },
@@ -159,7 +159,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(MILK_BAR, 0),                ENTRANCE(EAST_CLOCK_TOWN, 11), HAS_ITEM(ITEM_MASK_ROMANI)),
         },
     } },
-    { RR_CLOCK_TOWN_WEST, { RR_CLOCK_TOWN_WEST, "", SCENE_ICHIBA,
+    { RR_CLOCK_TOWN_WEST, RandoRegion{ .name = "", .sceneId = SCENE_ICHIBA,
         .exits = {
             EXIT(ENTRANCE(TERMINA_FIELD, 0),    ENTRANCE(WEST_CLOCK_TOWN, 0), true),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 5), ENTRANCE(WEST_CLOCK_TOWN, 1), true), // To lower
@@ -172,7 +172,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(LOTTERY_SHOP, 0),     ENTRANCE(WEST_CLOCK_TOWN, 8), true),
         },
     } },
-    { RR_ASTRAL_OBSERVATORY_PASSAGE, { RR_ASTRAL_OBSERVATORY_PASSAGE, "Passage", SCENE_TENMON_DAI,
+    { RR_ASTRAL_OBSERVATORY_PASSAGE, RandoRegion{ .name = "Passage", .sceneId = SCENE_TENMON_DAI,
         .checks = {
             CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST, (CAN_BE_HUMAN || CAN_BE_DIETY || CAN_BE_ZORA) && CAN_USE_EXPLOSIVE),
         },
@@ -183,7 +183,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_ASTRAL_OBSERVATORY, CAN_BE_DEKU && HAS_MAGIC),
         },
     } },
-    { RR_ASTRAL_OBSERVATORY, { RR_ASTRAL_OBSERVATORY, "", SCENE_TENMON_DAI,
+    { RR_ASTRAL_OBSERVATORY, RandoRegion{ .name = "", .sceneId = SCENE_TENMON_DAI,
         .exits = {
             EXIT(ENTRANCE(TERMINA_FIELD, 9), ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
         },
@@ -191,7 +191,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_ASTRAL_OBSERVATORY_PASSAGE, CAN_BE_DEKU && HAS_MAGIC), // TODO: Trick to backflip over balloon
         },
     } },
-    { RR_ASTRAL_OBSERVATORY_OUTSIDE, { RR_ASTRAL_OBSERVATORY_OUTSIDE, "Outside Astral Observatory", SCENE_00KEIKOKU,
+    { RR_ASTRAL_OBSERVATORY_OUTSIDE, RandoRegion{ .name = "Outside Astral Observatory", .sceneId = SCENE_00KEIKOKU,
         .checks = {
             CHECK(RC_ASTRAL_OBSERVATORY_MOON_TEAR, true),
         },
@@ -199,7 +199,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 1), ENTRANCE(TERMINA_FIELD, 9), true),
         },
     } },
-    { RR_TERMINA_FIELD, { RR_TERMINA_FIELD, "", SCENE_00KEIKOKU,
+    { RR_TERMINA_FIELD, RandoRegion{ .name = "", .sceneId = SCENE_00KEIKOKU,
         .exits = {
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 0), true),
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0),   ENTRANCE(TERMINA_FIELD, 1), true),
@@ -213,7 +213,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     // TODO: We'll remove this eventually
-    { RR_MAX, { RR_MAX, "", SCENE_MAX,
+    { RR_MAX, RandoRegion{ .name = "", .sceneId = SCENE_MAX,
         .checks = {
             // CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
         },
