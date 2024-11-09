@@ -28,15 +28,21 @@ struct RandoEvent {
     std::string conditionString;
 };
 
+struct RandoRegionExit {
+    s32 returnEntrance;
+    std::function<bool()> condition;
+    std::string conditionString;
+};
+
 struct RandoRegion {
     RandoRegionId randoRegionId;
     const char* name;
     SceneId sceneId;
-    std::vector<RandoEvent> events;
     std::unordered_map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
-    std::set<s32> entrances;
-    std::unordered_map<s32, std::pair<std::function<bool()>, std::string>> exits;
+    std::unordered_map<s32, RandoRegionExit> exits;
     std::unordered_map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
+    std::vector<RandoEvent> events;
+    std::set<s32> oneWayEntrances;
 };
 
 extern std::map<RandoRegionId, RandoRegion> Regions;
