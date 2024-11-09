@@ -35,7 +35,7 @@ struct RandoRegionExit {
 };
 
 struct RandoRegion {
-    const char* name;
+    const char* name = "";
     SceneId sceneId;
     std::unordered_map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::unordered_map<s32, RandoRegionExit> exits;

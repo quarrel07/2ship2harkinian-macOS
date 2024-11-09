@@ -13,7 +13,8 @@ void Window::DrawElement() {
     // Get connected entrances from starting & warp points
     Rando::Logic::FindReachableRegions(RR_MAX, reachableRegions);
     // Get connected regions from current entrance (TODO: Make this optional)
-    Rando::Logic::FindReachableRegions(Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance), reachableRegions);
+    Rando::Logic::FindReachableRegions(Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance),
+                                       reachableRegions);
 
     for (RandoRegionId regionId : reachableRegions) {
         auto& randoRegion = Rando::Logic::Regions[regionId];

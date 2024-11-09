@@ -21,6 +21,7 @@ struct RandoPoolEntry {
 
 void ApplyGlitchlessLogicToSaveContext() {
     std::unordered_map<RandoCheckId, RandoPoolEntry> randoCheckPool;
+    std::set<RandoEvent*> randoEventsTriggered;
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
@@ -61,7 +62,7 @@ void ApplyGlitchlessLogicToSaveContext() {
             FindReachableRegions(regionId, currentReachableRegions);
         }
 
-        // Mark newly accessible checks
+        // Track newly accessible checks
         std::vector<RandoCheckId> newChecksInPool;
         for (RandoRegionId regionId : currentReachableRegions) {
             auto& randoRegion = Rando::Logic::Regions[regionId];
@@ -78,6 +79,23 @@ void ApplyGlitchlessLogicToSaveContext() {
                     } else {
                         SPDLOG_INFO("Check {} is not accessible", Rando::StaticData::Checks[randoCheckId].name);
                     }
+                }
+            }
+        }
+
+        // Track newly triggered events
+        std::vector<RandoEvent*> newEventsTriggered;
+        for (RandoRegionId regionId : currentReachableRegions) {
+            auto& randoRegion = Rando::Logic::Regions[regionId];
+            for (auto& randoEvent : randoRegion.events) {
+                if (
+                    // Event is not already triggered
+                    !randoEventsTriggered.contains(&randoEvent) &&
+                    // Event condition is met
+                    randoEvent.condition()) {
+                    randoEventsTriggered.insert(&randoEvent);
+                    newEventsTriggered.push_back(&randoEvent);
+                    randoEvent.onApply();
                 }
             }
         }
@@ -105,6 +123,10 @@ void ApplyGlitchlessLogicToSaveContext() {
         if (currentItemPool.size() == 0) {
             for (RandoCheckId randoCheckId : newChecksInPool) {
                 randoCheckPool[randoCheckId].inPool = false;
+            }
+            for (RandoEvent* randoEvent : newEventsTriggered) {
+                randoEvent->onRemove();
+                randoEventsTriggered.erase(randoEvent);
             }
             return false; // No more items to place
         }
@@ -144,6 +166,10 @@ void ApplyGlitchlessLogicToSaveContext() {
 
         for (RandoCheckId randoCheckId : newChecksInPool) {
             randoCheckPool[randoCheckId].inPool = false;
+        }
+        for (RandoEvent* randoEvent : newEventsTriggered) {
+            randoEvent->onRemove();
+            randoEventsTriggered.erase(randoEvent);
         }
 
         return false; // No valid placements for this item

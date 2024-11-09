@@ -24,6 +24,9 @@ namespace Logic {
 #define HAS_MAGIC (gSaveContext.save.saveInfo.playerData.isMagicAcquired)
 #define CAN_USE_EXPLOSIVE (HAS_ITEM(ITEM_BOMB) || HAS_ITEM(ITEM_BOMBCHU) || (HAS_ITEM(ITEM_MASK_BLAST) && CAN_BE_HUMAN))
 #define ONE_WAY_EXIT 0
+#define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
+#define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
+#define CLEAR_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags &= ~(1 << owlId))
 
 std::string LogicString(std::string condition) {
     if (condition == "true")
@@ -59,7 +62,7 @@ std::string LogicString(std::string condition) {
 
 // clang-format off
 std::map<RandoRegionId, RandoRegion> Regions = {
-    { RR_CLOCK_TOWN_SOUTH, RandoRegion{ .name = "", .sceneId = SCENE_CLOCKTOWER,
+    { RR_CLOCK_TOWN_SOUTH, RandoRegion{ .sceneId = SCENE_CLOCKTOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
@@ -79,11 +82,14 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_CLOCK_TOWN_SOUTH_PLATFORM, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR))),
             CONNECTION(RR_MAX, true),
         },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
         .oneWayEntrances = {
             ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
         }
     } },
-    { RR_CLOCK_TOWER_INTERIOR, RandoRegion{ .name = "", .sceneId = SCENE_INSIDETOWER,
+    { RR_CLOCK_TOWER_INTERIOR, RandoRegion{ .sceneId = SCENE_INSIDETOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
             CHECK(RC_CLOCK_TOWER_INTERIOR_DEKU_MASK, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
@@ -103,7 +109,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_CLOCK_TOWN_SOUTH, true),
         },
     } },
-    { RR_CLOCK_TOWER_ROOF, RandoRegion{ .name = "", .sceneId = SCENE_OKUJOU,
+    { RR_CLOCK_TOWER_ROOF, RandoRegion{ .sceneId = SCENE_OKUJOU,
         .checks = {
             CHECK(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME, HAS_MAGIC && CAN_BE_DEKU),
             CHECK(RC_CLOCK_TOWER_ROOF_OCARINA, HAS_MAGIC && CAN_BE_DEKU),
@@ -112,7 +118,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
         },
     } },
-    { RR_CLOCK_TOWN_LAUNDRY, RandoRegion{ .name = "", .sceneId = SCENE_ALLEY,
+    { RR_CLOCK_TOWN_LAUNDRY, RandoRegion{ .sceneId = SCENE_ALLEY,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, true),
             CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -121,7 +127,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 6), ENTRANCE(LAUNDRY_POOL, 0), true),
         },
     } },
-    { RR_CLOCK_TOWN_NORTH, RandoRegion{ .name = "", .sceneId = SCENE_BACKTOWN,
+    { RR_CLOCK_TOWN_NORTH, RandoRegion{ .sceneId = SCENE_BACKTOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -143,7 +149,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 3), ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
         },
     } },
-    { RR_CLOCK_TOWN_EAST, RandoRegion{ .name = "", .sceneId = SCENE_TOWN,
+    { RR_CLOCK_TOWN_EAST, RandoRegion{ .sceneId = SCENE_TOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU), // Same check in two places, is this okay?
         },
@@ -162,7 +168,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(MILK_BAR, 0),                ENTRANCE(EAST_CLOCK_TOWN, 11), HAS_ITEM(ITEM_MASK_ROMANI)),
         },
     } },
-    { RR_CLOCK_TOWN_WEST, RandoRegion{ .name = "", .sceneId = SCENE_ICHIBA,
+    { RR_CLOCK_TOWN_WEST, RandoRegion{ .sceneId = SCENE_ICHIBA,
         .exits = { //     TO                             FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),    ENTRANCE(WEST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 5), ENTRANCE(WEST_CLOCK_TOWN, 1), true), // To lower
@@ -186,7 +192,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_ASTRAL_OBSERVATORY, CAN_BE_DEKU && HAS_MAGIC),
         },
     } },
-    { RR_ASTRAL_OBSERVATORY, RandoRegion{ .name = "", .sceneId = SCENE_TENMON_DAI,
+    { RR_ASTRAL_OBSERVATORY, RandoRegion{ .sceneId = SCENE_TENMON_DAI,
         .exits = { //     TO                          FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 9), ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
         },
@@ -202,7 +208,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 1), ENTRANCE(TERMINA_FIELD, 9), true),
         },
     } },
-    { RR_TERMINA_FIELD, RandoRegion{ .name = "", .sceneId = SCENE_00KEIKOKU,
+    { RR_TERMINA_FIELD, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 0), true),
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0),   ENTRANCE(TERMINA_FIELD, 1), true),
@@ -215,18 +221,31 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 0),         ENTRANCE(TERMINA_FIELD, 8), true),
         },
     } },
-    { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .name = "", .sceneId = SCENE_24KEMONOMITI,
+    { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
         },
-        .exits = { //     TO                            FROM
-            EXIT(ENTRANCE(TERMINA_FIELD, 1),   ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
+        .exits = { //     TO                                    FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 1),           ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
+            EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1), true),
         },
     } },
-    { RR_MAX, RandoRegion{ .name = "", .sceneId = SCENE_MAX,
-        .exits = { //     TO                    FROM
-            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0), ONE_WAY_EXIT, true), // Save warp
-            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 9), ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING)), // TODO: Add event for hitting owl statue
+    { RR_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_20SICHITAI,
+        .exits = { //     TO                                   FROM
+            EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1), ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), true),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(SOUTHERN_SWAMP_POISONED, 10), // From Song of Soaring
+        }
+    } },
+    { RR_MAX, RandoRegion{ .sceneId = SCENE_MAX,
+        .exits = { //     TO                            FROM
+            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0),         ONE_WAY_EXIT, true), // Save warp
+            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 9),         ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_CLOCK_TOWN)),
+            EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 10), ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP)),
         },
     } },
 };
