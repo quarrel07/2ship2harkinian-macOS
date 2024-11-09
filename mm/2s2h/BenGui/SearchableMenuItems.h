@@ -1,5 +1,6 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
+#include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -448,7 +449,7 @@ void AddSettings() {
                 "gSettings.MenuTheme",
                 "Changes the Theme of the Menu Widgets.",
                 WIDGET_CVAR_COMBOBOX,
-                { .comboBoxOptions = menuThemeOptions } },
+                { .defaultVariant = COLOR_INDIGO, .comboBoxOptions = menuThemeOptions } },
 #if not defined(__SWITCH__) and not defined(__WIIU__)
               { "Menubar Controller Navigation", CVAR_IMGUI_CONTROLLER_NAV,
                 "Allows controller navigation of the SOH menu bar (Settings, Enhancements,...)\nCAUTION: "
@@ -466,15 +467,6 @@ void AddSettings() {
                         CVarGetInteger("gSettings.CursorVisibility", 0));
                 } },
 #endif
-              { "Open App Files Folder",
-                "",
-                "Opens the folder that contains the save and mods folders, etc.",
-                WIDGET_BUTTON,
-                {},
-                [](widgetInfo& info) {
-                    std::string filesPath = Ship::Context::GetInstance()->GetAppDirectoryPath();
-                    SDL_OpenURL(std::string("file:///" + std::filesystem::absolute(filesPath).string()).c_str());
-                } },
               { "Search In Sidebar",
                 "gSettings.SidebarSearch",
                 "Displays the Search menu as a sidebar entry in Settings instead of in the header.",
@@ -499,6 +491,20 @@ void AddSettings() {
               { "Search Input Autofocus", "gSettings.SearchAutofocus",
                 "Search input box gets autofocus when visible. Does not affect using other widgets.",
                 WIDGET_CVAR_CHECKBOX },
+              { .widgetName = "Alt Assets Tab hotkey",
+                .widgetCVar = "gEnhancements.Mods.AlternateAssetsHotkey",
+                .widgetTooltip = "Allows pressing the Tab key to toggle alternate assets",
+                .widgetType = WIDGET_CVAR_CHECKBOX,
+                .widgetOptions = { .defaultVariant = true } },
+              { "Open App Files Folder",
+                "",
+                "Opens the folder that contains the save and mods folders, etc.",
+                WIDGET_BUTTON,
+                {},
+                [](widgetInfo& info) {
+                    std::string filesPath = Ship::Context::GetInstance()->GetAppDirectoryPath();
+                    SDL_OpenURL(std::string("file:///" + std::filesystem::absolute(filesPath).string()).c_str());
+                } },
           } } });
     // Audio Settings
     settingsSidebar.push_back(
@@ -1066,6 +1072,11 @@ void AddEnhancements() {
                 "-Rupee: Get the rupee reward",
                 WIDGET_CVAR_COMBOBOX,
                 { .comboBoxOptions = cremiaRewardOptions } },
+              { "Swordsman School Winning Score",
+                "gEnhancements.Minigames.SwordsmanSchoolScore",
+                "Sets the score required to win the Swordsman School.",
+                WIDGET_CVAR_SLIDER_INT,
+                { 1, 30, 30 } },
               { "Fast Magic Arrow Equip Animation", "gEnhancements.Equipment.MagicArrowEquipSpeed",
                 "Removes the animation for equipping Magic Arrows.", WIDGET_CVAR_CHECKBOX },
               { "Instant Fin Boomerangs Recall", "gEnhancements.PlayerActions.InstantRecall",
@@ -1164,6 +1175,12 @@ void AddEnhancements() {
                 { .comboBoxOptions = clockTypeOptions } },
               { "24 Hours Clock", "gEnhancements.Graphics.24HoursClock", "Changes from a 12 Hour to a 24 Hour Clock",
                 WIDGET_CVAR_CHECKBOX },
+              { .widgetName = "Mods", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { .widgetName = "Use Alternate Assets",
+                .widgetCVar = "gEnhancements.Mods.AlternateAssets",
+                .widgetTooltip = "Toggle between standard assets and alternate assets. Usually mods will indicate if "
+                                 "this setting has to be used or not.",
+                .widgetType = WIDGET_CVAR_CHECKBOX },
               { .widgetName = "Motion Blur", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Motion Blur Mode",
                 "gEnhancements.Graphics.MotionBlur.Mode",
@@ -1361,7 +1378,13 @@ void AddEnhancements() {
               { "Fix Ikana Great Fairy Fountain Color", "gFixes.FixIkanaGreatFairyFountainColor",
                 "Fixes a bug that results in the Ikana Great Fairy fountain looking green instead of yellow, this was "
                 "fixed in the EU version",
-                WIDGET_CVAR_CHECKBOX } } } });
+                WIDGET_CVAR_CHECKBOX },
+              { .widgetName = "Fix Texture overflow OOB",
+                .widgetCVar = "gEnhancements.Fixes.FixTexturesOOB",
+                .widgetTooltip = "Fixes textures that normally overflow to be patched with the correct size or format",
+                .widgetType = WIDGET_CVAR_CHECKBOX,
+                .widgetOptions = { .defaultVariant = true },
+                .widgetCallback = [](widgetInfo& info) { GfxPatcher_ApplyOverflowTexturePatches(); } } } } });
     enhancementsSidebar.push_back(
         { "Restorations",
           3,
@@ -1401,6 +1424,15 @@ void AddEnhancements() {
                                           "Enables the HUD Editor window, allowing you to modify your HUD",
                                           WIDGET_WINDOW_BUTTON,
                                           { .size = UIWidgets::Sizes::Inline, .windowName = "HUD Editor" } } } } });
+    enhancementsSidebar.push_back(
+        { "Item Tracker",
+          1,
+          { // Item Tracker Settings
+            { { "Popout Item Tracker Settings",
+                "gWindows.ItemTrackerSettings",
+                "",
+                WIDGET_WINDOW_BUTTON,
+                { .size = UIWidgets::Sizes::Inline, .windowName = "Item Tracker Settings" } } } } });
 }
 
 void AddDevTools() {

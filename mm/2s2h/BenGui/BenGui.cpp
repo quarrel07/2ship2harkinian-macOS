@@ -22,6 +22,9 @@
 #include "include/global.h"
 #include "include/z64audio.h"
 
+#include "Enhancements/Trackers/ItemTracker.h"
+#include "Enhancements/Trackers/ItemTrackerSettings.h"
+
 namespace BenGui {
 // MARK: - Delegates
 
@@ -41,6 +44,8 @@ std::shared_ptr<BenInputEditorWindow> mBenInputEditorWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<Rando::CheckTracker::Window> mRandoCheckTrackerWindow;
 std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
+std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
+std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
 
 void SetupGuiElements() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
@@ -97,6 +102,13 @@ void SetupGuiElements() {
 
     mEventLogWindow = std::make_shared<EventLogWindow>("gWindows.EventLog", "Event Log", ImVec2(520, 600));
     gui->AddGuiWindow(mEventLogWindow);
+
+    mItemTrackerWindow = std::make_shared<ItemTrackerWindow>("gWindows.ItemTracker", "Item Tracker");
+    gui->AddGuiWindow(mItemTrackerWindow);
+
+    mItemTrackerSettingsWindow = std::make_shared<ItemTrackerSettingsWindow>("gWindows.ItemTrackerSettings",
+                                                                             "Item Tracker Settings", ImVec2(800, 400));
+    gui->AddGuiWindow(mItemTrackerSettingsWindow);
     gui->SetPadBtnTogglesMenu();
 
     mNotificationWindow = std::make_shared<Notification::Window>("gWindows.Notifications", "Notifications Window");
@@ -113,6 +125,9 @@ void SetupGuiElements() {
 }
 
 void Destroy() {
+    auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+
+    gui->RemoveAllGuiWindows();
     mBenMenuBar = nullptr;
     mBenMenu = nullptr;
     mStatsWindow = nullptr;
@@ -128,5 +143,7 @@ void Destroy() {
     mSaveEditorWindow = nullptr;
     mHudEditorWindow = nullptr;
     mActorViewerWindow = nullptr;
+    mItemTrackerWindow = nullptr;
+    mItemTrackerSettingsWindow = nullptr;
 }
 } // namespace BenGui
