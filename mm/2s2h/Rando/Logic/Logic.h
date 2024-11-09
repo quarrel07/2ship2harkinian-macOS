@@ -2,7 +2,6 @@
 #define RANDO_LOGIC_H
 
 #include <unordered_map>
-#include <map>
 #include <set>
 #include "Rando/Rando.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
@@ -44,7 +43,7 @@ struct RandoRegion {
     std::set<s32> oneWayEntrances;
 };
 
-extern std::map<RandoRegionId, RandoRegion> Regions;
+extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
 
 } // namespace Logic
 
