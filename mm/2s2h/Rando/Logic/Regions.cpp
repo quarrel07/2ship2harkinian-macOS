@@ -126,6 +126,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_CLOCK_TOWN_EAST, RandoRegion{ .sceneId = SCENE_TOWN,
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU), // Same check in two places, is this okay?
+            CHECK(RC_CLOCK_TOWN_EAST_UPPER_CHEST, CAN_BE_ZORA || CAN_BE_HUMAN || CAN_BE_DIETY),
         },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 7),            ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
@@ -212,6 +213,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         }
     } },
     { RR_CLOCK_TOWN_WEST, RandoRegion{ .sceneId = SCENE_ICHIBA,
+        .checks = {
+            CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAMARO)),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 0),            ENTRANCE(WEST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 5),         ENTRANCE(WEST_CLOCK_TOWN, 1), true), // To lower
@@ -235,6 +239,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_DEKU_PALACE_INSIDE, RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
+        .checks = {
+            CHECK(RC_DEKU_PALACE_HP, true),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 0),       ENTRANCE(DEKU_PALACE, 2), true),
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 1),       ENTRANCE(DEKU_PALACE, 3), CAN_BE_DEKU), // Cell TODO: Is there something to do with beans here?
@@ -259,6 +266,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
+        .checks = {
+            // TODO: Shop prices vs adult wallet?
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_1, true),
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_2, true),
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_3, true),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 5),  ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0), true),
         },
@@ -274,6 +287,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_SOUTHERN_SWAMP_NORTH, RandoRegion{ .name = "North Section", .sceneId = SCENE_20SICHITAI,
+        .checks = {
+            CHECK(RC_SOUTHERN_SWAMP_HP, CAN_BE_DEKU && CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
+            CHECK(RC_SOUTHERN_SWAMP_SCRUB_DEED, CAN_BE_HUMAN && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1),   ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), true),
             EXIT(ENTRANCE(TOURIST_INFORMATION, 0),      ENTRANCE(SOUTHERN_SWAMP_POISONED, 1), true),
@@ -313,6 +330,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_TERMINA_FIELD, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
+        .checks = {
+            CHECK(RC_TERMINA_FIELD_KAMARO, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_HEALING)),
+            CHECK(RC_TERMINA_FIELD_TALL_GRASS_CHEST, true),
+            // CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, ((HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_STORMS)) || HAS_BOTTLE(ITEM_SPRING_WATER) || HAS_BOTTLE(ITEM_HOT_SPRING_WATER)) && HAS_ITEM(ITEM_MAGIC_BEANS)),
+            // CHECK(RC_TERMINA_FIELD_WATER_CHEST, CAN_BE_ZORA),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 0), true),
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0),   ENTRANCE(TERMINA_FIELD, 1), true),
@@ -352,6 +375,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_WOODFALL, RandoRegion{ .sceneId = SCENE_21MITURINMAE,
+        .checks = {
+            CHECK(RC_WOODFALL_ENTRANCE_CHEST, CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_WOODFALL_HP_CHEST, CAN_BE_DEKU),
+            CHECK(RC_WOODFALL_NEAR_OWL_CHEST, CAN_BE_DEKU),
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 2),  ENTRANCE(WOODFALL, 0), true),
             EXIT(ENTRANCE(WOODFALL_TEMPLE, 0),          ENTRANCE(WOODFALL, 1), CAN_BE_DEKU),
