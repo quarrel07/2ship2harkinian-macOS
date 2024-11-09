@@ -65,7 +65,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && (CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY)),
         },
-        .exits = {
+        .exits = { //     TO                                 FROM
             EXIT(ENTRANCE(CLOCK_TOWER_INTERIOR, 1), ENTRANCE(SOUTH_CLOCK_TOWN, 0), true),
             EXIT(ENTRANCE(TERMINA_FIELD, 6),        ENTRANCE(SOUTH_CLOCK_TOWN, 1), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 3),      ENTRANCE(SOUTH_CLOCK_TOWN, 2), true), // To upper
@@ -77,15 +77,18 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_CLOCK_TOWN_SOUTH_PLATFORM, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR))),
-            CONNECTION(RR_MAX, true), // TODO: We'll remove this eventually
+            CONNECTION(RR_MAX, true),
         },
+        .oneWayEntrances = {
+            ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
+        }
     } },
     { RR_CLOCK_TOWER_INTERIOR, RandoRegion{ .name = "", .sceneId = SCENE_INSIDETOWER,
         .checks = {
             CHECK(RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
             CHECK(RC_CLOCK_TOWER_INTERIOR_DEKU_MASK, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
         },
-        .exits = {
+        .exits = { //     TO                             FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0), ENTRANCE(CLOCK_TOWER_INTERIOR, 1), true),
         },
     } },
@@ -93,7 +96,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWN_SOUTH_PLATFORM_HP, true),
         },
-        .exits = {
+        .exits = { //     TO                       FROM
             EXIT(ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), ONE_WAY_EXIT, true),
         },
         .connections = {
@@ -114,7 +117,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, true),
             CHECK(RC_CLOCK_TOWN_LAUNDRY_GURU_GURU, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
         },
-        .exits = {
+        .exits = { //     TO                             FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 6), ENTRANCE(LAUNDRY_POOL, 0), true),
         },
     } },
@@ -123,7 +126,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_NORTH_TREE_HP, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA),
             CHECK(RC_CLOCK_TOWN_NORTH_BOMB_LADY, CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
         },
-        .exits = {
+        .exits = { //     TO                                  FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 8),         ENTRANCE(NORTH_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 5),       ENTRANCE(NORTH_CLOCK_TOWN, 1), true),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 4),      ENTRANCE(NORTH_CLOCK_TOWN, 2), true),
@@ -136,7 +139,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_GREAT_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80)),
             CHECK(RC_CLOCK_TOWN_GREAT_FAIRY_ALT, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80) && CAN_BE_HUMAN),
         },
-        .exits = {
+        .exits = { //     TO                             FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 3), ENTRANCE(DEKU_SCRUB_PLAYGROUND, 0), true),
         },
     } },
@@ -144,7 +147,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWN_STRAY_FAIRY, CAN_BE_DEKU), // Same check in two places, is this okay?
         },
-        .exits = {
+        .exits = { //     TO                                    FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 7),           ENTRANCE(EAST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 7),        ENTRANCE(EAST_CLOCK_TOWN, 1), true), // To lower
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 0),      ENTRANCE(EAST_CLOCK_TOWN, 2), true), // TODO: Bombers Code req
@@ -160,8 +163,8 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_CLOCK_TOWN_WEST, RandoRegion{ .name = "", .sceneId = SCENE_ICHIBA,
-        .exits = {
-            EXIT(ENTRANCE(TERMINA_FIELD, 0),    ENTRANCE(WEST_CLOCK_TOWN, 0), true),
+        .exits = { //     TO                             FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 0),    ENTRANCE(WEST_CLOCK_TOWN, 0), CAN_BE_DIETY || CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_GORON),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 5), ENTRANCE(WEST_CLOCK_TOWN, 1), true), // To lower
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 3), ENTRANCE(WEST_CLOCK_TOWN, 2), true), // To upper
             EXIT(ENTRANCE(SWORDMANS_SCHOOL, 0), ENTRANCE(WEST_CLOCK_TOWN, 3), true),
@@ -176,7 +179,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_ASTRAL_OBSERVATORY_PASSAGE_CHEST, (CAN_BE_HUMAN || CAN_BE_DIETY || CAN_BE_ZORA) && CAN_USE_EXPLOSIVE),
         },
-        .exits = {
+        .exits = { //     TO                            FROM
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 2), ENTRANCE(ASTRAL_OBSERVATORY, 0), true),
         },
         .connections = {
@@ -184,7 +187,7 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_ASTRAL_OBSERVATORY, RandoRegion{ .name = "", .sceneId = SCENE_TENMON_DAI,
-        .exits = {
+        .exits = { //     TO                          FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 9), ENTRANCE(ASTRAL_OBSERVATORY, 1), true),
         },
         .connections = {
@@ -195,12 +198,12 @@ std::map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_ASTRAL_OBSERVATORY_MOON_TEAR, true),
         },
-        .exits = {
+        .exits = { //     TO                               FROM
             EXIT(ENTRANCE(ASTRAL_OBSERVATORY, 1), ENTRANCE(TERMINA_FIELD, 9), true),
         },
     } },
     { RR_TERMINA_FIELD, RandoRegion{ .name = "", .sceneId = SCENE_00KEIKOKU,
-        .exits = {
+        .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 0), true),
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0),   ENTRANCE(TERMINA_FIELD, 1), true),
             EXIT(ENTRANCE(GREAT_BAY_COAST, 0),          ENTRANCE(TERMINA_FIELD, 2), true),
@@ -212,22 +215,18 @@ std::map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 0),         ENTRANCE(TERMINA_FIELD, 8), true),
         },
     } },
-    // TODO: We'll remove this eventually
-    { RR_MAX, RandoRegion{ .name = "", .sceneId = SCENE_MAX,
+    { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .name = "", .sceneId = SCENE_24KEMONOMITI,
         .checks = {
-            // CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
+            CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
         },
-        .exits = {
-            // EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 2), true),
+        .exits = { //     TO                            FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 1),   ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
         },
-        .connections = {
-            // CONNECTION(RR_CLOCK_TOWN_SOUTH_PLATFORM, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY || (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR))),
-        },
-        .events = {
-            // EVENT(Flags_SetRandoInf(0), Flags_ClearRandoInf(0), true),
-        },
-        .oneWayEntrances = {
-            // { ENTRANCE(SOUTH_CLOCK_TOWN, 0) }, // From clock tower interior
+    } },
+    { RR_MAX, RandoRegion{ .name = "", .sceneId = SCENE_MAX,
+        .exits = { //     TO                    FROM
+            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0), ONE_WAY_EXIT, true), // Save warp
+            EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 9), ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING)), // TODO: Add event for hitting owl statue
         },
     } },
 };

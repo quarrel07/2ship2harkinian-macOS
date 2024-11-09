@@ -149,7 +149,7 @@ void ApplyGlitchlessLogicToSaveContext() {
         return false; // No valid placements for this item
     };
 
-    if (!PlaceItems({ RR_CLOCK_TOWN_SOUTH })) {
+    if (!PlaceItems({ RR_MAX })) {
         memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
         throw std::runtime_error("Failed to place all items in glitchless logic");
     } else {
