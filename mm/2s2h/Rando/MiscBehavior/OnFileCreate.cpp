@@ -5,6 +5,7 @@
 #include <boost_custom/container_hash/hash_32.hpp>
 
 extern "C" {
+#include "functions.h"
 #include "variables.h"
 #include "ShipUtils.h"
 }
@@ -20,6 +21,22 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         memcpy(&gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys,
                &gSaveContext.save.saveInfo.inventory.dungeonKeys,
                sizeof(gSaveContext.save.saveInfo.inventory.dungeonKeys));
+
+        // Skip the first cycle, in Rando we start as Human at south clock town.
+        gSaveContext.save.entrance = ENTRANCE(SOUTH_CLOCK_TOWN, 0);
+        gSaveContext.save.cutsceneIndex = 0;
+        gSaveContext.save.hasTatl = true;
+        gSaveContext.save.playerForm = PLAYER_FORM_HUMAN;
+        gSaveContext.save.saveInfo.playerData.threeDayResetCount = 1;
+        gSaveContext.save.isFirstCycle = false;
+        SET_WEEKEVENTREG(WEEKEVENTREG_59_04);                                                  // Tatl
+        SET_WEEKEVENTREG(WEEKEVENTREG_31_04);                                                  // Tatl
+        gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_INSIDETOWER].switch0 |= (1 << 0); // Happy Mask Salesman
+
+        // TODO: Starting item configuration. Currently if you don't start with ocarina & SoT glitchless logic will fail
+        // because of looping condition of needing Deku mask to get ocarina, and needing ocarina to get deku mask.
+        GiveItem(RI_OCARINA);
+        GiveItem(RI_SONG_OF_TIME);
 
         try {
             // SpoilerFileIndex == 0 means we're generating a new one

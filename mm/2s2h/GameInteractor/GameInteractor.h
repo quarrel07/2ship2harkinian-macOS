@@ -115,6 +115,7 @@ typedef enum {
     VB_START_CUTSCENE,
     VB_QUEUE_CUTSCENE,
     VB_GIVE_ITEM_FROM_MNK,
+    VB_TERMINA_FIELD_BE_EMPTY,
 } GIVanillaBehavior;
 
 typedef enum {

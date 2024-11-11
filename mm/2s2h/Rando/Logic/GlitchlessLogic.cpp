@@ -25,9 +25,6 @@ void ApplyGlitchlessLogicToSaveContext() {
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
 
-    // As far as logic is concerned, we start in Deku form
-    gSaveContext.save.playerForm = PLAYER_FORM_DEKU;
-
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
         for (auto& [randoCheckId, _] : randoRegion.checks) {
