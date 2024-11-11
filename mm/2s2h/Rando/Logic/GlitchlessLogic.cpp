@@ -179,8 +179,10 @@ void ApplyGlitchlessLogicToSaveContext() {
         memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
 
         for (auto& [randoCheckId, randoPoolEntry] : randoCheckPool) {
-            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoPoolEntry.placedItemId;
-            RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
+            if (randoPoolEntry.shuffled) {
+                RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoPoolEntry.placedItemId;
+                RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
+            }
         }
 
         SPDLOG_INFO("Successfully placed all items in glitchless logic");
