@@ -24,6 +24,9 @@ void Rando::MiscBehavior::OnFileLoad() {
     // This overrides the ocarina condition for Termina Field
     COND_VB_SHOULD(VB_TERMINA_FIELD_BE_EMPTY, IS_RANDO, { *should = false; });
 
+    // Override faster first-cycle time speed if you don't have the Ocarina
+    COND_VB_SHOULD(VB_FASTER_FIRST_CYCLE, IS_RANDO, { *should = false; });
+
     // In Sram_OpenSave (right before this code runs) for non-owl saves, it overwrites the entrance to
     // ENTRANCE(CUTSCENE, 0), we need to override that with our starting location (Harcoded to South Clock Town)
     if (!gSaveContext.save.isOwlSave) {
