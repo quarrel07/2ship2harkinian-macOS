@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <libultraship/libultra/types.h>
 #include "2s2h/ShipUtils.h"
+#include <spdlog/fmt/fmt.h>
 
 namespace UIWidgets {
 // Automatically adds newlines to break up text longer than a specified number of characters
@@ -534,7 +535,7 @@ void DrawFlagArray32(const std::string& name, uint32_t& flags) {
         ImGui::PushID(flagIndex);
         uint32_t bitMask = 1 << flagIndex;
         bool flag = (flags & bitMask) != 0;
-        std::string label = std::to_string(flagIndex);
+        std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
                                 { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
             if (flag) {
@@ -557,7 +558,7 @@ void DrawFlagArray16(const std::string& name, uint16_t& flags) {
         ImGui::PushID(flagIndex);
         uint16_t bitMask = 1 << flagIndex;
         bool flag = (flags & bitMask) != 0;
-        std::string label = std::to_string(flagIndex);
+        std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
                                 { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
             if (flag) {
@@ -580,7 +581,30 @@ void DrawFlagArray8(const std::string& name, uint8_t& flags) {
         ImGui::PushID(flagIndex);
         uint8_t bitMask = 1 << flagIndex;
         bool flag = (flags & bitMask) != 0;
-        std::string label = std::to_string(flagIndex);
+        std::string label = fmt::format("0x{:02X} ({})", flagIndex, flagIndex);
+        if (UIWidgets::Checkbox(label.c_str(), &flag,
+                                { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
+            if (flag) {
+                flags |= bitMask;
+            } else {
+                flags &= ~bitMask;
+            }
+        }
+        ImGui::PopID();
+    }
+    ImGui::PopID();
+}
+
+void DrawFlagArray8Mask(const std::string& name, uint8_t& flags) {
+    ImGui::PushID(name.c_str());
+    for (int8_t flagIndex = 0; flagIndex < 8; flagIndex++) {
+        if ((flagIndex % 8) != 0) {
+            ImGui::SameLine();
+        }
+        ImGui::PushID(flagIndex);
+        uint8_t bitMask = 1 << flagIndex;
+        bool flag = (flags & bitMask) != 0;
+        std::string label = fmt::format("0x{:02X} ({})", bitMask, flagIndex);
         if (UIWidgets::Checkbox(label.c_str(), &flag,
                                 { .tooltip = label.c_str(), .labelPosition = LabelPosition::None })) {
             if (flag) {
