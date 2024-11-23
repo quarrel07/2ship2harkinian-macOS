@@ -120,6 +120,7 @@ typedef enum {
     VB_CHECK_FOR_ROOM_KEY,
     VB_DRAW_BOSS_REMAINS,
     VB_SPAWN_BOSS_REMAINS,
+    VB_BE_HOOKSHOT_SURFACE,
 } GIVanillaBehavior;
 
 typedef enum {
