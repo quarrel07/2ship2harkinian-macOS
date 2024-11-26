@@ -83,4 +83,5 @@ void InitEnhancements() {
 
     // Difficulty Options
     RegisterDisableTakkuriSteal();
+    RegisterShowDekuGuardSearchBalls();
 }
