@@ -52,6 +52,7 @@ void InitEnhancements() {
     // Minigames
     RegisterAlwaysWinDoggyRace();
     RegisterCremiaHugs();
+    RegisterCuccoShackCuccoCount();
     RegisterSwordsmanSchool();
 
     // Player
