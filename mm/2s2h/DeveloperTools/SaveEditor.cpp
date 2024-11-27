@@ -5,6 +5,7 @@
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/BenGui/Notification.h"
+#include "2s2h/Rando/Spoiler/Spoiler.h"
 
 #include "interface/icon_item_dungeon_static/icon_item_dungeon_static.h"
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
@@ -59,6 +60,7 @@ const char* songTooltip;
 const char* curForm;
 ImVec4 formColor;
 uint32_t formObject;
+static std::unordered_map<RandoItemId, const char*> randoItemIdComboboxMap;
 
 InventorySlot selectedInventorySlot = SLOT_NONE;
 std::vector<ItemId> safeItemsForInventorySlot[SLOT_MASK_FIERCE_DEITY + 1] = {};
@@ -2030,49 +2032,55 @@ void DrawFlagsTab() {
 
 void DrawRandoTab() {
     ImGui::BeginChild("RandoChild");
-    if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
 
-        ImGui::BeginTable("Check List", 4);
-        ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed,
-                                40.0f);
-        ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed,
-                                40.0f);
-        ImGui::TableSetupColumn("Check Name");
-        ImGui::TableSetupColumn("Reward");
-        ImGui::TableSetupScrollFreeze(4, 1);
-        ImGui::TableHeadersRow();
+    if (UIWidgets::Button("Generate Spoiler from Save")) {
+        nlohmann::json spoiler = Rando::Spoiler::GenerateFromSaveContext();
+        std::string inputSeed = std::to_string(Ship_Random(0, 1000000));
+        spoiler["inputSeed"] = inputSeed;
 
-        for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-            if (!randoSaveCheck.shuffled) {
-                continue;
-            }
-            std::string hiddenName = "##";
-            hiddenName += randoStaticCheck.name;
-            ImGui::TableNextColumn();
-            UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
-            UIWidgets::Tooltip("Eligible");
-            ImGui::TableNextColumn();
-            UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
-            UIWidgets::Tooltip("Obtained");
-            ImGui::TableNextColumn();
-            ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
-                               randoStaticCheck.name);
-            ImGui::TableNextColumn();
-            if (randoSaveCheck.obtained) {
-                ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
-                                   Rando::StaticData::Items[randoStaticCheck.randoItemId].name);
-            }
-        }
-
-        ImGui::EndTable();
-        ImGui::PopStyleColor(3);
-    } else {
-        ImGui::Text("No Rando Save Loaded...");
+        std::string fileName = inputSeed + ".json";
+        Rando::Spoiler::SaveToFile(fileName, spoiler);
     }
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
+
+    ImGui::BeginTable("Check List", 5);
+    ImGui::TableSetupColumn("Shuffled", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
+    ImGui::TableSetupColumn("Eligible", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
+    ImGui::TableSetupColumn("Obtained", ImGuiTableColumnFlags_NoHeaderLabel | ImGuiTableColumnFlags_WidthFixed, 30.0f);
+    ImGui::TableSetupColumn("Check Name");
+    ImGui::TableSetupColumn("Reward");
+    ImGui::TableSetupScrollFreeze(5, 1);
+    ImGui::TableHeadersRow();
+
+    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+        if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
+            continue;
+        }
+        std::string hiddenName = "##";
+        hiddenName += randoStaticCheck.name;
+        ImGui::TableNextColumn();
+        UIWidgets::Checkbox((hiddenName + "shuffled").c_str(), &randoSaveCheck.shuffled);
+        UIWidgets::Tooltip("Shuffled");
+        ImGui::TableNextColumn();
+        UIWidgets::Checkbox((hiddenName + "eligible").c_str(), &randoSaveCheck.eligible);
+        UIWidgets::Tooltip("Eligible");
+        ImGui::TableNextColumn();
+        UIWidgets::Checkbox((hiddenName + "obtained").c_str(), &randoSaveCheck.obtained);
+        UIWidgets::Tooltip("Obtained");
+        ImGui::TableNextColumn();
+        ImGui::TextColored(randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White,
+                           randoStaticCheck.name);
+        ImGui::TableNextColumn();
+        UIWidgets::Combobox((hiddenName + "reward").c_str(), &randoSaveCheck.randoItemId, randoItemIdComboboxMap,
+                            { .labelPosition = UIWidgets::LabelPosition::None });
+    }
+
+    ImGui::EndTable();
+    ImGui::PopStyleColor(3);
     ImGui::EndChild();
 }
 
@@ -2118,9 +2126,11 @@ void SaveEditorWindow::DrawElement() {
             ImGui::EndTabItem();
         }
 
-        if (ImGui::BeginTabItem("Rando")) {
-            DrawRandoTab();
-            ImGui::EndTabItem();
+        if (IS_RANDO) {
+            if (ImGui::BeginTabItem("Rando")) {
+                DrawRandoTab();
+                ImGui::EndTabItem();
+            }
         }
 
         ImGui::EndTabBar();
@@ -2129,4 +2139,8 @@ void SaveEditorWindow::DrawElement() {
 
 void SaveEditorWindow::InitElement() {
     initSafeItemsForInventorySlot();
+    randoItemIdComboboxMap.clear();
+    for (auto& [_, randoItem] : Rando::StaticData::Items) {
+        randoItemIdComboboxMap[randoItem.randoItemId] = randoItem.spoilerName;
+    }
 }

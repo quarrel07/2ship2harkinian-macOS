@@ -83,7 +83,8 @@ void Window::DrawElement() {
                     regionName += randoRegion.name;
                 }
 
-                regionName += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(availableChecks.size()) + ")";
+                regionName +=
+                    " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(availableChecks.size()) + ")";
 
                 ImGui::PushID(regionId);
                 ImGui::Separator();
@@ -96,7 +97,8 @@ void Window::DrawElement() {
                     for (auto& [checkId, accessLogicString] : availableChecks) {
                         auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
-                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
+                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
+                                                                                     : UIWidgets::Colors::White);
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
                             ImGui::Text("%s", readableCheckNames[checkId].c_str());
                             if (accessLogicString != "") {
@@ -129,9 +131,9 @@ void Window::DrawElement() {
             std::string headerText = Ship_GetSceneName(sceneId);
             headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(checks.size()) + ")";
 
-            ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == checks.size() ? 
-                UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
-            
+            ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == checks.size() ? UIWidgets::Colors::LightGreen
+                                                                                   : UIWidgets::Colors::White);
+
             if (expandedheaderState != expandHeaders) {
                 ImGui::SetNextItemOpen(expandHeaders);
             }
@@ -140,7 +142,8 @@ void Window::DrawElement() {
                 for (auto& randoCheckId : checks) {
                     Rando::StaticData::RandoStaticCheck& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                     RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
+                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
+                                                                                 : UIWidgets::Colors::White);
                     if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
                         ImGui::Text("%s", readableCheckNames[randoCheckId].c_str());
                         if (randoSaveCheck.obtained) {
