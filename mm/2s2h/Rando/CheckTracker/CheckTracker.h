@@ -8,11 +8,14 @@ namespace Rando {
 
 namespace CheckTracker {
 
+void Init();
+void OnFileLoad();
+
 class Window : public Ship::GuiWindow {
   public:
     using GuiWindow::GuiWindow;
 
-    void InitElement();
+    void InitElement() override{};
     void DrawElement() override;
     void UpdateElement() override{};
 };

@@ -3,91 +3,39 @@
 #include "2s2h/Rando/Logic/Logic.h"
 #include "2s2h/ShipUtils.h"
 #include "2s2h/BenGui/UIWidgets.hpp"
+#include "2s2h/Rando/StaticData/StaticData.h"
+#include <sstream>
 
 bool showLogic = false;
 bool hideCollected = false;
-bool updateHeaders = false;
-bool expandHeader = true;
+bool expandHeaders = true;
+bool expandedheaderState = true;
 
-std::vector<std::tuple<std::string, SceneId, bool, bool, uint32_t>> sceneCheckList;
+std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
 
-std::string convertToReadableName(const std::string& input) {
-    std::string result;
-    std::string content = input;
+std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
-    // Step 1: Remove "RC_" prefix if present
-    const std::string prefix = "RC_";
-    if (content.rfind(prefix, 0) == 0) {
-        content = content.substr(prefix.size());
-    }
-
-    // Step 2: Split the string by '_'
-    std::vector<std::string> words;
-    std::string word;
-    std::istringstream stream(content);
-    while (std::getline(stream, word, '_')) {
-        words.push_back(word);
-    }
-
-    // Step 3: Capitalize the first letter of each word
-    for (auto& w : words) {
-        std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
-        if (!w.empty()) {
-            w[0] = std::toupper(w[0]);
-        }
-    }
-
-    // Step 4: Join the words with spaces
-    for (size_t i = 0; i < words.size(); ++i) {
-        result += words[i];
-        if (i < words.size() - 1) {
-            result += " ";
-        }
-    }
-
-    return result;
-}
-
-uint32_t totalCheckAmount(SceneId sceneId) {
+uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
     uint32_t collected = 0;
-    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-        if (sceneId == randoStaticCheck.sceneId) {
-            if (randoSaveCheck.obtained) {
-                collected++;
-            }
+    for (RandoCheckId checkId : checks) {
+        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
+        if (randoSaveCheck.obtained) {
+            collected++;
         }
     }
     return collected;
 }
 
-namespace Rando {
-
-namespace CheckTracker {
-
-void CheckTrackerUpdateSceneList(int32_t action) {
-    if (action == SCENE_LOAD) {
-        for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-            bool sceneExists = false;
-            RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-            for (auto& scene : sceneCheckList) {
-                sceneExists = false;
-                if (std::get<1>(scene) == randoStaticCheck.sceneId) {
-                    sceneExists = true;
-                    std::get<4>(scene)++;
-                    break;
-                }
-            }
-            if (!sceneExists) {
-                sceneCheckList.push_back(std::make_tuple(Ship_GetSceneName(randoStaticCheck.sceneId),
-                                                         randoStaticCheck.sceneId, true, false, 1));
-            }
+void initializeSceneChecks() {
+    sceneChecks.clear();
+    for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
+        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+        if (!randoSaveCheck.shuffled) {
+            continue;
         }
-    } else {
-        for (auto& scene : sceneCheckList) {
-            std::get<2>(scene) = expandHeader;
-            std::get<3>(scene) = false;
-        }
+
+        SceneId sceneId = randoStaticCheck.sceneId;
+        sceneChecks[sceneId].push_back(randoStaticCheck.randoCheckId);
     }
 }
 
@@ -98,6 +46,10 @@ bool checkTrackerShouldShowRow(bool obtained) {
     }
     return showCheck;
 }
+
+namespace Rando {
+
+namespace CheckTracker {
 
 void Window::DrawElement() {
     if (showLogic) {
@@ -111,12 +63,16 @@ void Window::DrawElement() {
         for (RandoRegionId regionId : reachableRegions) {
             auto& randoRegion = Rando::Logic::Regions[regionId];
             std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
+            uint32_t obtainedCheckSum = 0;
 
             for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc.first()) {
+                if (randoSaveCheck.shuffled && accessLogicFunc.first()) {
                     availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
+                    if (randoSaveCheck.obtained) {
+                        obtainedCheckSum++;
+                    }
                 }
             }
 
@@ -126,73 +82,80 @@ void Window::DrawElement() {
                     regionName += " - ";
                     regionName += randoRegion.name;
                 }
-                ImGui::SeparatorText(regionName.c_str());
 
-                for (auto& [checkId, accessLogicString] : availableChecks) {
-                    auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
-                    ImGui::Text("%s", randoStaticCheck.name);
-                    if (accessLogicString != "") {
-                        UIWidgets::Tooltip(accessLogicString.c_str());
-                    }
+                regionName += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(availableChecks.size()) + ")";
+
+                ImGui::PushID(regionId);
+                ImGui::Separator();
+                ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
+                if (expandedheaderState != expandHeaders) {
+                    ImGui::SetNextItemOpen(expandHeaders);
                 }
-            }
-        }
-    } else {
-        for (auto& scene : sceneCheckList) {
-            if (std::get<0>(scene) == "Unknown") {
-                continue;
-            }
-            ImGui::PushID(std::get<1>(scene));
-            ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
-            uint32_t popCount = 1;
-            ImGui::Separator();
-            uint32_t collectedChecks = totalCheckAmount(std::get<1>(scene));
-            std::string headerText = std::get<0>(scene).c_str();
-            headerText += " (" + std::to_string(collectedChecks) + "/" + std::to_string(std::get<4>(scene)) + ")";
-            if (collectedChecks == std::get<4>(scene)) {
-                ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::LightGreen);
-                popCount++;
-            }
-            bool shouldExpand = std::get<2>(scene);
-            if (updateHeaders) {
-                ImGui::SetNextItemOpen(shouldExpand);
-            } else {
-                ImGui::SetNextItemOpen(shouldExpand, ImGuiCond_Once);
-            }
-            if (ImGui::CollapsingHeader(headerText.c_str())) {
-                ImGui::Indent(20.0f);
-                for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
-                    if (std::get<1>(scene) == randoStaticCheck.sceneId) {
-                        RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-                        if (!randoSaveCheck.shuffled) {
-                            continue;
-                        }
-                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen
-                                                                                     : UIWidgets::Colors::White);
+                if (ImGui::CollapsingHeader(regionName.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                    ImGui::Indent(20.0f);
+                    for (auto& [checkId, accessLogicString] : availableChecks) {
+                        auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
+                        auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];
+                        ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
                         if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
-                            ImGui::Text(convertToReadableName(randoStaticCheck.name).c_str());
+                            ImGui::Text("%s", readableCheckNames[checkId].c_str());
+                            if (accessLogicString != "") {
+                                UIWidgets::Tooltip(accessLogicString.c_str());
+                            }
                             if (randoSaveCheck.obtained) {
                                 ImGui::SameLine(0, 50.0f);
-                                std::string itemName = "(";
-                                itemName +=
-                                    convertToReadableName(Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
-                                itemName += ")";
-                                ImGui::Text(itemName.c_str());
+                                ImGui::Text("%s", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
                             }
                         }
                         ImGui::PopStyleColor();
                     }
+                    ImGui::Unindent(20.0f);
+                }
+                ImGui::PopStyleColor();
+                ImGui::PopID();
+            }
+        }
+        expandedheaderState = expandHeaders;
+    } else {
+        for (auto& [sceneId, checks] : sceneChecks) {
+            if (sceneId == SCENE_MAX) {
+                continue;
+            }
+
+            ImGui::PushID(sceneId);
+            ImGui::Separator();
+            ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
+            uint32_t obtainedCheckSum = getSumOfObtainedChecks(checks);
+            std::string headerText = Ship_GetSceneName(sceneId);
+            headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(checks.size()) + ")";
+
+            ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == checks.size() ? 
+                UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
+            
+            if (expandedheaderState != expandHeaders) {
+                ImGui::SetNextItemOpen(expandHeaders);
+            }
+            if (ImGui::CollapsingHeader(headerText.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::Indent(20.0f);
+                for (auto& randoCheckId : checks) {
+                    Rando::StaticData::RandoStaticCheck& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+                    RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained ? UIWidgets::Colors::LightGreen : UIWidgets::Colors::White);
+                    if (checkTrackerShouldShowRow(randoSaveCheck.obtained)) {
+                        ImGui::Text("%s", readableCheckNames[randoCheckId].c_str());
+                        if (randoSaveCheck.obtained) {
+                            ImGui::SameLine(0, 50.0f);
+                            ImGui::Text("%s", Rando::StaticData::Items[randoSaveCheck.randoItemId].name);
+                        }
+                    }
+                    ImGui::PopStyleColor();
                 }
                 ImGui::Unindent(20.0f);
             }
-            if (ImGui::IsItemClicked()) {
-                bool isExpanded = std::get<2>(scene);
-                std::get<2>(scene) = !isExpanded;
-            }
-            ImGui::PopStyleColor(popCount);
+            ImGui::PopStyleColor(2);
             ImGui::PopID();
         }
-        updateHeaders = false;
+        expandedheaderState = expandHeaders;
     }
 }
 
@@ -200,16 +163,23 @@ void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
     UIWidgets::Checkbox("Show Logic", &showLogic);
     UIWidgets::Checkbox("Hide Collected", &hideCollected);
-    if (ImGui::Button("Expand/Collapse All")) {
-        expandHeader = !expandHeader;
-        updateHeaders = true;
-        CheckTrackerUpdateSceneList(SCENE_UPDATE);
+    if (UIWidgets::Button("Expand/Collapse All")) {
+        expandHeaders = !expandHeaders;
     }
 }
 
-void Window::InitElement() {
-    COND_HOOK(OnSaveLoad, &gSaveContext.save.shipSaveInfo.rando,
-              [](uint32_t fileNum) { CheckTrackerUpdateSceneList(SCENE_LOAD); });
+void Init() {
+    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        readableCheckNames[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
+    }
+}
+
+void OnFileLoad() {
+    if (!IS_RANDO) {
+        return;
+    }
+
+    initializeSceneChecks();
 }
 
 } // namespace CheckTracker

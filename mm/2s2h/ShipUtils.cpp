@@ -120,3 +120,40 @@ void LoadGuiTextures() {
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
 }
+
+std::string convertEnumToReadableName(const std::string& input) {
+    std::string result;
+    std::string content = input;
+
+    // Step 1: Remove "RC_" prefix if present
+    const std::string prefix = "RC_";
+    if (content.rfind(prefix, 0) == 0) {
+        content = content.substr(prefix.size());
+    }
+
+    // Step 2: Split the string by '_'
+    std::vector<std::string> words;
+    std::string word;
+    std::istringstream stream(content);
+    while (std::getline(stream, word, '_')) {
+        words.push_back(word);
+    }
+
+    // Step 3: Capitalize the first letter of each word
+    for (auto& w : words) {
+        std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
+        if (!w.empty()) {
+            w[0] = std::toupper(w[0]);
+        }
+    }
+
+    // Step 4: Join the words with spaces
+    for (size_t i = 0; i < words.size(); ++i) {
+        result += words[i];
+        if (i < words.size() - 1) {
+            result += " ";
+        }
+    }
+
+    return result;
+}

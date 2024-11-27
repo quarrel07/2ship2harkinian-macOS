@@ -7,6 +7,7 @@
 #ifdef __cplusplus
 
 void LoadGuiTextures();
+std::string convertEnumToReadableName(const std::string& input);
 
 extern "C" {
 #endif
