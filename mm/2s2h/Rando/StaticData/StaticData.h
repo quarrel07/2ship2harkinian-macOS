@@ -32,6 +32,7 @@ RandoCheckId GetCheckIdFromName(const char* name);
 struct RandoStaticItem {
     RandoItemId randoItemId;
     const char* spoilerName;
+    const char* article;
     const char* name;
     ItemId itemId;
     GetItemId getItemId;

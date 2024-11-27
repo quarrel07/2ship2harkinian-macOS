@@ -41,12 +41,16 @@ void Rando::MiscBehavior::CheckQueue() {
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                         RandoItemId randoItemId =
                             Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
+                        std::string msg = "You received";
+                        if (Rando::StaticData::Items[randoItemId].article != "") {
+                            msg += " ";
+                            msg += Rando::StaticData::Items[randoItemId].article;
+                        }
 
                         CustomMessage::Entry entry = {
                             .textboxType = 2,
-                            .msg = "You received {{item}}!",
+                            .msg = msg + " " + Rando::StaticData::Items[randoItemId].name + "!",
                         };
-                        CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoItemId].name);
                         if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
                             entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
                         }
@@ -63,7 +67,7 @@ void Rando::MiscBehavior::CheckQueue() {
 
                             Notification::Emit({
                                 .itemIcon = itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
-                                .message = "You found",
+                                .message = msg,
                                 .suffix = Rando::StaticData::Items[randoItemId].name,
                             });
                         }

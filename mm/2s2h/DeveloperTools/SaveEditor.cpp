@@ -862,12 +862,16 @@ void DrawItemsAndMasksTab() {
                     .giveItem =
                         [](Actor* actor, PlayState* play) {
                             RandoItemId randoItemId = Rando::ConvertItem((RandoItemId)CUSTOM_ITEM_PARAM);
+                            std::string msg = "You received";
+                            if (Rando::StaticData::Items[randoItemId].article != "") {
+                                msg += " ";
+                                msg += Rando::StaticData::Items[randoItemId].article;
+                            }
 
                             CustomMessage::Entry entry = {
                                 .textboxType = 2,
-                                .msg = "You received {{item}}!",
+                                .msg = msg + " " + Rando::StaticData::Items[randoItemId].name + "!",
                             };
-                            CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[randoItemId].name);
                             if (Rando::StaticData::Items[randoItemId].getItemId != GI_NONE) {
                                 entry.icon = (u8)Rando::StaticData::Items[randoItemId].getItemId;
                             }
@@ -885,7 +889,7 @@ void DrawItemsAndMasksTab() {
                                 Notification::Emit({
                                     .itemIcon =
                                         itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr,
-                                    .message = "You found",
+                                    .message = msg,
                                     .suffix = Rando::StaticData::Items[randoItemId].name,
                                 });
                             }
