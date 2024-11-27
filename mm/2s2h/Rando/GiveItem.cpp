@@ -152,6 +152,10 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             Flags_SetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES);
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_POWDER_KEG:
+            Flags_SetWeekEventReg(WEEKEVENTREG_HAS_POWDERKEG_PRIVILEGES);
+            Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
