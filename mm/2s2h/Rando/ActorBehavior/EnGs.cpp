@@ -1,5 +1,6 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/ShipUtils.h"
 
 #include <vector>
 
@@ -7,6 +8,8 @@ extern "C" {
 #include "functions.h"
 #include "variables.h"
 }
+
+std::unordered_map<RandoCheckId, std::string> readableCheckNamesForGs;
 
 #define FIRST_GS_MESSAGE 0x20D1
 #define SECOND_GS_MESSAGE 0x20C0
@@ -36,6 +39,12 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
             if (gSaveContext.save.saveInfo.playerData.rupees < cost) {
                 entry.msg = "Foolish... You don't have enough rupees...";
             } else {
+                if (readableCheckNamesForGs.empty()) {
+                    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+                        readableCheckNamesForGs[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
+                    }
+                }
+
                 std::vector<RandoCheckId> availableChecks;
                 for (auto& [randoCheckId, _] : Rando::StaticData::Checks) {
                     RandoSaveCheck saveCheck = RANDO_SAVE_CHECKS[randoCheckId];
@@ -49,7 +58,7 @@ void Rando::ActorBehavior::InitEnGsBehavior() {
                 entry.msg = "Wise choice... They say there {{item}} is hidden at {{location}}.";
 
                 CustomMessage::Replace(&entry.msg, "{{item}}", Rando::StaticData::Items[saveCheck.randoItemId].name);
-                CustomMessage::Replace(&entry.msg, "{{location}}", Rando::StaticData::Checks[checkId].name);
+                CustomMessage::Replace(&entry.msg, "{{location}}", readableCheckNamesForGs[checkId]);
 
                 gSaveContext.rupeeAccumulator -= cost;
                 cost *= 2;
