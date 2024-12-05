@@ -77,6 +77,21 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                 return RI_RUPEE_BLUE;
             }
             break;
+        case RI_BOMB_BAG_20:
+            if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 1) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_BOMB_BAG_30:
+            if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 2) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_BOMB_BAG_40:
+            if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 3) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
         case RI_PROGRESSIVE_BOW:
             if (hasObtainedCheck) {
                 return RI_RUPEE_BLUE;
@@ -87,6 +102,21 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
             } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
                 return RI_QUIVER_50;
             } else {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_BOW:
+            if (CUR_UPG_VALUE(UPG_QUIVER) >= 1) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_QUIVER_40:
+            if (CUR_UPG_VALUE(UPG_QUIVER) >= 2) {
+                return RI_RUPEE_BLUE;
+            }
+            break;
+        case RI_QUIVER_50:
+            if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
                 return RI_RUPEE_BLUE;
             }
             break;
@@ -223,6 +253,62 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
             return CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_STONE_TOWER_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
         case RI_STONE_TOWER_MAP:
             return CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_STONE_TOWER_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+        // These items are technically fine to receive again because they don't do anything, but we'll convert them to
+        // ensure it's clear to the player something didn't go wrong.
+        // Quest Items
+        case RI_REMAINS_ODOLWA:
+            return CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_REMAINS_GOHT:
+            return CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_REMAINS_GYORG:
+            return CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_REMAINS_TWINMOLD:
+            return CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_BOSSA_NOVA:
+            return CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_ELEGY:
+            return CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_EPONA:
+            return CHECK_QUEST_ITEM(QUEST_SONG_EPONA) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_HEALING:
+            return CHECK_QUEST_ITEM(QUEST_SONG_HEALING) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_LULLABY_INTRO:
+            return CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_LULLABY:
+            return CHECK_QUEST_ITEM(QUEST_SONG_LULLABY) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_OATH:
+            return CHECK_QUEST_ITEM(QUEST_SONG_OATH) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_SARIA:
+            return CHECK_QUEST_ITEM(QUEST_SONG_SARIA) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_SOARING:
+            return CHECK_QUEST_ITEM(QUEST_SONG_SOARING) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_SONATA:
+            return CHECK_QUEST_ITEM(QUEST_SONG_SONATA) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_STORMS:
+            return CHECK_QUEST_ITEM(QUEST_SONG_STORMS) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_SUN:
+            return CHECK_QUEST_ITEM(QUEST_SONG_SUN) ? RI_RUPEE_BLUE : randoItemId;
+        case RI_SONG_TIME:
+            return CHECK_QUEST_ITEM(QUEST_SONG_TIME) ? RI_RUPEE_BLUE : randoItemId;
+        // These items are technically fine to receive again because they don't do anything, but we'll convert them to
+        // ensure it's clear to the player something didn't go wrong. We just simply check the inventory state
+        // Masks
+        case RI_MASK_BLAST:
+        case RI_MASK_BREMEN:
+        case RI_MASK_BUNNY:
+        case RI_MASK_CAPTAIN:
+        case RI_MASK_DEKU:
+        case RI_MASK_GIANT:
+        case RI_MASK_GORON:
+        case RI_MASK_GREAT_FAIRY:
+        case RI_MASK_KAFEIS_MASK:
+        case RI_MASK_KAMARO:
+        case RI_MASK_ROMANI:
+        case RI_MASK_STONE:
+        case RI_MASK_ZORA: {
+            ItemId itemId = StaticData::Items[randoItemId].itemId;
+            return INV_CONTENT(itemId) == itemId ? RI_RUPEE_BLUE : randoItemId;
+        }
         default:
             break;
     }

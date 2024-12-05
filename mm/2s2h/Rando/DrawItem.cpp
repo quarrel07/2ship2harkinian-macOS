@@ -97,22 +97,22 @@ void DrawSong(RandoItemId randoItemId) {
     gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
     switch (randoItemId) {
-        case RI_SUNS_SONG:
+        case RI_SONG_SUN:
             gDPSetEnvColor(POLY_XLU_DISP++, 237, 231, 62, 255);
             break;
-        case RI_SONG_OF_TIME:
+        case RI_SONG_TIME:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 177, 211, 255);
             break;
-        case RI_SONG_OF_HEALING:
+        case RI_SONG_HEALING:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 192, 203, 255);
             break;
-        case RI_SONATA_OF_AWAKENING:
+        case RI_SONG_SONATA:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 255, 98, 255);
             break;
-        case RI_ELEGY_OF_EMPTINESS:
+        case RI_SONG_ELEGY:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 98, 0, 255);
             break;
-        case RI_OATH_TO_ORDER:
+        case RI_SONG_OATH:
             gDPSetEnvColor(POLY_XLU_DISP++, 98, 0, 98, 255);
             break;
         default:
@@ -142,12 +142,12 @@ void DrawDoubleDefense() {
 
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
-        case RI_SONG_OF_TIME:
-        case RI_SUNS_SONG:
-        case RI_SONG_OF_HEALING:
-        case RI_SONATA_OF_AWAKENING:
-        case RI_ELEGY_OF_EMPTINESS:
-        case RI_OATH_TO_ORDER:
+        case RI_SONG_TIME:
+        case RI_SONG_SUN:
+        case RI_SONG_HEALING:
+        case RI_SONG_SONATA:
+        case RI_SONG_ELEGY:
+        case RI_SONG_OATH:
             DrawSong(randoItemId);
             break;
         case RI_CLOCK_TOWN_STRAY_FAIRY:

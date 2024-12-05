@@ -39,7 +39,7 @@ void RegisterSkipLearningSonataOfAwakening() {
                             .drawItem =
                                 [](Actor* actor, PlayState* play) {
                                     Matrix_Scale(30.0f, 30.0f, 30.0f, MTXMODE_APPLY);
-                                    Rando::DrawItem(RI_SONATA_OF_AWAKENING);
+                                    Rando::DrawItem(RI_SONG_SONATA);
                                 } });
                     }
                     gPlayState->nextEntrance = ENTRANCE(DEKU_PALACE, 1);

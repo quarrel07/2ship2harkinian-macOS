@@ -36,7 +36,7 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
         // TODO: Starting item configuration. Currently if you don't start with ocarina & SoT glitchless logic will fail
         // because of looping condition of needing Deku mask to get ocarina, and needing ocarina to get deku mask.
         GiveItem(RI_OCARINA);
-        GiveItem(RI_SONG_OF_TIME);
+        GiveItem(RI_SONG_TIME);
 
         try {
             // SpoilerFileIndex == 0 means we're generating a new one

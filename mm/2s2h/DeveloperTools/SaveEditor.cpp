@@ -852,7 +852,17 @@ void DrawItemsAndMasksTab() {
     if (gSaveContext.save.shipSaveInfo.saveType == SAVETYPE_RANDO) {
         ImGui::SeparatorText("Queue Randomizer Item Gives");
 
+        static ImGuiTextFilter riFilter;
+        UIWidgets::PushStyleCombobox();
+        riFilter.Draw("Filter");
+        UIWidgets::PopStyleCombobox();
+        std::string riFilterString(riFilter.InputBuf);
+
         for (auto& [randoItemId, randoStaticItem] : Rando::StaticData::Items) {
+            if (!riFilter.PassFilter(randoStaticItem.name)) {
+                continue;
+            }
+
             std::string buttonLabel = "Give ";
             buttonLabel += randoStaticItem.name;
             if (UIWidgets::Button(buttonLabel.c_str())) {
