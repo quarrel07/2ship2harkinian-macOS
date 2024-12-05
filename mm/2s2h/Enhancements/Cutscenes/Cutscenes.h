@@ -11,6 +11,7 @@ void RegisterSkipKafeiReveal();
 void RegisterSkipScarecrowDance();
 void RegisterSkipTatlInterrupts();
 void RegisterSkipMayorsOfficeCutscene();
+void RegisterSkipPushingMikau();
 void RegisterSkipKamaroTeachDance();
 
 // StoryCutscenes
@@ -26,6 +27,8 @@ void RegisterSkipRosaSistersDance();
 void RegisterSkipLearningSonataOfAwakening();
 void RegisterSkipBossCutscenes();
 void RegisterSkipGiantsChamber();
+void RegisterSkipHealingDarmani();
+void RegisterSkipHealingMikau();
 
 void RegisterHideTitleCards();
 void RegisterSkipEntranceCutscenes();

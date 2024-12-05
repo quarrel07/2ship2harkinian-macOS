@@ -9,6 +9,7 @@ void RegisterCutscenes() {
     RegisterSkipScarecrowDance();
     RegisterSkipTatlInterrupts();
     RegisterSkipMayorsOfficeCutscene();
+    RegisterSkipPushingMikau();
     RegisterSkipKamaroTeachDance();
 
     // StoryCutscenes
@@ -24,6 +25,8 @@ void RegisterCutscenes() {
     RegisterSkipLearningSonataOfAwakening();
     RegisterSkipBossCutscenes();
     RegisterSkipGiantsChamber();
+    RegisterSkipHealingDarmani();
+    RegisterSkipHealingMikau();
 
     RegisterHideTitleCards();
     RegisterSkipEntranceCutscenes();
