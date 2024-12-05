@@ -228,6 +228,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(LOTTERY_SHOP, 0),             ENTRANCE(WEST_CLOCK_TOWN, 8), true),
         },
     } },
+    { RR_CUCCO_SHACK, RandoRegion{ .sceneId = SCENE_F01C,
+        .checks = {
+            CHECK(RC_ROMANI_RANCH_GROG, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_BREMEN)),
+        },
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROMANI_RANCH, 4),             ENTRANCE(CUCCO_SHACK, 0), true),
+        },
+    } },
     { RR_DEKU_KINGS_CHAMBER_HOLDING_CELL, RandoRegion{ .name = "Holding Cell", .sceneId = SCENE_DEKU_KING,
         .checks = {
             CHECK(RC_DEKU_KINGS_CHAMBER_MONKEY, CAN_BE_DEKU && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
@@ -268,6 +276,22 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(DEKU_PALACE, 4),              ENTRANCE(DEKU_SHRINE, 0), true),
         },
     } },
+    { RR_DOGGY_RACETRACK, RandoRegion{ .sceneId = SCENE_F01_B,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROMANI_RANCH, 5),             ENTRANCE(DOGGY_RACETRACK, 0), true),
+        },
+    } },
+    { RR_GORMAN_TRACK, RandoRegion{ .sceneId = SCENE_KOEPONARACE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MILK_ROAD, 2),                ENTRANCE(GORMAN_TRACK, 3), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA) && CAN_BE_HUMAN),
+            EXIT(ENTRANCE(MILK_ROAD, 3),                ENTRANCE(GORMAN_TRACK, 0), true),
+        },
+    } },
+    { RR_GORON_GRAVEYARD, RandoRegion{ .sceneId = SCENE_GORON_HAKA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 3),  ENTRANCE(GORON_GRAVERYARD, 0), true),
+        },
+    } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
             // TODO: Shop prices vs adult wallet?
@@ -279,6 +303,79 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 5),  ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0), true),
         },
     } },
+    { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 5),            ENTRANCE(MILK_ROAD, 0), true),
+            EXIT(ENTRANCE(ROMANI_RANCH, 0),             ENTRANCE(MILK_ROAD, 1), true),
+            EXIT(ENTRANCE(GORMAN_TRACK, 3),             ENTRANCE(MILK_ROAD, 2), HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_EPONA) && CAN_BE_HUMAN),
+            EXIT(ENTRANCE(GORMAN_TRACK, 0),             ENTRANCE(MILK_ROAD, 3), true),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
+        }
+    } },
+    { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),  ENTRANCE(MOUNTAIN_SMITHY, 0), true),
+        },
+    } },
+    { RR_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MOUNTAIN_SMITHY, 0),          ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1), true),
+            EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2), true),
+            // TODO: When it's spring you need goron mask or zora mask instead?
+            EXIT(ENTRANCE(GORON_GRAVERYARD, 0),         ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 3), HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),
+            EXIT(ENTRANCE(PATH_TO_SNOWHEAD, 0),         ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 4), true),
+            EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6), true),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
+        }
+    } },
+    { RR_PATH_TO_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_13HUBUKINOMITI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(TERMINA_FIELD, 3),            ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), true),
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6),  ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), true),
+        },
+    } },
+    { RR_PATH_TO_SNOWHEAD_LOWER, RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 4),  ENTRANCE(PATH_TO_SNOWHEAD, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+        },
+    } },
+    { RR_PATH_TO_SNOWHEAD_MIDDLE, RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
+        .connections = {
+            CONNECTION(RR_PATH_TO_SNOWHEAD_LOWER, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, CAN_BE_GORON),
+        },
+    } },
+    { RR_PATH_TO_SNOWHEAD_UPPER, RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(SNOWHEAD, 0),                 ENTRANCE(PATH_TO_SNOWHEAD, 1), true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+        },
+    } },
+    { RR_RANCH_BARN, RandoRegion{ .sceneId = SCENE_OMOYA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROMANI_RANCH, 2),             ENTRANCE(RANCH_HOUSE, 0), true),
+        },
+    } },
+    { RR_RANCH_HOUSE, RandoRegion{ .sceneId = SCENE_OMOYA,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(ROMANI_RANCH, 3),             ENTRANCE(RANCH_HOUSE, 1), true),
+        },
+    } },
     { RR_ROAD_TO_SOUTHERN_SWAMP, RandoRegion{ .sceneId = SCENE_24KEMONOMITI,
         .checks = {
             CHECK(RC_ROAD_TO_SOUTHERN_SWAMP_HP, true),
@@ -287,6 +384,48 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(TERMINA_FIELD, 1),            ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0), true),
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 0),  ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1), true),
             EXIT(ENTRANCE(SWAMP_SHOOTING_GALLERY, 0),   ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2), true),
+        },
+    } },
+    { RR_ROMANI_RANCH, RandoRegion{ .sceneId = SCENE_F01,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(MILK_ROAD, 1),                ENTRANCE(ROMANI_RANCH, 0), true),
+            EXIT(ENTRANCE(RANCH_HOUSE, 0),              ENTRANCE(ROMANI_RANCH, 2), true), // Barn
+            EXIT(ENTRANCE(RANCH_HOUSE, 1),              ENTRANCE(ROMANI_RANCH, 3), true), // House
+            EXIT(ENTRANCE(CUCCO_SHACK, 0),              ENTRANCE(ROMANI_RANCH, 4), true),
+            EXIT(ENTRANCE(DOGGY_RACETRACK, 0),          ENTRANCE(ROMANI_RANCH, 5), true),
+        },
+    } },
+    { RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(SNOWHEAD, 2),                 ENTRANCE(FAIRY_FOUNTAIN, 2), true),
+        },
+    } },
+    { RR_SNOWHEAD_NEAR_PATH, RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(PATH_TO_SNOWHEAD, 1),         ENTRANCE(SNOWHEAD, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_SNOWHEAD_NEAR_TEMPLE, CAN_BE_GORON && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_LULLABY)),
+        },
+        .events = {
+            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), CAN_BE_HUMAN || CAN_BE_DIETY)
+        },
+        .oneWayEntrances = {
+            ENTRANCE(SNOWHEAD, 3), // From Song of Soaring
+        }
+    } },
+    { RR_SNOWHEAD_NEAR_TEMPLE, RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(SNOWHEAD_TEMPLE, 0),          ENTRANCE(SNOWHEAD, 1), true),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 2),           ENTRANCE(SNOWHEAD, 2), true),
+        },
+        .connections = {
+            CONNECTION(RR_SNOWHEAD_NEAR_PATH, true),
+        },
+    } },
+    { RR_SNOWHEAD_TEMPLE, RandoRegion{ .sceneId = SCENE_HAKUGIN,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(SNOWHEAD, 1),                 ENTRANCE(SNOWHEAD_TEMPLE, 0), true),
         },
     } },
     { RR_SOUTHERN_SWAMP_NORTH, RandoRegion{ .name = "North Section", .sceneId = SCENE_20SICHITAI,
@@ -332,6 +471,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 8),  ENTRANCE(SWAMP_SPIDER_HOUSE, 0), true),
         },
     } },
+    { RR_TERMINA_FIELD_BEFORE_PATH_TO_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
+        .exits = { //     TO                                     FROM
+            EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), ENTRANCE(TERMINA_FIELD, 3), true),
+        },
+        .connections = {
+            CONNECTION(RR_TERMINA_FIELD, CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)),
+        },
+    } },
     { RR_TERMINA_FIELD, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
         .checks = {
             CHECK(RC_TERMINA_FIELD_KAMARO, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_HEALING)),
@@ -343,12 +490,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 0), true),
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 0),   ENTRANCE(TERMINA_FIELD, 1), true),
             EXIT(ENTRANCE(GREAT_BAY_COAST, 0),          ENTRANCE(TERMINA_FIELD, 2), true),
-            EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), ENTRANCE(TERMINA_FIELD, 3), true),
             EXIT(ENTRANCE(ROAD_TO_IKANA, 0),            ENTRANCE(TERMINA_FIELD, 4), true),
             EXIT(ENTRANCE(MILK_ROAD, 0),                ENTRANCE(TERMINA_FIELD, 5), true),
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 1),         ENTRANCE(TERMINA_FIELD, 6), true),
             EXIT(ENTRANCE(EAST_CLOCK_TOWN, 0),          ENTRANCE(TERMINA_FIELD, 7), true),
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 0),         ENTRANCE(TERMINA_FIELD, 8), true),
+        },
+        .connections = {
+            CONNECTION(RR_TERMINA_FIELD_BEFORE_PATH_TO_MOUNTAIN_VILLAGE, CAN_BE_HUMAN && HAS_ITEM(ITEM_BOW)),
         },
     } },
     { RR_TOURIST_INFORMATION, RandoRegion{ .sceneId = SCENE_MAP_SHOP,
@@ -399,6 +548,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0),                  ONE_WAY_EXIT, true), // Save warp
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 9),                  ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_CLOCK_TOWN)),
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 10),          ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP)),
+            EXIT(ENTRANCE(MILK_ROAD, 4),                         ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_MILK_ROAD)),
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8),           ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE)),
+            EXIT(ENTRANCE(SNOWHEAD, 3),                          ONE_WAY_EXIT, HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_SOARING) && CAN_OWL_WARP(OWL_WARP_SNOWHEAD)),
         },
     } },
 };
