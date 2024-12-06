@@ -69,6 +69,12 @@ static const std::unordered_map<int32_t, const char*> timeStopOptions = {
     { TIME_STOP_TEMPLES_DUNGEONS, "Temples + Mini Dungeons" },
 };
 
+static const std::unordered_map<int32_t, const char*> dekuGuardSearchBallsOptions = {
+    { DEKU_GUARD_SEARCH_BALLS_NEVER, "Never" },
+    { DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY, "Night Only" },
+    { DEKU_GUARD_SEARCH_BALLS_ALWAYS, "Always" },
+};
+
 namespace BenGui {
 std::shared_ptr<std::vector<Ship::WindowBackend>> availableWindowBackends;
 std::unordered_map<Ship::WindowBackend, const char*> availableWindowBackendsMap;
@@ -614,6 +620,11 @@ void DrawEnhancementsMenu() {
                                     { .tooltip = "Fixes a bug that results in the Ikana Great Fairy fountain looking "
                                                  "green instead of yellow, this was fixed in the EU version" });
 
+            UIWidgets::CVarCheckbox("Fix Completed Heart Container Audio",
+                                    "gEnhancements.Fixes.CompletedHeartContainerAudio",
+                                    { .tooltip = "Fixes a bug that results in the wrong audio playing upon "
+                                                 "receiving a 4th piece of heart to fill a new heart container." });
+
             if (UIWidgets::CVarCheckbox(
                     "Fix Texture overflow OOB", "gEnhancements.Fixes.FixTexturesOOB",
                     { .tooltip = "Fixes textures that normally overflow to be patched with the correct size or format",
@@ -706,6 +717,9 @@ void DrawEnhancementsMenu() {
         if (UIWidgets::BeginMenu("Modes")) {
             UIWidgets::CVarCheckbox("Play As Kafei", "gModes.PlayAsKafei",
                                     { .tooltip = "Requires scene reload to take effect." });
+            UIWidgets::CVarCheckbox("Hyrule Warriors Young Link", "gModes.HyruleWarriorsStyledLink",
+                                    { .tooltip = "When acquired, places the Keaton and Fierce Deity masks on Link "
+                                                 "similarly to how he wears them in Hyrule Warriors" });
             if (UIWidgets::CVarCheckbox("Time Moves When You Move", "gModes.TimeMovesWhenYouMove")) {
                 RegisterTimeMovesWhenYouMove();
             }
@@ -787,6 +801,14 @@ void DrawEnhancementsMenu() {
                                                      "swords. It may still steal other items." })) {
                 RegisterDisableTakkuriSteal();
             }
+
+            UIWidgets::CVarCombobox(
+                "Deku Guard Search Balls", "gEnhancements.Cheats.DekuGuardSearchBalls", dekuGuardSearchBallsOptions,
+                { .tooltip = "Choose when to show the Deku Palace Guards' search balls\n"
+                             "- Never: Never show the search balls. This matches Majora's Mask 3D behaviour\n"
+                             "- Night Only: Only show the search balls at night. This matches original N64 behaviour.\n"
+                             "- Always: Always show the search balls.",
+                  .defaultIndex = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY });
             ImGui::EndMenu();
         }
 

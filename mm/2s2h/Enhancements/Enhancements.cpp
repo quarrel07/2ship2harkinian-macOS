@@ -36,9 +36,11 @@ void InitEnhancements() {
     // Fixes
     RegisterFierceDeityZTargetMovement();
     RegisterTwoHandedSwordSpinAttack();
+    RegisterCompletedHeartContainerAudio();
 
     // Graphics
     RegisterDisableBlackBars();
+    RegisterHyruleWarriorsStyledLink();
     Register3DItemDrops();
 
     // Masks
@@ -52,6 +54,7 @@ void InitEnhancements() {
     RegisterAlwaysWinDoggyRace();
     RegisterCremiaHugs();
     RegisterPowderKegCertification();
+    RegisterCuccoShackCuccoCount();
     RegisterSwordsmanSchool();
 
     // Player
@@ -61,6 +64,7 @@ void InitEnhancements() {
     RegisterFierceDeityPutaway();
 
     // Songs
+    RegisterBetterSongOfDoubleTime();
     RegisterEnableSunsSong();
     RegisterFasterSongPlayback();
     RegisterPauseOwlWarp();
@@ -83,6 +87,7 @@ void InitEnhancements() {
 
     // Difficulty Options
     RegisterDisableTakkuriSteal();
+    RegisterShowDekuGuardSearchBalls();
 
     // Uncomment to enable the demo behavior, this shows of different modding capabilities
     // void RegisterDemoBehavior();
