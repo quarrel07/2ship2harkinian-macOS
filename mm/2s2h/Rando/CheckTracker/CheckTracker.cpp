@@ -10,6 +10,9 @@ bool showLogic = false;
 bool hideCollected = false;
 bool expandHeaders = true;
 bool expandedheaderState = true;
+bool scrollToCurrentScene = true;
+s32 scrollToTargetScene = -1;
+s32 scrollToTargetEntrance = -1;
 
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
 
@@ -61,6 +64,12 @@ void Window::DrawElement() {
                                            reachableRegions);
 
         for (RandoRegionId regionId : reachableRegions) {
+            if (scrollToCurrentScene && scrollToTargetEntrance != -1 &&
+                Rando::Logic::GetRegionIdFromEntrance(scrollToTargetEntrance) == regionId) {
+                ImGui::SetScrollHereY();
+                scrollToTargetScene = -1;
+                scrollToTargetEntrance = -1;
+            }
             auto& randoRegion = Rando::Logic::Regions[regionId];
             std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
             uint32_t obtainedCheckSum = 0;
@@ -124,6 +133,12 @@ void Window::DrawElement() {
                 continue;
             }
 
+            if (scrollToCurrentScene && scrollToTargetScene != -1 && scrollToTargetScene == sceneId) {
+                ImGui::SetScrollHereY();
+                scrollToTargetScene = -1;
+                scrollToTargetEntrance = -1;
+            }
+
             ImGui::PushID(sceneId);
             ImGui::Separator();
             ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
@@ -166,6 +181,7 @@ void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
     UIWidgets::Checkbox("Show Logic", &showLogic);
     UIWidgets::Checkbox("Hide Collected", &hideCollected);
+    UIWidgets::Checkbox("Auto Scroll To Current Scene", &scrollToCurrentScene);
     if (UIWidgets::Button("Expand/Collapse All")) {
         expandHeaders = !expandHeaders;
     }
@@ -175,6 +191,12 @@ void Init() {
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         readableCheckNames[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
     }
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
+        if (scrollToCurrentScene) {
+            scrollToTargetScene = sceneId;
+            scrollToTargetEntrance = gSaveContext.save.entrance;
+        }
+    });
 }
 
 void OnFileLoad() {
