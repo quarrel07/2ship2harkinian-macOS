@@ -10,9 +10,6 @@ extern "C" {
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 }
 
-// I know this is really ugly... unfortunately to render the stray fairies they need an active skeleton/joint list to
-// render properly, and we don't really have the systems in place to mock that, so we're rendering the fairy by hand
-// using it's individual DL's, for some reason half of the DL's either crash or don't render so we have to re-use some
 void DrawStrayFairy(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
@@ -39,52 +36,21 @@ void DrawStrayFairy(RandoItemId randoItemId) {
     Matrix_ReplaceRotation(&gPlayState->billboardMtxF);
     Matrix_Scale(0.03f, 0.03f, 0.03f, MTXMODE_APPLY);
 
-    Matrix_Push();
-    Matrix_Translate(96.2f, 898.3f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(4556, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftWingDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(-80.2f, -465.2f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(37148, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftArmDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(-80.2f, 914.4f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(28212, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftWingDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(48.1f, -481.2f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(59928, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftArmDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(-128.3f, -754.0f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(47487, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftArmDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(112.2f, -770.0f, 0.0f, MTXMODE_APPLY);
-    Matrix_RotateZS(51342, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftArmDL); // Renders
-    Matrix_Pop();
-    Matrix_Push();
-    Matrix_Translate(0.0f, -465.2f, 20.0f, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyTorsoDL); // Renders
-    Matrix_Pop();
-
-    Matrix_Translate(0.0f, 0.0f, 25.0f, MTXMODE_APPLY);
-    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyLeftFacingHeadDL);
-    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)&gStrayFairyGlowDL);
+    // Kind of a hack to draw the stray fairy, the drawback of this is that all stray fairies in the scene will animate
+    // together, but worse is that the more there are the faster their animation will play (because of the
+    // SkelAnime_Update below). This is still better than the previous solution which hand drew the fairy with DL
+    // calls...
+    static bool initialized = false;
+    static SkelAnime skelAnime;
+    static Vec3s jointTable[STRAY_FAIRY_LIMB_MAX];
+    if (!initialized) {
+        initialized = true;
+        SkelAnime_InitFlex(gPlayState, &skelAnime, (FlexSkeletonHeader*)&gStrayFairySkel,
+                           (AnimationHeader*)&gStrayFairyFlyingAnim, jointTable, jointTable, STRAY_FAIRY_LIMB_MAX);
+    }
+    SkelAnime_Update(&skelAnime);
+    POLY_XLU_DISP = SkelAnime_DrawFlex(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL,
+                                       NULL, NULL, POLY_XLU_DISP);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }
