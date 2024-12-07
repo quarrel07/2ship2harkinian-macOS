@@ -158,6 +158,8 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             Flags_SetWeekEventReg(WEEKEVENTREG_HAS_POWDERKEG_PRIVILEGES);
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;
+        case RI_NONE:
+            break;
         default:
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
             break;

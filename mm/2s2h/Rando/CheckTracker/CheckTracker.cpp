@@ -5,6 +5,7 @@
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "2s2h/Rando/StaticData/StaticData.h"
 #include <sstream>
+#include <cstring>
 
 bool showLogic = false;
 bool hideCollected = false;
@@ -15,7 +16,7 @@ s32 scrollToTargetScene = -1;
 s32 scrollToTargetEntrance = -1;
 
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
-
+std::vector<SceneId> sceneIdsSortedByAlphabetical;
 std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
@@ -40,6 +41,13 @@ void initializeSceneChecks() {
         SceneId sceneId = randoStaticCheck.sceneId;
         sceneChecks[sceneId].push_back(randoStaticCheck.randoCheckId);
     }
+
+    sceneIdsSortedByAlphabetical.clear();
+    for (auto& [sceneId, _] : sceneChecks) {
+        sceneIdsSortedByAlphabetical.push_back(sceneId);
+    }
+    std::sort(sceneIdsSortedByAlphabetical.begin(), sceneIdsSortedByAlphabetical.end(),
+              [](SceneId a, SceneId b) { return std::strcmp(Ship_GetSceneName(a), Ship_GetSceneName(b)) < 0; });
 }
 
 bool checkTrackerShouldShowRow(bool obtained) {
@@ -128,10 +136,11 @@ void Window::DrawElement() {
         }
         expandedheaderState = expandHeaders;
     } else {
-        for (auto& [sceneId, checks] : sceneChecks) {
+        for (auto& sceneId : sceneIdsSortedByAlphabetical) {
             if (sceneId == SCENE_MAX) {
                 continue;
             }
+            auto& checks = sceneChecks[sceneId];
 
             if (scrollToCurrentScene && scrollToTargetScene != -1 && scrollToTargetScene == sceneId) {
                 ImGui::SetScrollHereY();
