@@ -1,5 +1,6 @@
 #include "Rando/Rando.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/ShipUtils.h"
 
 // Copied from z_player.c, we could instead move this to a header file, idk
 typedef struct GetItemEntry {
@@ -19,34 +20,54 @@ extern "C" {
 extern GetItemEntry sGetItemTable[GI_MAX - 1];
 }
 
-// ALRIGHT BUCKLE UP. This function converts items to their "obtainable" form. This is used for various reasons, and you
-// don't always want to convert items, depending on the context. For example, if you're rendering ammo in a shop for an
-// item you don't have yet, you don't want to convert it, because you want to show the player what they're missing. But
-// if you're rendering a Mask they already have, you want to convert it to a Rupee, because they can't get it again.
+// ALRIGHT BUCKLE UP. This file is for converting items to their "obtainable" form. This is used for various reasons,
+// and you don't always want to convert items, depending on the context. For example, if you're rendering ammo in a shop
+// for an item you don't have yet, you don't want to convert it, because you want to show the player what they're
+// missing. But if you're rendering a Mask they already have, you want to convert it, because they can't get it again.
 //
 // Progressive Items:
-// - If an RC was provided, and the player has already obtained the check, the item is converted to a Rupee.
-// - If the player has obtained the highest level of the item, the item is converted to a Rupee.
-// - Maybe this should convert to an associated ammo item if applicable? The main issue is we check if this returns a
-// Rupee to determine if it's obtainable in some cases.
+// - If an RC was provided, and the player has already obtained the check, the item is converted to a junk item.
+// - If the player has obtained the highest level of the item, the item is converted to junk item.
 //
 // Keys, Fairies and Skulltulas:
 // - If the settings deem this item should be persistent (NOT IMPLEMENTED YET), and the player has already obtained the
-// check, the item is converted to a Rupee.
+// check, the item is converted to a junk item.
 //
 // Ammo:
-// - If the player does not have the associated item to use the ammo, the item is converted to a Rupee.
+// - If the player does not have the associated item to use the ammo, the item is converted to a junk item.
 //
 // Refills:
-// - If the player has no empty bottles, the item is converted to a Rupee.
+// - If the player has no empty bottles, the item is converted to a junk item.
 //
 // Heart Pieces/Containers/One-Time Items:
-// - If the player has already obtained the check, the item is converted to a Rupee.
+// - If the player has already obtained the check, the item is converted to a junk item.
 //
 // Everything Else:
 // - We check if the item has an associated GetItemEntry, and if it does, we check if vanilla would allow the player to
-// obtain it. If not, we convert it to a Rupee.
-RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId) {
+// obtain it. If not, we convert it to a junk item.
+//
+// Junk Items:
+// - The list of junk items is defined below. We attempt to roll a random junk item one time, based on the RC provided,
+// and if we fail, we return a blue rupee. This will still result in the "lots of blue rupees" problem, but it's better
+// than _always_ converting to a blue rupee.
+
+static std::vector<RandoItemId> junkItems = {
+    // Rupees
+    RI_RUPEE_GREEN,
+    RI_RUPEE_BLUE,
+    RI_RUPEE_RED,
+    RI_RUPEE_PURPLE,
+    // Ammo
+    RI_ARROWS_10,
+    RI_BOMBCHU,
+    RI_BOMBS_5,
+    RI_DEKU_NUT,
+    RI_DEKU_STICK,
+    // Misc
+    RI_RECOVERY_HEART,
+};
+
+bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId) {
     bool hasObtainedCheck = false;
     if (randoCheckId != RC_UNKNOWN) {
         hasObtainedCheck = RANDO_SAVE_CHECKS[randoCheckId].obtained;
@@ -63,74 +84,66 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
 
     switch (randoItemId) {
         case RI_UNKNOWN:
-            return RI_RUPEE_BLUE;
+            return false;
         case RI_PROGRESSIVE_BOMB_BAG:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
-            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 0) {
-                return RI_BOMB_BAG_20;
-            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 1) {
-                return RI_BOMB_BAG_30;
-            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 2) {
-                return RI_BOMB_BAG_40;
-            } else {
-                return RI_RUPEE_BLUE;
+                return false;
+            } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 3) {
+                return false;
             }
             break;
         case RI_BOMB_BAG_20:
             if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 1) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_BOMB_BAG_30:
             if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 2) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_BOMB_BAG_40:
             if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 3) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_PROGRESSIVE_BOW:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
-            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
-                return RI_BOW;
-            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
-                return RI_QUIVER_40;
-            } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
-                return RI_QUIVER_50;
-            } else {
-                return RI_RUPEE_BLUE;
+                return false;
+            } else if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
+                return false;
             }
             break;
         case RI_BOW:
             if (CUR_UPG_VALUE(UPG_QUIVER) >= 1) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_QUIVER_40:
             if (CUR_UPG_VALUE(UPG_QUIVER) >= 2) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_QUIVER_50:
             if (CUR_UPG_VALUE(UPG_QUIVER) >= 3) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_PROGRESSIVE_MAGIC:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
-            } else if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
-                return RI_SINGLE_MAGIC;
-            } else if (!gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
-                return RI_DOUBLE_MAGIC;
-            } else {
-                return RI_RUPEE_BLUE;
+                return false;
+            } else if (gSaveContext.save.saveInfo.playerData.isMagicAcquired &&
+                       gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
+                return false;
             }
             break;
+        case RI_DOUBLE_MAGIC:
+            return !gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired;
+        case RI_SINGLE_MAGIC:
+            return !gSaveContext.save.saveInfo.playerData.isMagicAcquired;
+        case RI_MAGIC_JAR_SMALL:
+        case RI_MAGIC_JAR_BIG:
+            return gSaveContext.save.saveInfo.playerData.isMagicAcquired;
         // TODO: These should be based on a persistent setting
         case RI_WOODFALL_SMALL_KEY:
         case RI_SNOWHEAD_SMALL_KEY:
@@ -144,17 +157,13 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
         case RI_GS_TOKEN_SWAMP:
         case RI_GS_TOKEN_OCEAN:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
-            } else {
-                return randoItemId;
+                return false;
             }
             break;
         case RI_HEART_PIECE:
         case RI_HEART_CONTAINER:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
-            } else {
-                return randoItemId;
+                return false;
             }
             break;
         case RI_MILK_REFILL:
@@ -163,14 +172,14 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
         case RI_BLUE_POTION_REFILL:
         case RI_GREEN_POTION_REFILL:
             if (!Inventory_HasEmptyBottle()) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_ARROWS_10:
         case RI_ARROWS_30:
         case RI_ARROWS_50:
             if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_BOMBCHU:
@@ -179,137 +188,117 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
         case RI_BOMBS_5:
         case RI_BOMBS_10:
             if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 0) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_SHIELD_HERO:
             if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) != EQUIP_VALUE_SHIELD_NONE) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_SHIELD_MIRROR:
             if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_MIRROR) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
             break;
         case RI_BOTTLE_EMPTY:
             if (hasObtainedCheck) {
-                return RI_RUPEE_BLUE;
+                return false;
             }
 
             for (s32 slot = SLOT_BOTTLE_1; slot <= SLOT_BOTTLE_6; slot++) {
                 if (gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE) {
-                    return randoItemId;
+                    return true;
                 }
             }
-            return RI_RUPEE_BLUE;
+            return false;
         case RI_MOONS_TEAR:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && INV_CONTENT(ITEM_MOONS_TEAR) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && INV_CONTENT(ITEM_MOONS_TEAR) != ITEM_NONE);
         case RI_DEED_LAND:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) && INV_CONTENT(ITEM_DEED_LAND) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) && INV_CONTENT(ITEM_DEED_LAND) != ITEM_NONE);
         case RI_DEED_SWAMP:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) && INV_CONTENT(ITEM_DEED_SWAMP) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) && INV_CONTENT(ITEM_DEED_SWAMP) != ITEM_NONE);
         case RI_DEED_MOUNTAIN:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && INV_CONTENT(ITEM_DEED_MOUNTAIN) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) &&
+                     INV_CONTENT(ITEM_DEED_MOUNTAIN) != ITEM_NONE);
         case RI_DEED_OCEAN:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && INV_CONTENT(ITEM_DEED_OCEAN) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && INV_CONTENT(ITEM_DEED_OCEAN) != ITEM_NONE);
         case RI_ROOM_KEY:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY) && INV_CONTENT(ITEM_ROOM_KEY) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY) && INV_CONTENT(ITEM_ROOM_KEY) != ITEM_NONE);
         case RI_LETTER_TO_MAMA:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA) && INV_CONTENT(ITEM_LETTER_MAMA) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA) &&
+                     INV_CONTENT(ITEM_LETTER_MAMA) != ITEM_NONE);
         case RI_LETTER_TO_KAFEI:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) &&
-                    INV_CONTENT(ITEM_LETTER_TO_KAFEI) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) &&
+                     INV_CONTENT(ITEM_LETTER_TO_KAFEI) != ITEM_NONE);
         case RI_PENDANT_OF_MEMORIES:
-            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) &&
-                    INV_CONTENT(ITEM_PENDANT_OF_MEMORIES) != ITEM_NONE)
-                       ? RI_RUPEE_BLUE
-                       : randoItemId;
+            return !(Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) &&
+                     INV_CONTENT(ITEM_PENDANT_OF_MEMORIES) != ITEM_NONE);
         case RI_DOUBLE_DEFENSE:
-            return gSaveContext.save.saveInfo.playerData.doubleDefense ? RI_RUPEE_BLUE : randoItemId;
-        case RI_DOUBLE_MAGIC:
-            return gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired ? RI_RUPEE_BLUE : randoItemId;
-        case RI_SINGLE_MAGIC:
-            return gSaveContext.save.saveInfo.playerData.isMagicAcquired ? RI_RUPEE_BLUE : randoItemId;
+            return !gSaveContext.save.saveInfo.playerData.doubleDefense;
         case RI_GREAT_SPIN_ATTACK:
-            return CHECK_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_WEEKEVENTREG(WEEKEVENTREG_OBTAINED_GREAT_SPIN_ATTACK);
         case RI_WOODFALL_BOSS_KEY:
-            return CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_WOODFALL_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_WOODFALL_TEMPLE);
         case RI_WOODFALL_COMPASS:
-            return CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_WOODFALL_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_WOODFALL_TEMPLE);
         case RI_WOODFALL_MAP:
-            return CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_WOODFALL_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_WOODFALL_TEMPLE);
         case RI_SNOWHEAD_BOSS_KEY:
-            return CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_SNOWHEAD_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
         case RI_SNOWHEAD_COMPASS:
-            return CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_SNOWHEAD_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
         case RI_SNOWHEAD_MAP:
-            return CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_SNOWHEAD_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_SNOWHEAD_TEMPLE);
         case RI_GREAT_BAY_BOSS_KEY:
-            return CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
         case RI_GREAT_BAY_COMPASS:
-            return CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_GREAT_BAY_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
         case RI_GREAT_BAY_MAP:
-            return CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_GREAT_BAY_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_GREAT_BAY_TEMPLE);
         case RI_STONE_TOWER_BOSS_KEY:
-            return CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_STONE_TOWER_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         case RI_STONE_TOWER_COMPASS:
-            return CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_STONE_TOWER_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         case RI_STONE_TOWER_MAP:
-            return CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_STONE_TOWER_TEMPLE) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong.
         // Quest Items
         case RI_REMAINS_ODOLWA:
-            return CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA);
         case RI_REMAINS_GOHT:
-            return CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT);
         case RI_REMAINS_GYORG:
-            return CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG);
         case RI_REMAINS_TWINMOLD:
-            return CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD);
         case RI_SONG_BOSSA_NOVA:
-            return CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA);
         case RI_SONG_ELEGY:
-            return CHECK_QUEST_ITEM(QUEST_SONG_ELEGY) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_ELEGY);
         case RI_SONG_EPONA:
-            return CHECK_QUEST_ITEM(QUEST_SONG_EPONA) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_EPONA);
         case RI_SONG_HEALING:
-            return CHECK_QUEST_ITEM(QUEST_SONG_HEALING) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_HEALING);
         case RI_SONG_LULLABY_INTRO:
-            return CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO);
         case RI_SONG_LULLABY:
-            return CHECK_QUEST_ITEM(QUEST_SONG_LULLABY) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_LULLABY);
         case RI_SONG_OATH:
-            return CHECK_QUEST_ITEM(QUEST_SONG_OATH) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_OATH);
         case RI_SONG_SARIA:
-            return CHECK_QUEST_ITEM(QUEST_SONG_SARIA) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_SARIA);
         case RI_SONG_SOARING:
-            return CHECK_QUEST_ITEM(QUEST_SONG_SOARING) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_SOARING);
         case RI_SONG_SONATA:
-            return CHECK_QUEST_ITEM(QUEST_SONG_SONATA) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_SONATA);
         case RI_SONG_STORMS:
-            return CHECK_QUEST_ITEM(QUEST_SONG_STORMS) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_STORMS);
         case RI_SONG_SUN:
-            return CHECK_QUEST_ITEM(QUEST_SONG_SUN) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_SUN);
         case RI_SONG_TIME:
-            return CHECK_QUEST_ITEM(QUEST_SONG_TIME) ? RI_RUPEE_BLUE : randoItemId;
+            return !CHECK_QUEST_ITEM(QUEST_SONG_TIME);
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong. We just simply check the inventory state
         // Masks
@@ -327,15 +316,64 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
         case RI_MASK_STONE:
         case RI_MASK_ZORA: {
             ItemId itemId = StaticData::Items[randoItemId].itemId;
-            return INV_CONTENT(itemId) == itemId ? RI_RUPEE_BLUE : randoItemId;
+            return INV_CONTENT(itemId) != itemId;
         }
         default:
             break;
     }
 
     if (vanillaCantObtain) {
-        return RI_RUPEE_BLUE;
+        return false;
     }
 
-    return randoItemId;
+    return true;
+}
+
+RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckId) {
+    if (IsItemObtainable(randoItemId, randoCheckId)) {
+        switch (randoItemId) {
+            case RI_PROGRESSIVE_BOMB_BAG:
+                if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 0) {
+                    return RI_BOMB_BAG_20;
+                } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 1) {
+                    return RI_BOMB_BAG_30;
+                } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) == 2) {
+                    return RI_BOMB_BAG_40;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_RUPEE_BLUE;
+            case RI_PROGRESSIVE_BOW:
+                if (CUR_UPG_VALUE(UPG_QUIVER) == 0) {
+                    return RI_BOW;
+                } else if (CUR_UPG_VALUE(UPG_QUIVER) == 1) {
+                    return RI_QUIVER_40;
+                } else if (CUR_UPG_VALUE(UPG_QUIVER) == 2) {
+                    return RI_QUIVER_50;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_RUPEE_BLUE;
+            case RI_PROGRESSIVE_MAGIC:
+                if (!gSaveContext.save.saveInfo.playerData.isMagicAcquired) {
+                    return RI_SINGLE_MAGIC;
+                } else if (!gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
+                    return RI_DOUBLE_MAGIC;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_RUPEE_BLUE;
+            default:
+                break;
+        }
+
+        return randoItemId;
+    } else {
+        if (randoCheckId != RC_UNKNOWN) {
+            Ship_Random_Seed(gSaveContext.save.shipSaveInfo.rando.finalSeed + randoCheckId);
+            return ConvertItem(junkItems[Ship_Random(0, junkItems.size() - 1)]);
+        } else {
+            return RI_RUPEE_BLUE;
+        }
+    }
 }

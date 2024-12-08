@@ -32,8 +32,7 @@ s32 EnGirlA_RandoCanBuyFunc(PlayState* play, EnGirlA* enGirlA) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
 
-    if (randoSaveCheck.randoItemId != RI_RUPEE_BLUE &&
-        Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z) == RI_RUPEE_BLUE) {
+    if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z)) {
         return CANBUY_RESULT_CANNOT_GET_NOW;
     }
 

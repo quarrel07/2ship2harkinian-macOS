@@ -887,5 +887,8 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
                 Rando::DrawItem(Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM));
             });
         *should = false;
+
+        // Clear the stored Check ID for pots that are on a timed respawn
+        actor->home.rot.x = 0;
     });
 }
