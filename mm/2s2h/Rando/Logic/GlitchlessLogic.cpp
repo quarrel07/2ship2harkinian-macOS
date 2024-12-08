@@ -88,7 +88,6 @@ void ApplyGlitchlessLogicToSaveContext() {
                         randoCheckPool[randoCheckId].inPool = true;
                         newChecksInPool.push_back(randoCheckId);
                     } else {
-                        innaccessibleRC[randoCheckId]++;
                         SPDLOG_INFO("Check {} is not accessible", Rando::StaticData::Checks[randoCheckId].name);
                     }
                 }
@@ -167,8 +166,6 @@ void ApplyGlitchlessLogicToSaveContext() {
                 return true; // Found a solution
             }
 
-            failedPlacementsRC[randoCheckId]++;
-            failedPlacementsRI[randoItemId]++;
             SPDLOG_INFO("Failed to place item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
                         Rando::StaticData::Checks[randoCheckId].name);
             // Backtrack: remove the item and try another check
