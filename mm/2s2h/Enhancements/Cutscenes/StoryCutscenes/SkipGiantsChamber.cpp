@@ -16,7 +16,7 @@ void HandleGiantsCutsceneSkip() {
     GIEventTransition transition;
     switch (gPlayState->sceneId) {
         case SCENE_MITURIN_BS: // Odolwa's Lair
-            SET_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE);
+            SET_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE);
             SET_WEEKEVENTREG(WEEKEVENTREG_ENTERED_WOODFALL_TEMPLE_PRISON);
             transition.entrance = ENTRANCE(WOODFALL_TEMPLE, 1);
             transition.cutsceneIndex = 0;
