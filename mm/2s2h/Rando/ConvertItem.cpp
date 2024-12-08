@@ -204,23 +204,43 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
             }
             return RI_RUPEE_BLUE;
         case RI_MOONS_TEAR:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR) && INV_CONTENT(ITEM_MOONS_TEAR) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_DEED_LAND:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND) && INV_CONTENT(ITEM_DEED_LAND) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_DEED_SWAMP:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_SWAMP) && INV_CONTENT(ITEM_DEED_SWAMP) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_DEED_MOUNTAIN:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_MOUNTAIN) && INV_CONTENT(ITEM_DEED_MOUNTAIN) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_DEED_OCEAN:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_OCEAN) && INV_CONTENT(ITEM_DEED_OCEAN) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_ROOM_KEY:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY) && INV_CONTENT(ITEM_ROOM_KEY) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_LETTER_TO_MAMA:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_MAMA) && INV_CONTENT(ITEM_LETTER_MAMA) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_LETTER_TO_KAFEI:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_LETTER_TO_KAFEI) &&
+                    INV_CONTENT(ITEM_LETTER_TO_KAFEI) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_PENDANT_OF_MEMORIES:
-            return Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) ? RI_RUPEE_BLUE : randoItemId;
+            return (Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES) &&
+                    INV_CONTENT(ITEM_PENDANT_OF_MEMORIES) != ITEM_NONE)
+                       ? RI_RUPEE_BLUE
+                       : randoItemId;
         case RI_DOUBLE_DEFENSE:
             return gSaveContext.save.saveInfo.playerData.doubleDefense ? RI_RUPEE_BLUE : randoItemId;
         case RI_DOUBLE_MAGIC:

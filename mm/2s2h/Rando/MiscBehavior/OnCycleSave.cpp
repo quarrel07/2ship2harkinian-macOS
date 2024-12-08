@@ -23,6 +23,15 @@ void Rando::MiscBehavior::AfterEndOfCycleSave() {
         gSaveContext.save.saveInfo.skullTokenCount = saveContextCopy.save.saveInfo.skullTokenCount;
     }
 
+    // For now, we're just going to always persist these slots. We may do something smarter here later if this causes
+    // any issues.
+    gSaveContext.save.saveInfo.inventory.items[SLOT_TRADE_DEED] =
+        saveContextCopy.save.saveInfo.inventory.items[SLOT_TRADE_DEED];
+    gSaveContext.save.saveInfo.inventory.items[SLOT_TRADE_KEY_MAMA] =
+        saveContextCopy.save.saveInfo.inventory.items[SLOT_TRADE_KEY_MAMA];
+    gSaveContext.save.saveInfo.inventory.items[SLOT_TRADE_COUPLE] =
+        saveContextCopy.save.saveInfo.inventory.items[SLOT_TRADE_COUPLE];
+
     // Unset any flags used for checks, whether or not they get the item or junk is determined on our end instead.
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         switch (randoStaticCheck.flagType) {

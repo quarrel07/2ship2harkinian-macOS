@@ -5,16 +5,18 @@ extern "C" {
 #include "z64interface.h"
 #include "variables.h"
 #include "functions.h"
+#include "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope.h"
 #include <macros.h>
 }
 
 // Currently this enables a simple "press a" to cycle through the available trade items
 void Rando::MiscBehavior::InitKaleidoItemPage() {
     COND_VB_SHOULD(VB_KALEIDO_DISPLAY_ITEM_TEXT, IS_RANDO, {
+        PauseContext* pauseCtx = &gPlayState->pauseCtx;
+        u16 slot = pauseCtx->cursorSlot[PAUSE_ITEM];
         ItemId itemId = (ItemId)*va_arg(args, u16*);
 
-        if (SLOT(itemId) != SLOT_TRADE_COUPLE && SLOT(itemId) != SLOT_TRADE_DEED &&
-            SLOT(itemId) != SLOT_TRADE_KEY_MAMA) {
+        if (slot != SLOT_TRADE_COUPLE && slot != SLOT_TRADE_DEED && slot != SLOT_TRADE_KEY_MAMA) {
             return;
         }
 
@@ -22,7 +24,7 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
 
         // Build list of available items
         std::vector<u8> availableItems;
-        switch (SLOT(itemId)) {
+        switch (slot) {
             case SLOT_TRADE_COUPLE:
                 if (Flags_GetRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES)) {
                     availableItems.push_back(ITEM_PENDANT_OF_MEMORIES);
@@ -67,7 +69,7 @@ void Rando::MiscBehavior::InitKaleidoItemPage() {
             }
         }
 
-        if (index == -1 || availableItems.size() == 0) {
+        if (availableItems.size() == 0) {
             return;
         }
 
