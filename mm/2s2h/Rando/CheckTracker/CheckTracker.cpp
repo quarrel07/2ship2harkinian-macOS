@@ -63,6 +63,17 @@ namespace Rando {
 namespace CheckTracker {
 
 void Window::DrawElement() {
+    static ImGuiTextFilter filter;
+
+    UIWidgets::PushStyleCombobox();
+    filter.Draw("##filter", ImGui::GetContentRegionAvail().x);
+    UIWidgets::PopStyleCombobox();
+    if (!filter.IsActive()) {
+        ImGui::SameLine(18.0f);
+        ImGui::Text("Search");
+    }
+
+    ImGui::BeginChild("Checks", ImVec2(0, 0));
     if (showLogic) {
         std::set<RandoRegionId> reachableRegions = {};
         // Get connected entrances from starting & warp points
@@ -86,6 +97,10 @@ void Window::DrawElement() {
                 auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
                 if (randoSaveCheck.shuffled && accessLogicFunc.first()) {
+                    if (!filter.PassFilter(readableCheckNames[randoCheckId].c_str())) {
+                        continue;
+                    }
+
                     availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
                     if (randoSaveCheck.obtained) {
                         obtainedCheckSum++;
@@ -140,7 +155,29 @@ void Window::DrawElement() {
             if (sceneId == SCENE_MAX) {
                 continue;
             }
-            auto& checks = sceneChecks[sceneId];
+
+            auto& unfilteredChecks = sceneChecks[sceneId];
+            std::vector<RandoCheckId> checks;
+            uint32_t obtainedCheckSum = 0;
+
+            for (auto& checkId : unfilteredChecks) {
+                if (RANDO_SAVE_CHECKS[checkId].obtained) {
+                    obtainedCheckSum++;
+                    if (hideCollected) {
+                        continue;
+                    }
+                }
+
+                if (!filter.PassFilter(readableCheckNames[checkId].c_str())) {
+                    continue;
+                }
+
+                checks.push_back(checkId);
+            }
+
+            if (checks.size() == 0) {
+                continue;
+            }
 
             if (scrollToCurrentScene && scrollToTargetScene != -1 && scrollToTargetScene == sceneId) {
                 ImGui::SetScrollHereY();
@@ -151,12 +188,12 @@ void Window::DrawElement() {
             ImGui::PushID(sceneId);
             ImGui::Separator();
             ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
-            uint32_t obtainedCheckSum = getSumOfObtainedChecks(checks);
             std::string headerText = Ship_GetSceneName(sceneId);
-            headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(checks.size()) + ")";
+            headerText += " (" + std::to_string(obtainedCheckSum) + "/" + std::to_string(unfilteredChecks.size()) + ")";
 
-            ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == checks.size() ? UIWidgets::Colors::LightGreen
-                                                                                   : UIWidgets::Colors::White);
+            ImGui::PushStyleColor(ImGuiCol_Text, obtainedCheckSum == unfilteredChecks.size()
+                                                     ? UIWidgets::Colors::LightGreen
+                                                     : UIWidgets::Colors::White);
 
             if (expandedheaderState != expandHeaders) {
                 ImGui::SetNextItemOpen(expandHeaders);
@@ -184,6 +221,7 @@ void Window::DrawElement() {
         }
         expandedheaderState = expandHeaders;
     }
+    ImGui::EndChild();
 }
 
 void SettingsWindow::DrawElement() {

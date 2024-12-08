@@ -854,8 +854,12 @@ void DrawItemsAndMasksTab() {
 
         static ImGuiTextFilter riFilter;
         UIWidgets::PushStyleCombobox();
-        riFilter.Draw("Filter");
+        riFilter.Draw("##filter", ImGui::GetContentRegionAvail().x);
         UIWidgets::PopStyleCombobox();
+        if (!riFilter.IsActive()) {
+            ImGui::SameLine(18.0f);
+            ImGui::Text("Search");
+        }
         std::string riFilterString(riFilter.InputBuf);
 
         for (auto& [randoItemId, randoStaticItem] : Rando::StaticData::Items) {
@@ -2045,9 +2049,7 @@ void DrawFlagsTab() {
 }
 
 void DrawRandoTab() {
-    ImGui::BeginChild("RandoChild");
-
-    if (UIWidgets::Button("Generate Spoiler from Save")) {
+    if (UIWidgets::Button("Generate Spoiler from Save", { .size = UIWidgets::Sizes::Inline })) {
         nlohmann::json spoiler = Rando::Spoiler::GenerateFromSaveContext();
         std::string inputSeed = std::to_string(Ship_Random(0, 1000000));
         spoiler["inputSeed"] = inputSeed;
@@ -2056,6 +2058,16 @@ void DrawRandoTab() {
         Rando::Spoiler::SaveToFile(fileName, spoiler);
     }
 
+    static ImGuiTextFilter rcFilter;
+    UIWidgets::PushStyleCombobox();
+    rcFilter.Draw("##filter", ImGui::GetContentRegionAvail().x);
+    UIWidgets::PopStyleCombobox();
+    if (!rcFilter.IsActive()) {
+        ImGui::SameLine(18.0f);
+        ImGui::Text("Search");
+    }
+
+    ImGui::BeginChild("RandoChild");
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.2f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.1f));
@@ -2071,6 +2083,12 @@ void DrawRandoTab() {
 
     for (auto& [_, randoStaticCheck] : Rando::StaticData::Checks) {
         RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
+
+        if (!rcFilter.PassFilter(randoStaticCheck.name) &&
+            !rcFilter.PassFilter(Rando::StaticData::Items[randoSaveCheck.randoItemId].spoilerName)) {
+            continue;
+        }
+
         if (randoStaticCheck.randoCheckId == RC_UNKNOWN) {
             continue;
         }
