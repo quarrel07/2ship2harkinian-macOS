@@ -307,14 +307,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MARINE_RESEARCH_LAB, 0),      ENTRANCE(GREAT_BAY_COAST, 7), true),
         },
+        .connections = {
+            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
         .events = {
             EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_BE_HUMAN || CAN_BE_DIETY)
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
-        },
-        .connections = {
-            CONNECTION(RR_GREATBAY_COAST, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
         },
     } },
     { RR_GREATBAY_COAST_OUTSIDE_PIRATES_FORTRESS, RandoRegion{ .name = "Outside Pirate's Fortress", .sceneId = SCENE_30GYOSON,
@@ -322,11 +322,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_GREAT_BAY_COAST_POT_1, true),
             CHECK(RC_GREAT_BAY_COAST_POT_2, true),
         },
-        .oneWayEntrances = {
-            ENTRANCE(GREAT_BAY_COAST, 12), // From being captured in Pirate Fortress Moat
-        },
         .connections = {
             CONNECTION(RR_GREATBAY_COAST_PIRATES_COVE, CAN_BE_HUMAN || CAN_BE_ZORA || CAN_BE_DIETY),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(GREAT_BAY_COAST, 12), // From being captured in Pirate Fortress Moat
         },
     } },
     { RR_GREATBAY_COAST_PIRATES_COVE, RandoRegion{ .name = "Pirate's Cove", .sceneId = SCENE_30GYOSON,
