@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include <libultraship/libultraship.h>
+#include "2s2h/Rando/Types.h"
 
 extern "C" {
 #include "variables.h"
@@ -24,6 +25,19 @@ void ApplyGlitchlessLogicToSaveContext() {
     std::set<RandoEvent*> randoEventsTriggered;
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
+
+    // #region TODO: This just gives us a bunch of stuff that isn't technically in logic yet, so that generation can
+    // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
+    // section.
+    std::vector<RandoItemId> startingItems = {
+        RI_SONG_EPONA, RI_HOOKSHOT,      RI_ARROW_FIRE, RI_BOW,         RI_POWDER_KEG,
+        RI_MASK_GORON, RI_DEED_MOUNTAIN, RI_MAGIC_BEAN, RI_SONG_STORMS, RI_SONG_BOSSA_NOVA,
+    };
+
+    for (RandoItemId randoItemId : startingItems) {
+        GiveItem(randoItemId);
+    }
+    // #endregion
 
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
@@ -74,6 +88,7 @@ void ApplyGlitchlessLogicToSaveContext() {
                         randoCheckPool[randoCheckId].inPool = true;
                         newChecksInPool.push_back(randoCheckId);
                     } else {
+                        innaccessibleRC[randoCheckId]++;
                         SPDLOG_INFO("Check {} is not accessible", Rando::StaticData::Checks[randoCheckId].name);
                     }
                 }
@@ -152,6 +167,8 @@ void ApplyGlitchlessLogicToSaveContext() {
                 return true; // Found a solution
             }
 
+            failedPlacementsRC[randoCheckId]++;
+            failedPlacementsRI[randoItemId]++;
             SPDLOG_INFO("Failed to place item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
                         Rando::StaticData::Checks[randoCheckId].name);
             // Backtrack: remove the item and try another check
