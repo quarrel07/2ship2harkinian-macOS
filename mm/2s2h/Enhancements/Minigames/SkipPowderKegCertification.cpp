@@ -7,7 +7,7 @@ extern "C" {
 
 void RegisterPowderKegCertification() {
     COND_VB_SHOULD(VB_EXEC_MSG_EVENT, CVarGetInteger("gEnhancements.Minigames.PowderKegCertification", 0), {
-        u8 cmdId = va_arg(args, u8);
+        u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
 

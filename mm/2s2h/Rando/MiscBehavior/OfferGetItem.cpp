@@ -14,7 +14,7 @@ s32 func_80832558(PlayState* play, Player* player, PlayerFuncD58 arg2);
 void Rando::MiscBehavior::InitOfferGetItemBehavior() {
     // Scripted Actors
     COND_VB_SHOULD(VB_EXEC_MSG_EVENT, IS_RANDO, {
-        u8 cmdId = va_arg(args, u8);
+        u32 cmdId = va_arg(args, u32);
         Actor* actor = va_arg(args, Actor*);
         Player* player = GET_PLAYER(gPlayState);
         static std::vector<u8> skipCmds = {};
