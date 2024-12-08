@@ -10,6 +10,15 @@ extern "C" {
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 }
 
+s32 StrayFairyOverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, Actor* thisx,
+                               Gfx** gfx) {
+    if (limbIndex == STRAY_FAIRY_LIMB_RIGHT_FACING_HEAD) {
+        *dList = NULL;
+    }
+
+    return false;
+}
+
 void DrawStrayFairy(RandoItemId randoItemId) {
     OPEN_DISPS(gPlayState->state.gfxCtx);
 
@@ -49,8 +58,8 @@ void DrawStrayFairy(RandoItemId randoItemId) {
                            (AnimationHeader*)&gStrayFairyFlyingAnim, jointTable, jointTable, STRAY_FAIRY_LIMB_MAX);
     }
     SkelAnime_Update(&skelAnime);
-    POLY_XLU_DISP = SkelAnime_DrawFlex(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount, NULL,
-                                       NULL, NULL, POLY_XLU_DISP);
+    POLY_XLU_DISP = SkelAnime_DrawFlex(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount,
+                                       StrayFairyOverrideLimbDraw, NULL, NULL, POLY_XLU_DISP);
 
     CLOSE_DISPS(gPlayState->state.gfxCtx);
 }

@@ -101,20 +101,28 @@ RandoCheckId IdentifyShopItem(Actor* actor) {
         case SCENE_8ITEMSHOP:
             switch (actor->params) {
                 case 10:
+                case 18:
                     return RC_TRADING_POST_SHOP_ITEM_1;
                 case 5:
+                case 14:
                     return RC_TRADING_POST_SHOP_ITEM_2;
                 case 6:
+                case 17:
                     return RC_TRADING_POST_SHOP_ITEM_3;
                 case 3:
+                case 11:
                     return RC_TRADING_POST_SHOP_ITEM_4;
                 case 7:
+                case 16:
                     return RC_TRADING_POST_SHOP_ITEM_5;
                 case 8:
+                case 12:
                     return RC_TRADING_POST_SHOP_ITEM_6;
                 case 9:
+                case 15:
                     return RC_TRADING_POST_SHOP_ITEM_7;
                 case 4:
+                case 13:
                     return RC_TRADING_POST_SHOP_ITEM_8;
             }
             break;
@@ -176,7 +184,7 @@ RandoCheckId IdentifyActiveShopItem() {
             randoCheckId = (RandoCheckId)enTrt->items[enTrt->cursorIndex]->actor.world.rot.z;
         }
     } else if (gPlayState->msgCtx.talkActor->id == ACTOR_EN_OSSAN) {
-        if (gPlayState->msgCtx.talkActor->params == 0) {
+        if (gPlayState->msgCtx.talkActor->params == 0 || gPlayState->msgCtx.talkActor->params == 1) {
             EnOssan* enOssan = (EnOssan*)gPlayState->msgCtx.talkActor;
             if (enOssan->items[enOssan->cursorIndex] != nullptr) {
                 randoCheckId = (RandoCheckId)enOssan->items[enOssan->cursorIndex]->actor.world.rot.z;
