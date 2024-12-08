@@ -30,6 +30,7 @@ void InitEnhancements() {
     RegisterFastBankSelection();
 
     // Equipment
+    RegisterBetterPictoMessage();
     RegisterSkipMagicArrowEquip();
     RegisterInstantRecall();
 
