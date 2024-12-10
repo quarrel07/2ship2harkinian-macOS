@@ -14,6 +14,9 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_MADAME_AROMA_ASK_FOR_HELP:
             *should = !CHECK_WEEKEVENTREG(WEEKEVENTREG_BOMBERS_NOTEBOOK_EVENT_RECEIVED_KAFEIS_MASK);
             break;
+        case VB_MSG_SCRIPT_DEL_ITEM:
+            *should = false;
+            break;
     }
 }
 
