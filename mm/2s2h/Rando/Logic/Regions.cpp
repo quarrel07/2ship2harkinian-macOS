@@ -246,6 +246,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_CLOCK_TOWER_ROOF_SONG_OF_TIME, HAS_MAGIC && CAN_BE_DEKU),
             CHECK(RC_CLOCK_TOWER_ROOF_OCARINA, HAS_MAGIC && CAN_BE_DEKU),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_1, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_2, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_3, true),
+            CHECK(RC_CLOCK_TOWER_ROOF_POT_4, true),
         },
         .oneWayEntrances = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
@@ -634,7 +638,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             // TODO : Add Couples Mask check here.
             CHECK(RC_STOCK_POT_INN_GRANDMA_LONG_STORY, IS_HUMAN && HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
             CHECK(RC_STOCK_POT_INN_GRANDMA_SHORT_STORY, IS_HUMAN && HAS_ITEM(ITEM_MASK_ALL_NIGHT)),
-            CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST, (CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA) && Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY)),
+            CHECK(RC_STOCK_POT_INN_GUEST_ROOM_CHEST, (CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA) && Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY)),
             CHECK(RC_STOCK_POT_INN_LETTER_TO_KAFEI, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAFEIS_MASK)),
             CHECK(RC_STOCK_POT_INN_ROOM_KEY, CAN_BE_HUMAN || CAN_BE_GORON || CAN_BE_ZORA || CAN_BE_DIETY),
             CHECK(RC_STOCK_POT_INN_STAFF_ROOM_CHEST, CAN_BE_HUMAN || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA),
@@ -1094,8 +1098,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_TERMINA_FIELD, RandoRegion{ .sceneId = SCENE_00KEIKOKU,
         .checks = {
             CHECK(RC_TERMINA_FIELD_KAMARO, CAN_BE_HUMAN && HAS_ITEM(ITEM_OCARINA_OF_TIME) && CHECK_QUEST_ITEM(QUEST_SONG_HEALING)),
+            CHECK(RC_TERMINA_FIELD_POT, CAN_GROW_BEAN_PLANT),
             CHECK(RC_TERMINA_FIELD_TALL_GRASS_CHEST, true),
-            CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT),
+            CHECK(RC_TERMINA_FIELD_TREE_STUMP_CHEST, CAN_GROW_BEAN_PLANT || (CAN_BE_HUMAN && HAS_ITEM(ITEM_HOOKSHOT))),
             CHECK(RC_TERMINA_FIELD_WATER_CHEST, CAN_BE_ZORA),
         },
         .exits = { //     TO                                     FROM
