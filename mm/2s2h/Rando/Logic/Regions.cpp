@@ -713,6 +713,11 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MOUNTAIN_SMITHY, RandoRegion{ .sceneId = SCENE_KAJIYA,
+        .checks = {
+            CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD, GET_CUR_UPG_VALUE(UPG_WALLET) >= 1),
+            // TODO: Access to gold dust
+            // CHECK(RC_MOUNTAIN_VILLAGE_SMITHY_GILDED_SWORD, HAS_ITEM(ITEM_GOLD_DUST) && RANDO_SAVE_CHECKS[RC_MOUNTAIN_VILLAGE_SMITHY_RAZOR_SWORD].obtained)
+        },
         .exits = { //     TO                                     FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),  ENTRANCE(MOUNTAIN_SMITHY, 0), true),
         },

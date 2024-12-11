@@ -1,6 +1,7 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
+#include "2s2h/Rando/Rando.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -50,6 +51,7 @@ typedef enum {
     DISABLE_FOR_FRAME_ADVANCE_OFF,
     DISABLE_FOR_WARP_POINT_NOT_SET,
     DISABLE_FOR_INTRO_SKIP_OFF,
+    DISABLE_FOR_RANDO,
 } DisableOption;
 
 struct widgetInfo;
@@ -348,7 +350,9 @@ static std::map<DisableOption, disabledInfo> disabledMap = {
         "Warp Point Not Saved" } },
     { DISABLE_FOR_INTRO_SKIP_OFF,
       { [](disabledInfo& info) -> bool { return !CVarGetInteger("gEnhancements.Cutscenes.SkipIntroSequence", 0); },
-        "Intro Skip Not Selected" } }
+        "Intro Skip Not Selected" } },
+    { DISABLE_FOR_RANDO,
+      { [](disabledInfo& info) -> bool { return IS_RANDO; }, "This is incompatible with Randomizer saves" } },
 };
 
 std::unordered_map<int32_t, const char*> menuThemeOptions = {
@@ -1167,8 +1171,16 @@ void AddEnhancements() {
                 "Playing the Song Of Time will not reset the bottles' content.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Consumables", "gEnhancements.Cycle.DoNotResetConsumables",
                 "Playing the Song Of Time will not reset the consumables.", WIDGET_CVAR_CHECKBOX },
-              { "Do not reset Razor Sword", "gEnhancements.Cycle.DoNotResetRazorSword",
-                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.", WIDGET_CVAR_CHECKBOX },
+              { "Do not reset Razor Sword",
+                "gEnhancements.Cycle.DoNotResetRazorSword",
+                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.",
+                WIDGET_CVAR_CHECKBOX,
+                {},
+                nullptr,
+                [](widgetInfo& info) {
+                    if (disabledMap.at(DISABLE_FOR_RANDO).active)
+                        info.activeDisables.push_back(DISABLE_FOR_RANDO);
+                } },
               { "Do not reset Rupees", "gEnhancements.Cycle.DoNotResetRupees",
                 "Playing the Song Of Time will not reset the your rupees.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Time Speed", "gEnhancements.Cycle.DoNotResetTimeSpeed",

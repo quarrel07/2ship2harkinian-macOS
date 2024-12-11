@@ -102,6 +102,32 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                 return false;
             }
             break;
+        case RI_PROGRESSIVE_SWORD:
+            if (hasObtainedCheck) {
+                return false;
+            } else if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_GILDED ||
+                       (STOLEN_ITEM_1 >= ITEM_SWORD_GILDED) || (STOLEN_ITEM_2 >= ITEM_SWORD_GILDED)) {
+                return false;
+            }
+            break;
+        case RI_SWORD_KOKIRI:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI ||
+                (STOLEN_ITEM_1 >= ITEM_SWORD_KOKIRI) || (STOLEN_ITEM_2 >= ITEM_SWORD_KOKIRI)) {
+                return false;
+            }
+            break;
+        case RI_SWORD_RAZOR:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_RAZOR ||
+                (STOLEN_ITEM_1 >= ITEM_SWORD_RAZOR) || (STOLEN_ITEM_2 >= ITEM_SWORD_RAZOR)) {
+                return false;
+            }
+            break;
+        case RI_SWORD_GILDED:
+            if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_GILDED ||
+                (STOLEN_ITEM_1 >= ITEM_SWORD_GILDED) || (STOLEN_ITEM_2 >= ITEM_SWORD_GILDED)) {
+                return false;
+            }
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
             if (hasObtainedCheck) {
                 return false;
@@ -388,6 +414,20 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                     return RI_WALLET_ADULT;
                 } else if (CUR_UPG_VALUE(UPG_WALLET) == 1) {
                     return RI_WALLET_GIANT;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_RUPEE_BLUE;
+            case RI_PROGRESSIVE_SWORD:
+                if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_NONE &&
+                    (STOLEN_ITEM_1 < ITEM_SWORD_KOKIRI) && (STOLEN_ITEM_2 < ITEM_SWORD_KOKIRI)) {
+                    return RI_SWORD_KOKIRI;
+                } else if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_KOKIRI ||
+                           (STOLEN_ITEM_1 == ITEM_SWORD_KOKIRI) || (STOLEN_ITEM_2 == ITEM_SWORD_KOKIRI)) {
+                    return RI_SWORD_RAZOR;
+                } else if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_RAZOR ||
+                           (STOLEN_ITEM_1 == ITEM_SWORD_RAZOR) || (STOLEN_ITEM_2 == ITEM_SWORD_RAZOR)) {
+                    return RI_SWORD_GILDED;
                 }
                 // Shouldn't happen, just in case
                 assert(false);
