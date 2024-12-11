@@ -334,6 +334,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_CLOCK_TOWN_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_UPPER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || HAS_ITEM(ITEM_HOOKSHOT)),
             CHECK(RC_CLOCK_TOWN_SOUTH_CHEST_LOWER, (CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_MOONS_TEAR)) || HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_CLOCK_TOWN_SOUTH_OWL_STATUE, CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(CLOCK_TOWER_INTERIOR, 1),         ENTRANCE(SOUTH_CLOCK_TOWN, 0), true),
@@ -468,6 +469,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_GREATBAY_COAST, RandoRegion{ .sceneId = SCENE_30GYOSON,
         .checks = {
+            CHECK(RC_GREAT_BAY_COAST_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_GREAT_BAY_COAST_MIKAU, CAN_PLAY_SONG(HEALING)),
             CHECK(RC_GREAT_BAY_COAST_HP, CAN_HOOK_SCARECROW && CAN_GROW_BEAN_PLANT),
             CHECK(RC_GREAT_BAY_COAST_POT_1, true),
@@ -548,14 +550,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_IKANA_CANYON_UPPER, RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
+        .checks = {
+            CHECK(RC_IKANA_CANYON_OWL_STATUE, CAN_USE_SWORD),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
-            EXIT(ENTRANCE(IKANA_CASTLE, 1),                 ENTRANCE(IKANA_CANYON, 8), true),
-            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 4),               ENTRANCE(IKANA_CANYON, 11), true),
-            EXIT(ENTRANCE(IKANA_CANYON, 14),                ENTRANCE(IKANA_CANYON, 13), true),
         },
         .connections = {
             // May consider cutting Deku and Goron from this since getting down as them may be seen as a trick. But its possible and is pretty easy to do.
@@ -667,6 +669,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MILK_ROAD, RandoRegion{ .sceneId = SCENE_ROMANYMAE,
+        .checks = {
+            CHECK(RC_MILK_ROAD_OWL_STATUE, CAN_USE_SWORD),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 5),                ENTRANCE(MILK_ROAD, 0), true),
             EXIT(ENTRANCE(ROMANI_RANCH, 0),                 ENTRANCE(MILK_ROAD, 1), true),
@@ -691,6 +696,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_MOUNTAIN_VILLAGE, RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
+        .checks = {
+            CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE, CAN_USE_SWORD),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_SMITHY, 0),              ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1), true),
             EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2), true),
@@ -1168,6 +1176,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_SNOWHEAD_NEAR_PATH, RandoRegion{ .sceneId = SCENE_12HAKUGINMAE,
+        .checks = {
+            CHECK(RC_SNOWHEAD_OWL_STATUE, CAN_USE_SWORD),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PATH_TO_SNOWHEAD, 1),             ENTRANCE(SNOWHEAD, 0), true),
         },
@@ -1199,6 +1210,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_SOUTHERN_SWAMP_HP, CAN_BE_DEKU && Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
             CHECK(RC_SOUTHERN_SWAMP_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
+            CHECK(RC_SOUTHERN_SWAMP_OWL_STATUE, CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1),       ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), true),
@@ -1307,6 +1319,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     // TODO: Probably need to split this up to account for entrance rando later
     { RR_STONE_TOWER_TOP, RandoRegion{ .name = "Top", .sceneId = SCENE_F40,
         .checks = {
+            CHECK(RC_STONE_TOWER_OWL_STATUE, CAN_BE_HUMAN),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_1, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_2, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_3, true),
@@ -1650,6 +1663,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_WOODFALL_ENTRANCE_CHEST, CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             CHECK(RC_WOODFALL_HP_CHEST, CAN_BE_DEKU),
+            CHECK(RC_WOODFALL_OWL_STATUE, CAN_BE_HUMAN),
             CHECK(RC_WOODFALL_NEAR_OWL_CHEST, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
@@ -1677,6 +1691,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_2,     true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_3,     true),
             CHECK(RC_ZORA_CAPE_POT_NEAR_OWL_STATUE_4,     true),
+            CHECK(RC_ZORA_CAPE_OWL_STATUE,                CAN_USE_SWORD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 1),              ENTRANCE(ZORA_CAPE, 0), true),
