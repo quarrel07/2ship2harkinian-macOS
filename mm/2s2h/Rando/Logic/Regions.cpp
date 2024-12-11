@@ -43,9 +43,10 @@ namespace Logic {
 #define SET_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags |= (1 << owlId))
 #define CLEAR_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags &= ~(1 << owlId))
 #define HAS_BOTTLE_ITEM(item) (Inventory_HasItemInBottle(item))
+// TODO: Maybe not reliable because of theif bird stealing bottle
 #define HAS_BOTTLE (INV_CONTENT(ITEM_BOTTLE) != ITEM_NONE)
-#define CAN_GET_SPRING_WATER                                                                             \
-    (CAN_BE_HUMAN && HAS_ITEM(ITEM_BOTTLE) && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
+#define CAN_GET_SPRING_WATER                                                                  \
+    (CAN_BE_HUMAN && HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
      Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
 #define CAN_GROW_BEAN_PLANT \
     (CAN_BE_HUMAN && HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
@@ -348,6 +349,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_CLOCK_TOWN_WEST, RandoRegion{ .sceneId = SCENE_ICHIBA,
         .checks = {
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_ADULTS_WALLET, true),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_HP, true),
+            CHECK(RC_CLOCK_TOWN_WEST_BANK_INTEREST, true),
             CHECK(RC_CLOCK_TOWN_WEST_SISTERS_HP, CAN_BE_HUMAN && HAS_ITEM(ITEM_MASK_KAMARO)),
         },
         .exits = { //     TO                                     FROM

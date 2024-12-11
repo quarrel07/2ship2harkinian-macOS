@@ -85,6 +85,23 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
     switch (randoItemId) {
         case RI_UNKNOWN:
             return false;
+        case RI_PROGRESSIVE_WALLET:
+            if (hasObtainedCheck) {
+                return false;
+            } else if (CUR_UPG_VALUE(UPG_WALLET) >= 2) {
+                return false;
+            }
+            break;
+        case RI_WALLET_ADULT:
+            if (CUR_UPG_VALUE(UPG_WALLET) >= 1) {
+                return false;
+            }
+            break;
+        case RI_WALLET_GIANT:
+            if (CUR_UPG_VALUE(UPG_WALLET) >= 2) {
+                return false;
+            }
+            break;
         case RI_PROGRESSIVE_BOMB_BAG:
             if (hasObtainedCheck) {
                 return false;
@@ -362,6 +379,15 @@ RandoItemId Rando::ConvertItem(RandoItemId randoItemId, RandoCheckId randoCheckI
                     return RI_SINGLE_MAGIC;
                 } else if (!gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
                     return RI_DOUBLE_MAGIC;
+                }
+                // Shouldn't happen, just in case
+                assert(false);
+                return RI_RUPEE_BLUE;
+            case RI_PROGRESSIVE_WALLET:
+                if (CUR_UPG_VALUE(UPG_WALLET) == 0) {
+                    return RI_WALLET_ADULT;
+                } else if (CUR_UPG_VALUE(UPG_WALLET) == 1) {
+                    return RI_WALLET_GIANT;
                 }
                 // Shouldn't happen, just in case
                 assert(false);

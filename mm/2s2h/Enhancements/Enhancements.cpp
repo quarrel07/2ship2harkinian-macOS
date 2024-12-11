@@ -87,6 +87,7 @@ void InitEnhancements() {
     RegisterTimeMovesWhenYouMove();
 
     // Difficulty Options
+    RegisterCustomBankRewardThresholds();
     RegisterDisableTakkuriSteal();
     RegisterShowDekuGuardSearchBalls();
 

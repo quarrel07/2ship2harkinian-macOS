@@ -1437,7 +1437,8 @@ void AddEnhancements() {
     enhancementsSidebar.push_back(
         { "Difficulty Options",
           3,
-          { { { "Disable Takkuri Steal",
+          { {
+              { "Disable Takkuri Steal",
                 "gEnhancements.Cheats.DisableTakkuriSteal",
                 "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other items.",
                 WIDGET_CVAR_CHECKBOX,
@@ -1451,7 +1452,13 @@ void AddEnhancements() {
                 "- Always: Always show the search balls.",
                 WIDGET_CVAR_COMBOBOX,
                 { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
-                  .comboBoxOptions = dekuGuardSearchBallsOptions } } } } });
+                  .comboBoxOptions = dekuGuardSearchBallsOptions } },
+              { "Lower Bank Reward Thresholds", "gEnhancements.DifficultyOptions.LowerBankRewardThresholds",
+                "Reduces the amount of rupees required to receive the rewards from the bank.\n"
+                "From: 200 -> 1000 -> 5000\n"
+                "To:   100 ->  500 -> 1000",
+                WIDGET_CVAR_CHECKBOX },
+          } } });
     enhancementsSidebar.push_back({ "HUD Editor",
                                     1,
                                     { // HUD Editor
