@@ -38,6 +38,7 @@ void InitEnhancements() {
     RegisterFierceDeityZTargetMovement();
     RegisterTwoHandedSwordSpinAttack();
     RegisterCompletedHeartContainerAudio();
+    RegisterFixEponaStealingSword();
 
     // Graphics
     RegisterDisableBlackBars();

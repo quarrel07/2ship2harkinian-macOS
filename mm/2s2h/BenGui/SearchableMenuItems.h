@@ -1401,6 +1401,9 @@ void AddEnhancements() {
                 "Fixes a missing gDPSetEnvColor, which causes the ammo count to be "
                 "the wrong color prior to obtaining magic or other conditions.",
                 WIDGET_CVAR_CHECKBOX },
+              { "Fix Epona stealing Sword", "gFixes.FixEponaStealingSword",
+                "This fixes a bug where Epona can steal your sword when you mount her without a bow in your inventory.",
+                WIDGET_CVAR_CHECKBOX },
               { "Fix Fierce Deity Z-Target movement", "gEnhancements.Fixes.FierceDeityZTargetMovement",
                 "Fixes Fierce Deity movement being choppy when Z-targeting", WIDGET_CVAR_CHECKBOX },
               { "Fix Hess and Weirdshot Crash", "gEnhancements.Fixes.HessCrash",
