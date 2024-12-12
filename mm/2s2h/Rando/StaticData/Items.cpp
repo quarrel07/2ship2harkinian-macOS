@@ -126,6 +126,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_SONG_ELEGY,                 "the",  "Elegy of Emptiness",         ITEM_SONG_ELEGY,                 GI_NONE,                     GID_NONE),
     RI(RI_SONG_EPONA,                 "",     "Epona's Song",               ITEM_SONG_EPONA,                 GI_NONE,                     GID_NONE),
     RI(RI_SONG_HEALING,               "the",  "Song of Healing",            ITEM_SONG_HEALING,               GI_NONE,                     GID_NONE),
+    RI(RI_SONG_LULLABY,               "the",  "Goron Lullaby",              ITEM_SONG_LULLABY,               GI_NONE,                     GID_NONE),
     RI(RI_SONG_OATH,                  "the",  "Oath to Order",              ITEM_SONG_OATH,                  GI_NONE,                     GID_NONE),
     RI(RI_SONG_SONATA,                "the",  "Sonata of Awakening",        ITEM_SONG_SONATA,                GI_NONE,                     GID_NONE),
     RI(RI_SONG_STORMS,                "the",  "Song of Storms",             ITEM_SONG_STORMS,                GI_NONE,                     GID_NONE),
