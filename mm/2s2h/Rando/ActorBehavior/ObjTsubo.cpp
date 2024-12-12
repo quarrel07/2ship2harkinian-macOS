@@ -393,10 +393,10 @@ RandoCheckId IdentifyPot(Actor* actor) {
                 randoCheckId = RC_WOODFALL_TEMPLE_POT_MAZE_2;
             }
             if (IS_AT(-120.0f, -2220.0f)) {
-                randoCheckId = RC_WOODFALL_TEMPLE_POT_PREBOSS_1;
+                randoCheckId = RC_WOODFALL_TEMPLE_POT_PRE_BOSS_1;
             }
             if (IS_AT(120.0f, -2220.0f)) {
-                randoCheckId = RC_WOODFALL_TEMPLE_POT_PREBOSS_2;
+                randoCheckId = RC_WOODFALL_TEMPLE_POT_PRE_BOSS_2;
             }
             if (IS_AT(1335.0f, 585.0f)) {
                 randoCheckId = RC_WOODFALL_TEMPLE_POT_WATER_ROOM_1;
