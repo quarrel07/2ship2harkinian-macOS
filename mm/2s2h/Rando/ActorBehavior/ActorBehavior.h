@@ -28,7 +28,6 @@ void InitEnItem00Behavior();
 void InitEnKgyBehavior();
 void InitEnKnightBehavior();
 void InitEnMaYtoBehavior();
-void InitObjWarpstoneBehavior();
 void InitEnOsnBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
@@ -41,6 +40,7 @@ void InitEnZogBehavior();
 void InitItemBHeartBehavior();
 void InitObjMoonStoneBehavior();
 void InitObjTsuboBehavior();
+void InitObjWarpstoneBehavior();
 
 } // namespace ActorBehavior
 

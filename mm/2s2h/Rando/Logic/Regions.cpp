@@ -351,7 +351,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_MAX, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), CAN_USE_SWORD),
+            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
@@ -498,7 +498,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),       ENTRANCE(GREAT_BAY_COAST, 8), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
@@ -564,7 +564,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_IKANA_CANYON_LOWER, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
@@ -679,7 +679,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GORMAN_TRACK, 0),                 ENTRANCE(MILK_ROAD, 3), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
@@ -708,7 +708,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1),     ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
@@ -1186,7 +1186,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SNOWHEAD_NEAR_TEMPLE, CAN_BE_GORON && CAN_PLAY_SONG(LULLABY)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(SNOWHEAD, 3), // From Song of Soaring
@@ -1222,7 +1222,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SOUTHERN_SWAMP_SOUTH, (Flags_GetSceneSwitch(SCENE_20SICHITAI, 1) || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE))),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CAN_USE_SWORD),
+            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
             EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
         },
         .oneWayEntrances = {
@@ -1319,7 +1319,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     // TODO: Probably need to split this up to account for entrance rando later
     { RR_STONE_TOWER_TOP, RandoRegion{ .name = "Top", .sceneId = SCENE_F40,
         .checks = {
-            CHECK(RC_STONE_TOWER_OWL_STATUE, CAN_BE_HUMAN),
+            CHECK(RC_STONE_TOWER_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_1, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_2, true),
             CHECK(RC_STONE_TOWER_POT_OWL_STATUE_3, true),
@@ -1333,7 +1333,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), CAN_USE_SWORD)
+            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
         },
         .oneWayEntrances = {
             ENTRANCE(STONE_TOWER, 3), // From Song of Soaring
@@ -1663,7 +1663,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .checks = {
             CHECK(RC_WOODFALL_ENTRANCE_CHEST, CAN_BE_DEKU || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
             CHECK(RC_WOODFALL_HP_CHEST, CAN_BE_DEKU),
-            CHECK(RC_WOODFALL_OWL_STATUE, CAN_BE_HUMAN),
+            CHECK(RC_WOODFALL_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_WOODFALL_NEAR_OWL_CHEST, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
@@ -1702,7 +1702,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GREAT_BAY_TEMPLE, 1),             ENTRANCE(ZORA_CAPE, 7), CAN_BE_ZORA && CAN_PLAY_SONG(BOSSA_NOVA) && HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), CAN_USE_SWORD),
+            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
         },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
