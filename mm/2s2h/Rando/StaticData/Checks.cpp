@@ -577,6 +577,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MOON_TRIAL_LINK_POT_7,                                RCTYPE_POT,              SCENE_LAST_LINK,                FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
     RC(RC_MOON_TRIAL_LINK_POT_8,                                RCTYPE_POT,              SCENE_LAST_LINK,                FLAG_NONE,                   0x0,                                                                 RI_MAGIC_JAR_BIG),
     RC(RC_MOUNTAIN_VILLAGE_POT,                                 RCTYPE_POT,              SCENE_10YUKIYAMANOMURA,         FLAG_CYCL_SCENE_COLLECTIBLE, 0x20,                                                                RI_FAIRY_REFILL),
+    RC(RC_MOUNTAIN_VILLAGE_SPRING_POT,                          RCTYPE_POT,              SCENE_10YUKIYAMANOMURA2,        FLAG_CYCL_SCENE_COLLECTIBLE, 0x26,                                                                RI_FAIRY_REFILL),
     RC(RC_OCEAN_SPIDER_HOUSE_POT_COLORED_SKULLS_1,              RCTYPE_POT,              SCENE_KINDAN2,                  FLAG_CYCL_SCENE_COLLECTIBLE, 0x3b,                                                                RI_ARROWS_10),
     RC(RC_OCEAN_SPIDER_HOUSE_POT_COLORED_SKULLS_2,              RCTYPE_POT,              SCENE_KINDAN2,                  FLAG_CYCL_SCENE_COLLECTIBLE, 0x3a,                                                                RI_ARROWS_10),
     RC(RC_OCEAN_SPIDER_HOUSE_POT_ENTRANCE_1,                    RCTYPE_POT,              SCENE_KINDAN2,                  FLAG_CYCL_SCENE_COLLECTIBLE, 0x2d,                                                                RI_RECOVERY_HEART),
@@ -695,14 +696,17 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_SNOWHEAD_TEMPLE_POT_WIZZROBE_3,                       RCTYPE_POT,              SCENE_HAKUGIN,                  FLAG_NONE,                   0x0,                                                                 RI_RECOVERY_HEART),
     RC(RC_SNOWHEAD_TEMPLE_POT_WIZZROBE_4,                       RCTYPE_POT,              SCENE_HAKUGIN,                  FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
     RC(RC_SNOWHEAD_TEMPLE_POT_WIZZROBE_5,                       RCTYPE_POT,              SCENE_HAKUGIN,                  FLAG_NONE,                   0x0,                                                                 RI_ARROWS_10),
+    RC(RC_SOUTHERN_SWAMP_CLEAR_POT_1,                           RCTYPE_POT,              SCENE_20SICHITAI2,              FLAG_CYCL_SCENE_COLLECTIBLE, 0x20,                                                                RI_RECOVERY_HEART),
+    RC(RC_SOUTHERN_SWAMP_CLEAR_POT_2,                           RCTYPE_POT,              SCENE_20SICHITAI2,              FLAG_CYCL_SCENE_COLLECTIBLE, 0x21,                                                                RI_RUPEE_BLUE),
+    RC(RC_SOUTHERN_SWAMP_CLEAR_POT_3,                           RCTYPE_POT,              SCENE_20SICHITAI2,              FLAG_CYCL_SCENE_COLLECTIBLE, 0x22,                                                                RI_RUPEE_GREEN),
     RC(RC_SOUTHERN_SWAMP_POT_1,                                 RCTYPE_POT,              SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x25,                                                                RI_RECOVERY_HEART),
     RC(RC_SOUTHERN_SWAMP_POT_2,                                 RCTYPE_POT,              SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x26,                                                                RI_RUPEE_BLUE),
     RC(RC_SOUTHERN_SWAMP_POT_3,                                 RCTYPE_POT,              SCENE_20SICHITAI,               FLAG_CYCL_SCENE_COLLECTIBLE, 0x27,                                                                RI_RUPEE_GREEN),
-    RC(RC_STONE_TOWER_INVERTED_POT_1,                           RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x3b,                                                                RI_RECOVERY_HEART),
-    RC(RC_STONE_TOWER_INVERTED_POT_2,                           RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x38,                                                                RI_MAGIC_JAR_BIG),
-    RC(RC_STONE_TOWER_INVERTED_POT_3,                           RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x39,                                                                RI_FAIRY_REFILL),
-    RC(RC_STONE_TOWER_INVERTED_POT_4,                           RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x3a,                                                                RI_BOMBS_5),
-    RC(RC_STONE_TOWER_INVERTED_POT_5,                           RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x37,                                                                RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_INVERTED_POT_1,                           RCTYPE_POT,              SCENE_F41,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x3b,                                                                RI_RECOVERY_HEART),
+    RC(RC_STONE_TOWER_INVERTED_POT_2,                           RCTYPE_POT,              SCENE_F41,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x38,                                                                RI_MAGIC_JAR_BIG),
+    RC(RC_STONE_TOWER_INVERTED_POT_3,                           RCTYPE_POT,              SCENE_F41,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x39,                                                                RI_FAIRY_REFILL),
+    RC(RC_STONE_TOWER_INVERTED_POT_4,                           RCTYPE_POT,              SCENE_F41,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x3a,                                                                RI_BOMBS_5),
+    RC(RC_STONE_TOWER_INVERTED_POT_5,                           RCTYPE_POT,              SCENE_F41,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x37,                                                                RI_RECOVERY_HEART),
     RC(RC_STONE_TOWER_POT_CLIMB_1,                              RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x35,                                                                RI_RECOVERY_HEART),
     RC(RC_STONE_TOWER_POT_CLIMB_2,                              RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x36,                                                                RI_RECOVERY_HEART),
     RC(RC_STONE_TOWER_POT_HIGHER_SCARECROW_1,                   RCTYPE_POT,              SCENE_F40,                      FLAG_CYCL_SCENE_COLLECTIBLE, 0x2b,                                                                RI_RECOVERY_HEART),
@@ -867,14 +871,19 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 // should keep an eye on performance, because this is used in various draw calls. One possible optimization is to create
 // a hash map from the list of checks but that seems overkill for now.
 RandoStaticCheck GetCheckFromFlag(FlagType flagType, s32 flag, s16 sceneId) {
-    // Exclude converting Inverted Stone Tower Temple for collectible flags. Cleared room flags should also be excluded,
-    // but there aren't any checks for that flagType.
-    if (!(sceneId == SCENE_INISIE_R && flagType == FLAG_CYCL_SCENE_COLLECTIBLE)) {
-        sceneId = Play_GetOriginalSceneId(sceneId);
+    s32 checkSceneId = Play_GetOriginalSceneId(sceneId);
+
+    // Inverted Stone Tower Temple saves its own collectible and cleared_room flags
+    // Collectible flags greater than 0x1F (ie not collectible[0]) aren't save and can be reused across 2-scene scenes
+    // Both cases shouldn't convert to OriginalSceneId
+    if (flagType == FLAG_CYCL_SCENE_COLLECTIBLE) {
+        if (sceneId == SCENE_INISIE_R || flag > 0x1F) {
+            checkSceneId = sceneId;
+        }
     }
 
     for (auto& [check, data] : Checks) {
-        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == sceneId)) {
+        if (data.flagType == flagType && data.flag == flag && (sceneId == SCENE_MAX || data.sceneId == checkSceneId)) {
             return data;
         }
     }
