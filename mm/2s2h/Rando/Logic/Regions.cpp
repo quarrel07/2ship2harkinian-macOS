@@ -871,6 +871,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_PIRATES_FORTRESS_MOAT_HIGHER, RandoRegion{ .name = "Higher", .sceneId = SCENE_TORIDE,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 0),             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 1), true),
+            EXIT(ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10),   ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6), true),
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_LOWER, true),
@@ -1034,7 +1035,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_END_3, true),
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10), HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
+            EXIT(ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 6),    ENTRANCE(PIRATES_FORTRESS_INTERIOR, 10), CAN_USE_PROJECTILE)
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_SEWERS_POSTGATE, true)
