@@ -11,6 +11,7 @@ void RegisterCutscenes() {
     RegisterSkipMayorsOfficeCutscene();
     RegisterSkipPushingMikau();
     RegisterSkipKamaroTeachDance();
+    RegisterSkipTingleTime();
 
     // StoryCutscenes
     RegisterSkipClockTowerOpen();

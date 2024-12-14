@@ -44,7 +44,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         // Don't love this because it doesn't hit GameInteractor_ExecuteOnItemGive()
         // but not sure how else to account for collecting outside of dungeon
         case RI_WOODFALL_BOSS_KEY:
-        case RI_WOODFALL_MAP:
+        case RI_WOODFALL_TEMPLE_MAP:
         case RI_WOODFALL_COMPASS:
             SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
                              DUNGEON_INDEX_WOODFALL_TEMPLE);
@@ -59,7 +59,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             }
             break;
         case RI_SNOWHEAD_BOSS_KEY:
-        case RI_SNOWHEAD_MAP:
+        case RI_SNOWHEAD_TEMPLE_MAP:
         case RI_SNOWHEAD_COMPASS:
             SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
                              DUNGEON_INDEX_SNOWHEAD_TEMPLE);
@@ -74,7 +74,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             }
             break;
         case RI_GREAT_BAY_BOSS_KEY:
-        case RI_GREAT_BAY_MAP:
+        case RI_GREAT_BAY_TEMPLE_MAP:
         case RI_GREAT_BAY_COMPASS:
             SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
                              DUNGEON_INDEX_GREAT_BAY_TEMPLE);
@@ -89,7 +89,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             }
             break;
         case RI_STONE_TOWER_BOSS_KEY:
-        case RI_STONE_TOWER_MAP:
+        case RI_STONE_TOWER_TEMPLE_MAP:
         case RI_STONE_TOWER_COMPASS:
             SET_DUNGEON_ITEM(Rando::StaticData::Items[randoItemId].itemId - ITEM_KEY_BOSS,
                              DUNGEON_INDEX_STONE_TOWER_TEMPLE);
@@ -171,6 +171,30 @@ void Rando::GiveItem(RandoItemId randoItemId) {
             }
 
             Item_Give(gPlayState, Rando::StaticData::Items[randoItemId].itemId);
+            break;
+        case RI_CLOCK_TOWN_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_CLOCK_TOWN);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_CLOCK_TOWN);
+            break;
+        case RI_WOODFALL_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_WOODFALL);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_WOODFALL);
+            break;
+        case RI_GREAT_BAY_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_SNOWHEAD);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_SNOWHEAD);
+            break;
+        case RI_ROMANI_RANCH_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_ROMANI_RANCH);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_ROMANI_RANCH);
+            break;
+        case RI_SNOWHEAD_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_GREAT_BAY);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_GREAT_BAY);
+            break;
+        case RI_STONE_TOWER_MAP:
+            Inventory_SetWorldMapCloudVisibility(TINGLE_MAP_STONE_TOWER);
+            SET_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_STONE_TOWER);
             break;
         case RI_OWL_CLOCK_TOWN_SOUTH:
             Sram_ActivateOwl(OWL_WARP_CLOCK_TOWN);

@@ -13,6 +13,7 @@ void RegisterSkipTatlInterrupts();
 void RegisterSkipMayorsOfficeCutscene();
 void RegisterSkipPushingMikau();
 void RegisterSkipKamaroTeachDance();
+void RegisterSkipTingleTime();
 
 // StoryCutscenes
 void RegisterSkipClockTowerOpen();
