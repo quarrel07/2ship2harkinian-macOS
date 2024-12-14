@@ -150,6 +150,7 @@ typedef enum {
     VB_ALREADY_HAVE_TINGLE_MAP,
     VB_TINGLE_GIVE_MAP_UNLOCK,
     VB_OWL_STATUE_ACTIVATE,
+    VB_HAVE_HEALED_PAMELAS_FATHER,
 } GIVanillaBehavior;
 
 typedef enum {
