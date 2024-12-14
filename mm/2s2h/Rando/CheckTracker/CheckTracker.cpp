@@ -95,6 +95,7 @@ void Window::DrawElement() {
             }
             auto& randoRegion = Rando::Logic::Regions[regionId];
             std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
+            std::vector<std::pair<std::string, std::string>> availableEvents;
             uint32_t obtainedCheckSum = 0;
 
             for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
@@ -112,7 +113,17 @@ void Window::DrawElement() {
                 }
             }
 
-            if (availableChecks.size() > 0) {
+            for (auto& event : randoRegion.events) {
+                if (!filter.PassFilter(event.name.c_str())) {
+                    continue;
+                }
+
+                if (!event.isApplied() && event.condition()) {
+                    availableEvents.push_back({ event.name, event.conditionString });
+                }
+            }
+
+            if (availableChecks.size() > 0 || availableEvents.size() > 0) {
                 std::string regionName = Ship_GetSceneName(randoRegion.sceneId);
                 if (randoRegion.name != "") {
                     regionName += " - ";
@@ -130,6 +141,14 @@ void Window::DrawElement() {
                 }
                 if (ImGui::CollapsingHeader(regionName.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                     ImGui::Indent(20.0f);
+                    for (auto& [name, accessLogicString] : availableEvents) {
+                        ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::White);
+                        ImGui::Text("%s (Event)", name.c_str());
+                        if (accessLogicString != "") {
+                            UIWidgets::Tooltip(accessLogicString.c_str());
+                        }
+                        ImGui::PopStyleColor();
+                    }
                     for (auto& [checkId, accessLogicString] : availableChecks) {
                         auto& randoStaticCheck = Rando::StaticData::Checks[checkId];
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[checkId];

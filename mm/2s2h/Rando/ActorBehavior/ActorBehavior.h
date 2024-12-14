@@ -36,6 +36,7 @@ void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
 void InitEnBabaBehavior();
 void InitEnBalBehavior();
+void InitEnTest5Behavior();
 void InitEnYbBehavior();
 void InitEnRzBehavior();
 void InitEnMnkBehavior();

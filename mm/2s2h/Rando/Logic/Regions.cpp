@@ -95,9 +95,10 @@ std::string LogicString(std::string condition) {
     return condition;
 }
 
-#define EVENT(onApply, onRemove, condition)                                                                \
-    {                                                                                                      \
-        [] { return onApply; }, [] { return onRemove; }, [] { return condition; }, LogicString(#condition) \
+#define EVENT(name, isApplied, onApply, onRemove, condition)                                                       \
+    {                                                                                                              \
+        name, [] { return isApplied; }, [] { return onApply; }, [] { return onRemove; }, [] { return condition; }, \
+            LogicString(#condition)                                                                                \
     }
 #define EXIT(toEntrance, fromEntrance, condition)                           \
     {                                                                       \
@@ -116,6 +117,22 @@ std::string LogicString(std::string condition) {
         check, {                                              \
             [] { return condition; }, LogicString(#condition) \
         }                                                     \
+    }
+#define EVENT_OWL_WARP(owlId)                                                                                         \
+    {                                                                                                                 \
+        "Owl Statue", [] { return CAN_OWL_WARP(owlId); }, [] { SET_OWL_WARP(owlId); }, [] { CLEAR_OWL_WARP(owlId); }, \
+            [] { return RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD; },              \
+            "CAN_USE_SWORD"                                                                                           \
+    }
+#define EVENT_WEEKEVENTREG(name, flag, condition)                                               \
+    {                                                                                           \
+        name, [] { return CHECK_WEEKEVENTREG(flag); }, [] { SET_WEEKEVENTREG(flag); },          \
+            [] { CLEAR_WEEKEVENTREG(flag); }, [] { return condition; }, LogicString(#condition) \
+    }
+#define EVENT_RANDOINF(name, flag, condition)                                                    \
+    {                                                                                            \
+        name, [] { return Flags_GetRandoInf(flag); }, [] { Flags_SetRandoInf(flag); },           \
+            [] { Flags_ClearRandoInf(flag); }, [] { return condition; }, LogicString(#condition) \
     }
 
 // clang-format off
@@ -353,7 +370,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_MAX, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_CLOCK_TOWN), CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
+            EVENT_OWL_WARP(OWL_WARP_CLOCK_TOWN),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTH_CLOCK_TOWN, 9), // From Song of Soaring
@@ -502,7 +519,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(OCEANSIDE_SPIDER_HOUSE, 0),       ENTRANCE(GREAT_BAY_COAST, 8), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_GREAT_BAY_COAST),
         },
         .oneWayEntrances = {
             ENTRANCE(GREAT_BAY_COAST, 11), // From Song of Soaring
@@ -645,7 +662,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(IKANA_CANYON, 13),                ENTRANCE(IKANA_CANYON, 14), true),
         },
         .events = {
-            EVENT(SET_WEEKEVENTREG(WEEKEVENTREG_14_04), CLEAR_WEEKEVENTREG(WEEKEVENTREG_14_04), CAN_PLAY_SONG(STORMS))
+            EVENT_WEEKEVENTREG("Free Ghost Dude", WEEKEVENTREG_14_04, CAN_PLAY_SONG(STORMS)),
         },
     } },
     { RR_IKANA_CANYON_LOWER, RandoRegion{ .name = "Lower", .sceneId = SCENE_IKANA,
@@ -688,7 +705,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_IKANA_CANYON_LOWER, true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_IKANA_CANYON), CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_IKANA_CANYON),
         },
         .oneWayEntrances = {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
@@ -809,7 +826,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(GORMAN_TRACK, 0),                 ENTRANCE(MILK_ROAD, 3), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MILK_ROAD), CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_MILK_ROAD),
         },
         .oneWayEntrances = {
             ENTRANCE(MILK_ROAD, 4), // From Song of Soaring
@@ -838,7 +855,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1),     ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6), true),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE),
         },
         .oneWayEntrances = {
             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
@@ -921,7 +938,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(PIRATES_FORTRESS, 2),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 1), true),
         },
         .events = {
-            EVENT(SET_WEEKEVENTREG(WEEKEVENTREG_83_02), CLEAR_WEEKEVENTREG(WEEKEVENTREG_83_02), HAS_ITEM(ITEM_BOW)),
+            EVENT_WEEKEVENTREG("Hit Beehive", WEEKEVENTREG_83_02, HAS_ITEM(ITEM_BOW)),
         },
     } },
     { RR_PIRATES_FORTRESS_CAPTAIN_ROOM, RandoRegion{ .name = "Captain Room", .sceneId = SCENE_PIRATE,
@@ -1254,7 +1271,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SWAMP_SHOOTING_GALLERY, 0),       ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2), true),
         },
         .events = {
-            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
+            EVENT_RANDOINF("Access To Spring Water", RANDO_INF_HAS_ACCESS_TO_SPRING_WATER, true),
         },
     } },
     { RR_ROMANI_RANCH, RandoRegion{ .sceneId = SCENE_F01,
@@ -1307,10 +1324,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .events = {
             // TODO: Allow opting in to health checks
-            EVENT(Flags_SetSceneClear(SCENE_RANDOM, 0x02), Flags_UnsetSceneClear(SCENE_RANDOM, 0x02), /* CHECK_MAX_HP(4) && */ CAN_KILL_DINALFOS),
-            EVENT(Flags_SetSceneClear(SCENE_RANDOM, 0x03), Flags_UnsetSceneClear(SCENE_RANDOM, 0x03), /* CHECK_MAX_HP(8) && */ CAN_KILL_WIZZROBE),
-            EVENT(Flags_SetSceneClear(SCENE_RANDOM, 0x04), Flags_UnsetSceneClear(SCENE_RANDOM, 0x04), /* CHECK_MAX_HP(12) && */ CAN_KILL_WART),
-            EVENT(Flags_SetSceneClear(SCENE_RANDOM, 0x05), Flags_UnsetSceneClear(SCENE_RANDOM, 0x05), /* CHECK_MAX_HP(16) && */ CAN_KILL_GARO_MASTER),
+            EVENT("Kill Dinalfos", Flags_GetSceneClear(SCENE_RANDOM, 0x02), Flags_SetSceneClear(SCENE_RANDOM, 0x02), Flags_UnsetSceneClear(SCENE_RANDOM, 0x02), /* CHECK_MAX_HP(4) && */ CAN_KILL_DINALFOS),
+            EVENT("Kill Wizzrobe", Flags_GetSceneClear(SCENE_RANDOM, 0x03), Flags_SetSceneClear(SCENE_RANDOM, 0x03), Flags_UnsetSceneClear(SCENE_RANDOM, 0x03), /* CHECK_MAX_HP(8) && */ CAN_KILL_WIZZROBE),
+            EVENT("Kill Wart", Flags_GetSceneClear(SCENE_RANDOM, 0x04), Flags_SetSceneClear(SCENE_RANDOM, 0x04), Flags_UnsetSceneClear(SCENE_RANDOM, 0x04), /* CHECK_MAX_HP(12) && */ CAN_KILL_WART),
+            EVENT("Kill Garo Master", Flags_GetSceneClear(SCENE_RANDOM, 0x05), Flags_SetSceneClear(SCENE_RANDOM, 0x05), Flags_UnsetSceneClear(SCENE_RANDOM, 0x05), /* CHECK_MAX_HP(16) && */ CAN_KILL_GARO_MASTER),
         },
     } },
     { RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN, RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
@@ -1329,7 +1346,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SNOWHEAD_NEAR_TEMPLE, CAN_BE_GORON && CAN_PLAY_SONG(LULLABY)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SNOWHEAD), CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_SNOWHEAD),
         },
         .oneWayEntrances = {
             ENTRANCE(SNOWHEAD, 3), // From Song of Soaring
@@ -1471,8 +1488,8 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_SOUTHERN_SWAMP_SOUTH, (Flags_GetSceneSwitch(SCENE_20SICHITAI, 1) || CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE))),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
-            EVENT(Flags_SetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), Flags_ClearRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER), true),
+            EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
+            EVENT_RANDOINF("Access To Spring Water", RANDO_INF_HAS_ACCESS_TO_SPRING_WATER, true),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana
@@ -1702,7 +1719,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_STONE_TOWER_UPPER, HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_STONE_TOWER), CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD)
+            EVENT_OWL_WARP(OWL_WARP_STONE_TOWER),
         },
         .oneWayEntrances = {
             ENTRANCE(STONE_TOWER, 3), // From Song of Soaring
@@ -1797,8 +1814,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .events = {
             EVENT( // Killing Octorok blocking the southern swamp south section
-                Flags_SetSceneSwitch(SCENE_20SICHITAI, 1),
-                Flags_ClearSceneSwitch(SCENE_20SICHITAI, 1),
+                "Kill Octorok", 
+                Flags_GetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_SetSceneSwitch(SCENE_20SICHITAI, 0x01), 
+                Flags_ClearSceneSwitch(SCENE_20SICHITAI, 0x01), 
                 true // TODO: Conditions for starting swamp tour
             ),
         },
@@ -1937,8 +1956,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_WOODFALL_TEMPLE_DARK_ROOM, true),
         },
         .events = {
-            EVENT(Flags_SetSceneSwitch(SCENE_MITURIN, 0x09), Flags_ClearSceneSwitch(SCENE_MITURIN, 0x09), true),
-            EVENT(SET_WEEKEVENTREG(WEEKEVENTREG_12_01), CLEAR_WEEKEVENTREG(WEEKEVENTREG_12_01), HAS_ITEM(ITEM_BOW)),
+            EVENT(
+                "Light Corner Torch", 
+                Flags_GetSceneSwitch(SCENE_MITURIN, 0x09), 
+                Flags_SetSceneSwitch(SCENE_MITURIN, 0x09), 
+                Flags_ClearSceneSwitch(SCENE_MITURIN, 0x09), 
+                HAS_ITEM(ITEM_BOW) && CHECK_WEEKEVENTREG(WEEKEVENTREG_12_01)
+            ),
+            EVENT_WEEKEVENTREG("Light Middle Torch", WEEKEVENTREG_12_01, HAS_ITEM(ITEM_BOW)),
         },
     } },
     { RR_WOODFALL_TEMPLE_MAIN_ROOM, RandoRegion{ .name = "Main Room", .sceneId = SCENE_MITURIN,
@@ -2085,7 +2110,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             )),
         },
         .events = {
-            EVENT(SET_OWL_WARP(OWL_WARP_ZORA_CAPE), CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE), RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO && CAN_USE_SWORD),
+            EVENT_OWL_WARP(OWL_WARP_ZORA_CAPE),
         },
         .oneWayEntrances = {
             ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring

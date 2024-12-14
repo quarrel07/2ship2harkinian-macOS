@@ -21,6 +21,8 @@ void ApplyGlitchlessLogicToSaveContext();
 void ApplyNoLogicToSaveContext();
 
 struct RandoEvent {
+    std::string name;
+    std::function<bool()> isApplied;
     std::function<void()> onApply;
     std::function<void()> onRemove;
     std::function<bool()> condition;
