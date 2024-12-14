@@ -163,7 +163,7 @@ void Register3DItemDrops() {
             actor->draw = EnItem00_3DItemsDraw;
         }
     });
-    
+
     COND_ID_HOOK(OnActorUpdate, ACTOR_EN_ITEM00, CVAR, [](Actor* actor) {
         // Add spin to normally bill-boarded items
         if (actor->draw == EnItem00_3DItemsDraw && ItemShouldSpinWhen3D(actor)) {
