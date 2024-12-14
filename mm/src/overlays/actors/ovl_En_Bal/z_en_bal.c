@@ -835,7 +835,8 @@ void EnBal_TryPurchaseMap(EnBal* this, PlayState* play) {
                 Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, TINGLE_ANIM_TALK);
                 Message_StartTextbox(play, 0x1D0A, &this->picto.actor);
                 this->textId = 0x1D0A;
-            } else if ((GameInteractor_Should(VB_ALREADY_HAVE_TINGLE_MAP, EnBal_CheckIfMapUnlocked(this, play), this, &price))) {
+            } else if ((GameInteractor_Should(VB_ALREADY_HAVE_TINGLE_MAP, EnBal_CheckIfMapUnlocked(this, play), this,
+                                              &price))) {
                 // Can't buy map because player already has it
                 Audio_PlaySfx(NA_SE_SY_ERROR);
                 Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, TINGLE_ANIM_TALK);
