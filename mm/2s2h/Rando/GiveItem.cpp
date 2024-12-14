@@ -226,6 +226,7 @@ void Rando::GiveItem(RandoItemId randoItemId) {
         case RI_OWL_ZORA_CAPE:
             Sram_ActivateOwl(OWL_WARP_ZORA_CAPE);
             break;
+        case RI_JUNK:
         case RI_NONE:
             break;
         default:

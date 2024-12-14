@@ -56,6 +56,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_HEART_CONTAINER,            "a",    "Heart Container",            ITEM_HEART_CONTAINER,            GI_HEART_CONTAINER,          GID_HEART_CONTAINER),
     RI(RI_HEART_PIECE,                "a",    "Heart Piece",                ITEM_HEART_PIECE,                GI_HEART_PIECE,              GID_HEART_PIECE),
     RI(RI_HOOKSHOT,                   "the",  "Hookshot",                   ITEM_HOOKSHOT,                   GI_HOOKSHOT,                 GID_HOOKSHOT),
+    RI(RI_JUNK,                       "",     "Junk",                       ITEM_NONE,                       GI_NONE,                     GID_NONE),
     RI(RI_LENS,                       "the",  "Lens of Truth",              ITEM_LENS_OF_TRUTH,              GI_LENS_OF_TRUTH,            GID_LENS),
     RI(RI_LETTER_TO_KAFEI,            "the",  "Letter to Kafei",            ITEM_LETTER_TO_KAFEI,            GI_LETTER_TO_KAFEI,          GID_LETTER_TO_KAFEI),
     RI(RI_LETTER_TO_MAMA,             "the",  "Letter to Mama",             ITEM_LETTER_MAMA,                GI_LETTER_TO_MAMA,           GID_LETTER_MAMA),

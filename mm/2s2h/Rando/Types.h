@@ -931,6 +931,7 @@ typedef enum {
     RI_HEART_CONTAINER,
     RI_HEART_PIECE,
     RI_HOOKSHOT,
+    RI_JUNK,
     RI_LENS,
     RI_LETTER_TO_KAFEI,
     RI_LETTER_TO_MAMA,

@@ -54,12 +54,16 @@ void DrawStrayFairy(RandoItemId randoItemId) {
     static bool initialized = false;
     static SkelAnime skelAnime;
     static Vec3s jointTable[STRAY_FAIRY_LIMB_MAX];
+    static u32 lastUpdate = 0;
     if (!initialized) {
         initialized = true;
         SkelAnime_InitFlex(gPlayState, &skelAnime, (FlexSkeletonHeader*)&gStrayFairySkel,
                            (AnimationHeader*)&gStrayFairyFlyingAnim, jointTable, jointTable, STRAY_FAIRY_LIMB_MAX);
     }
-    SkelAnime_Update(&skelAnime);
+    if (gPlayState != NULL && lastUpdate != gPlayState->state.frames) {
+        lastUpdate = gPlayState->state.frames;
+        SkelAnime_Update(&skelAnime);
+    }
     POLY_XLU_DISP = SkelAnime_DrawFlex(gPlayState, skelAnime.skeleton, skelAnime.jointTable, skelAnime.dListCount,
                                        StrayFairyOverrideLimbDraw, NULL, NULL, POLY_XLU_DISP);
 
@@ -169,6 +173,9 @@ void DrawOwlStatue() {
 
 void Rando::DrawItem(RandoItemId randoItemId) {
     switch (randoItemId) {
+        case RI_JUNK:
+            Rando::DrawItem(Rando::CurrentJunkItem());
+            break;
         case RI_SONG_TIME:
         case RI_SONG_SUN:
         case RI_SONG_HEALING:
