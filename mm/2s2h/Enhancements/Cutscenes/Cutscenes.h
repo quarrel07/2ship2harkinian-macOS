@@ -19,6 +19,7 @@ void RegisterSkipTingleTime();
 void RegisterSkipClockTowerOpen();
 void SkipClockTowerSkullKidEncounter();
 void RegisterSkipLearningElegyOfEmptiness();
+void RegisterSkipLearningNewWaveBossaNova();
 void RegisterSkipLearningSongOfHealing();
 void RegisterSkipLearningSongOfTime();
 void RegisterSkipSongOfTimeCutscene();
