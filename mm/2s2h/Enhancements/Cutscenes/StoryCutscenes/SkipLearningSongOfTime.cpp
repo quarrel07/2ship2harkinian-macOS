@@ -14,7 +14,11 @@ extern "C" {
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
 void RegisterSkipLearningSongOfTime() {
-    COND_VB_SHOULD(VB_PLAY_SONG_OF_TIME_CS, CVAR || IS_RANDO, {
+    COND_VB_SHOULD(VB_PLAY_SONG_OF_TIME_CS, CVAR, {
+        if (!*should) {
+            return;
+        }
+
         *should = false;
         // This typically gets set in the cutscene
         gSaveContext.save.playerForm = PLAYER_FORM_DEKU;
@@ -38,4 +42,4 @@ void RegisterSkipLearningSongOfTime() {
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipLearningSongOfTime, { CVAR_NAME, "IS_RANDO" });
+static RegisterShipInitFunc initFunc(RegisterSkipLearningSongOfTime, { CVAR_NAME });
