@@ -116,7 +116,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             } else if (CUR_UPG_VALUE(UPG_WALLET) >= 2) {
                 return false;
             }
-            break;
+            return true;
         case RI_WALLET_ADULT:
             if (CUR_UPG_VALUE(UPG_WALLET) >= 1) {
                 return false;
@@ -134,7 +134,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                        (STOLEN_ITEM_1 >= ITEM_SWORD_GILDED) || (STOLEN_ITEM_2 >= ITEM_SWORD_GILDED)) {
                 return false;
             }
-            break;
+            return true;
         case RI_SWORD_KOKIRI:
             if (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) >= EQUIP_VALUE_SWORD_KOKIRI ||
                 (STOLEN_ITEM_1 >= ITEM_SWORD_KOKIRI) || (STOLEN_ITEM_2 >= ITEM_SWORD_KOKIRI)) {
@@ -159,7 +159,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             } else if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 3) {
                 return false;
             }
-            break;
+            return true;
         case RI_BOMB_BAG_20:
             if (CUR_UPG_VALUE(UPG_BOMB_BAG) >= 1) {
                 return false;
@@ -204,7 +204,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
                        gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired) {
                 return false;
             }
-            break;
+            return true;
         case RI_DOUBLE_MAGIC:
             return !gSaveContext.save.saveInfo.playerData.isDoubleMagicAcquired;
         case RI_SINGLE_MAGIC:
