@@ -46,4 +46,13 @@ void Rando::ActorBehavior::InitObjWarpstoneBehavior() {
             *should = false;
         }
     });
+
+    COND_VB_SHOULD(VB_OWL_STATUE_BE_ACTIVE, IS_RANDO, {
+        u8 warpstoneId = (u8)va_arg(args, u32);
+        RandoCheckId randoCheckId = Identify_Statue(warpstoneId);
+
+        if (randoCheckId != RC_UNKNOWN && RANDO_SAVE_CHECKS[randoCheckId].shuffled) {
+            *should = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        }
+    });
 }
