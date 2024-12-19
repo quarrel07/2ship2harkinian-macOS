@@ -14,6 +14,10 @@ void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* option
         case VB_GIVE_ITEM_FROM_MALON:
             *should = CHECK_QUEST_ITEM(QUEST_SONG_EPONA);
             break;
+        // TODO: This should be configurable
+        case VB_DOOR_HEALTH_CHECK_FAIL:
+            *should = false;
+            break;
         case VB_GIVE_PENDANT_OF_MEMORIES_FROM_KAFEI:
         case VB_MSG_SCRIPT_DEL_ITEM:
         case VB_GIVE_NEW_WAVE_BOSSA_NOVA:

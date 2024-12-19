@@ -1358,7 +1358,9 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Skip Misc Interactions", "gEnhancements.Cutscenes.SkipMiscInteractions",
                 "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time.",
-                WIDGET_CVAR_CHECKBOX } },
+                WIDGET_CVAR_CHECKBOX },
+              { "Skip Item Get Cutscene", "gEnhancements.Cutscenes.SkipGetItemCutscenes",
+                "Note: This only works in Randomizer currently", WIDGET_CVAR_CHECKBOX } },
             // Dialogue Enhancements
             { { .widgetName = "Dialogue", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Fast Bank Selection", "gEnhancements.Dialogue.FastBankSelection",
