@@ -456,6 +456,12 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
     } },
     { RR_DEKU_SHRINE, RandoRegion{ .sceneId = SCENE_DANPEI,
+        .checks = {
+            // Commenting out checks because I'm not sure on the logic. 
+            // Glitchless logic doesn't finish when uncommented
+            // CHECK(RC_DEKU_SHRINE_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            // CHECK(RC_DEKU_SHRINE_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
         },
@@ -1166,8 +1172,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_PIRATES_FORTRESS_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
         .checks = {
-            // SEWERS_POT_WATERWAY_1 incorrectly triggers INTERIOR_POT_GUARDED_1, commenting it out for now.
-            //CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, true),
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_1, true),
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_WATERWAY_2, true),
         },
         .exits = { //     TO                                         FROM
@@ -1183,7 +1188,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_2, CAN_BE_ZORA),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_CHEST_3, CAN_BE_ZORA),
             CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_1, true),
-            // RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2 seems to be missing, the pot next to the above pot.
+            CHECK(RC_PIRATE_FORTRESS_SEWERS_POT_HEART_PIECE_ROOM_2, true),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_SEWERS_HP, true)
         },
         .exits = { //     TO                                         FROM
