@@ -63,7 +63,11 @@ void ApplyGlitchlessLogicToSaveContext() {
                 if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
                     continue;
                 } else {
-                    RANDO_SAVE_CHECKS[randoCheckId].price = Ship_Random(0, 200);
+                    int price = Ship_Random(0, 200);
+                    // We need the price to be saved in the current save context for logic, as well as the backed
+                    // up context that will be used in the actual playthrough
+                    RANDO_SAVE_CHECKS[randoCheckId].price = price;
+                    copiedSaveContext.save.shipSaveInfo.rando.randoSaveChecks[randoCheckId].price = price;
                 }
             }
 

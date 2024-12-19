@@ -59,6 +59,9 @@ namespace Logic {
 #define CAN_LIGHT_TORCH_NEAR_ANOTHER \
     (HAS_ITEM(ITEM_DEKU_STICK) || (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC))
 #define KEY_COUNT(dungeon) (gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_##dungeon])
+#define CAN_AFFORD(rc)                                                                                                \
+    ((RANDO_SAVE_CHECKS[rc].price < 100) || (RANDO_SAVE_CHECKS[rc].price <= 200 && CUR_UPG_VALUE(UPG_WALLET) >= 1) || \
+     (CUR_UPG_VALUE(UPG_WALLET) >= 2))
 
 // TODO: MOVE THIS STUFF OR SOMETHING
 void Flags_SetSceneSwitch(s32 scene, s32 flag) {
@@ -261,9 +264,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_BOMB_SHOP, RandoRegion{ .sceneId = SCENE_BOMYA,
         .checks = {
-            CHECK(RC_BOMB_SHOP_ITEM_1, true),
-            CHECK(RC_BOMB_SHOP_ITEM_2, true),
-            CHECK(RC_BOMB_SHOP_ITEM_3, true),
+            CHECK(RC_BOMB_SHOP_ITEM_1, CAN_AFFORD(RC_BOMB_SHOP_ITEM_1)),
+            CHECK(RC_BOMB_SHOP_ITEM_2, CAN_AFFORD(RC_BOMB_SHOP_ITEM_2)),
+            CHECK(RC_BOMB_SHOP_ITEM_3, CAN_AFFORD(RC_BOMB_SHOP_ITEM_3)),
             // TODO: Bigger bomb bag
         },
         .exits = { //     TO                                         FROM
@@ -784,10 +787,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_MAGIC_HAGS_POTION_SHOP, RandoRegion{ .sceneId = SCENE_WITCH_SHOP,
         .checks = {
-            // TODO: Shop prices vs adult wallet?
-            CHECK(RC_HAGS_POTION_SHOP_ITEM_1, true),
-            CHECK(RC_HAGS_POTION_SHOP_ITEM_2, true),
-            CHECK(RC_HAGS_POTION_SHOP_ITEM_3, true),
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_1, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_1)),
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_2, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_2)),
+            CHECK(RC_HAGS_POTION_SHOP_ITEM_3, CAN_AFFORD(RC_HAGS_POTION_SHOP_ITEM_3)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 5),      ENTRANCE(MAGIC_HAGS_POTION_SHOP, 0), true),
@@ -1507,7 +1509,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_BLOCK_ROOM,   CAN_BE_ZORA || HAS_ITEM(ITEM_HOOKSHOT) || (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC)),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_ENTRANCE,     true), // Key door
+            CONNECTION(RR_SNOWHEAD_TEMPLE_ENTRANCE,     true), // TODO: Key door
             CONNECTION(RR_SNOWHEAD_TEMPLE_ICICLE_ROOM,  CAN_USE_EXPLOSIVE),
         },
     } },
@@ -1529,7 +1531,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR, CAN_BE_GORON || (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC)),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_ICICLE_ROOM, true), // Key Door
+            CONNECTION(RR_SNOWHEAD_TEMPLE_ICICLE_ROOM, true), // TODO: Key Door
         },
     } },
     { RR_SNOWHEAD_TEMPLE_ENTRANCE, RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
@@ -1543,7 +1545,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
       .connections = {
           CONNECTION(RR_SNOWHEAD_TEMPLE_BLOCK_ROOM,   CAN_BE_GORON && (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_FIRE) && HAS_MAGIC)),
           CONNECTION(RR_SNOWHEAD_TEMPLE_BRIDGE_ROOM,  CAN_BE_GORON),
-          CONNECTION(RR_SNOWHEAD_TEMPLE_COMPASS_ROOM, CAN_BE_GORON), // Key Door
+          CONNECTION(RR_SNOWHEAD_TEMPLE_COMPASS_ROOM, CAN_BE_GORON), // TODO: Key Door
       },
     } },
     { RR_SNOWHEAD_TEMPLE_ICICLE_ROOM, RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
@@ -1554,7 +1556,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR, true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_COMPASS_ROOM,             true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_DUAL_SWITCHES_ROOM,       true), // Key Door
+            CONNECTION(RR_SNOWHEAD_TEMPLE_DUAL_SWITCHES_ROOM,       true), // TODO: Key Door
             CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM,             true),
         },
     } },
@@ -1991,14 +1993,14 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_TRADING_POST, RandoRegion{ .sceneId = SCENE_8ITEMSHOP,
         .checks = {
             CHECK(RC_CLOCK_TOWN_WEST_TRADING_POST_POT, true), // Note : Goron has to sidehop to get up.
-            CHECK(RC_TRADING_POST_SHOP_ITEM_1, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_2, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_3, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_4, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_5, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_6, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_7, true),
-            CHECK(RC_TRADING_POST_SHOP_ITEM_8, true),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_1, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_1)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_2, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_2)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_3, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_3)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_4, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_4)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_5, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_5)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_6, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_6)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_7, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_7)),
+            CHECK(RC_TRADING_POST_SHOP_ITEM_8, CAN_AFFORD(RC_TRADING_POST_SHOP_ITEM_8)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WEST_CLOCK_TOWN, 5),              ENTRANCE(TRADING_POST, 0), true),
@@ -2294,9 +2296,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_ZORA_HALL_SHOP, RandoRegion{ .name = "Shop", .sceneId = SCENE_BANDROOM,
         .checks = {
-            CHECK(RC_ZORA_SHOP_ITEM_1,              true),
-            CHECK(RC_ZORA_SHOP_ITEM_2,              true),
-            CHECK(RC_ZORA_SHOP_ITEM_3,              true),
+            CHECK(RC_ZORA_SHOP_ITEM_1, CAN_AFFORD(RC_ZORA_SHOP_ITEM_1)),
+            CHECK(RC_ZORA_SHOP_ITEM_2, CAN_AFFORD(RC_ZORA_SHOP_ITEM_2)),
+            CHECK(RC_ZORA_SHOP_ITEM_3, CAN_AFFORD(RC_ZORA_SHOP_ITEM_3)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_HALL, 2),                    ENTRANCE(ZORA_HALL_ROOMS, 5), true),
