@@ -16,13 +16,34 @@ void EnGirlA_SetupAction(EnGirlA* enGirlA, EnGirlAActionFunc action);
 #define RANDO_DESC_TEXT_ID 0x083F
 #define RANDO_CHOICE_TEXT_ID 0x0840
 
+static const std::vector<std::string> flavorTexts = {
+    "Buy it, you won't regret it!",   "A must-have for any adventurer!", "A great gift for a friend!",
+    "One of a kind, don't miss out!", "A great deal for the price!",     "On sale for a limited time!",
+    "Get it while it's hot!",         "Don't miss out on this deal!",
+};
+
+void EnGirlA_RandoDrawFunc(Actor* actor, PlayState* play) {
+    EnGirlA* enGirlA = (EnGirlA*)actor;
+
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[actor->world.rot.z];
+
+    Matrix_RotateYS(enGirlA->rotY, MTXMODE_APPLY);
+
+    Rando::DrawItem(randoSaveCheck.randoItemId);
+}
+
 void EnGirlA_RandoBought(PlayState* play, EnGirlA* enGirlA) {
     enGirlA->isOutOfStock = true;
     enGirlA->actor.draw = NULL;
 }
 
 void EnGirlA_RandoRestock(PlayState* play, EnGirlA* enGirlA) {
-    // Maybe in the future we'll restock ammo items / refills? for now nothing
+    auto randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
+
+    if (Rando::IsItemObtainable(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z)) {
+        enGirlA->isOutOfStock = false;
+        enGirlA->actor.draw = EnGirlA_RandoDrawFunc;
+    }
 }
 
 s32 EnGirlA_RandoCanBuyFunc(PlayState* play, EnGirlA* enGirlA) {
@@ -41,23 +62,14 @@ s32 EnGirlA_RandoCanBuyFunc(PlayState* play, EnGirlA* enGirlA) {
 
 void EnGirlA_RandoBuyFunc(PlayState* play, EnGirlA* enGirlA) {
     auto& randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
-
-    randoSaveCheck.eligible = true;
+    RandoItemId randoItemId = Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z);
+    randoSaveCheck.obtained = true;
     Rupees_ChangeBy(-play->msgCtx.unk1206C);
+    Rando::GiveItem(randoItemId);
 }
 
 void EnGirlA_RandoBuyFanfareFunc(PlayState* play, EnGirlA* enGirlA) {
     // No-op, if we made it here something went wrong
-}
-
-void EnGirlA_RandoDrawFunc(Actor* actor, PlayState* play) {
-    EnGirlA* enGirlA = (EnGirlA*)actor;
-
-    auto randoSaveCheck = RANDO_SAVE_CHECKS[actor->world.rot.z];
-
-    Matrix_RotateYS(enGirlA->rotY, MTXMODE_APPLY);
-
-    Rando::DrawItem(randoSaveCheck.randoItemId);
 }
 
 void EnGirlA_RandoInit(EnGirlA* enGirlA, PlayState* play) {
@@ -86,7 +98,7 @@ void EnGirlA_RandoInit(EnGirlA* enGirlA, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
 
-    if (randoSaveCheck.eligible) {
+    if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z)) {
         enGirlA->isOutOfStock = true;
         enGirlA->actor.draw = NULL;
     } else {
@@ -227,10 +239,11 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
                                std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
                                    " Rupees");
 
-        if (randoSaveCheck.eligible) {
+        if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, randoCheckId)) {
             CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
         } else {
-            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Buy it, you won't regret it!");
+            CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!",
+                                   flavorTexts[rand() % flavorTexts.size()]);
         }
 
         CustomMessage::LoadCustomMessageIntoFont(entry);

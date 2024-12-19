@@ -227,7 +227,7 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             if (hasObtainedCheck) {
                 return false;
             }
-            break;
+            return true;
         case RI_HEART_PIECE:
         case RI_HEART_CONTAINER:
             if (hasObtainedCheck) {
