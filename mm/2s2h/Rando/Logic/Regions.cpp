@@ -43,9 +43,8 @@ namespace Logic {
 // TODO: Maybe not reliable because of theif bird stealing bottle
 #define HAS_BOTTLE (INV_CONTENT(ITEM_BOTTLE) != ITEM_NONE)
 #define CAN_USE_PROJECTILE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA)
-#define CAN_GET_SPRING_WATER                                                  \
-    (HAS_BOTTLE && Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_SPRING_WATER) || \
-     Flags_GetRandoInf(RANDO_INF_HAS_ACCESS_TO_HOT_SPRING_WATER))
+#define CAN_GET_SPRING_WATER \
+    (HAS_BOTTLE && RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER] || RANDO_ACCESS[RANDO_ACCESS_HOT_SPRING_WATER])
 #define CAN_GROW_BEAN_PLANT (HAS_ITEM(ITEM_MAGIC_BEANS) && (CAN_PLAY_SONG(STORMS) || CAN_GET_SPRING_WATER))
 // TODO: Move these into a seperate file later?
 // After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
@@ -137,6 +136,16 @@ std::string LogicString(std::string condition) {
         name, [] { return Flags_GetRandoInf(flag); }, [] { Flags_SetRandoInf(flag); },           \
             [] { Flags_ClearRandoInf(flag); }, [] { return condition; }, LogicString(#condition) \
     }
+#define EVENT_ACCESS(flag, condition)                                                               \
+    {                                                                                               \
+        randoAccessName[flag], [] { return RANDO_ACCESS[flag] > 0; }, [] { RANDO_ACCESS[flag]++; }, \
+            [] { RANDO_ACCESS[flag]--; }, [] { return condition; }, LogicString(#condition)         \
+    }
+
+std::string randoAccessName[RANDO_ACCESS_MAX] = {
+    "Access To Hot Spring Water", "Access To Nut Ammo",   "Access To Pirate Picture", "Access To Seahorse",
+    "Access To Spring Water",     "Access To Stick Ammo", "Access To Zora Egg",
+};
 
 // clang-format off
 std::unordered_map<RandoRegionId, RandoRegion> Regions = {
@@ -477,6 +486,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     { RR_FISHERMANS_HUT, RandoRegion{ .sceneId = SCENE_FISHERMAN,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 4),              ENTRANCE(FISHERMANS_HUT, 0), true),
+        },
+        .events = {
+            // TODO: Should this be a check?
+            EVENT_ACCESS(RANDO_ACCESS_SEAHORSE, RANDO_ACCESS[RANDO_ACCESS_PIRATE_PICTURE]),
         },
     } },
     { RR_GHOST_HUT, RandoRegion{ .sceneId = SCENE_TOUGITES,
@@ -906,8 +919,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_MARINE_RESEARCH_LAB, RandoRegion{ .sceneId = SCENE_LABO,
         .checks = {
-            // TODO: eggs
-            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+            CHECK(RC_GREAT_BAY_COAST_NEW_WAVE_BOSSA_NOVA, CAN_BE_ZORA && HAS_ITEM(ITEM_OCARINA_OF_TIME) && RANDO_ACCESS[RANDO_ACCESS_ZORA_EGG] >= 7),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GREAT_BAY_COAST, 7),              ENTRANCE(MARINE_RESEARCH_LAB, 0), true),
@@ -1033,9 +1045,15 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
         },
     } },
-    { RR_PINNACLE_ROCK, RandoRegion{ .sceneId = SCENE_SINKAI,
-        // Maybe we split this up into two areas, one requiring sea horse to get to the other.
-        // (Without seahorse should be considered a trick)
+    { RR_PINNACLE_ROCK_ENTRANCE, RandoRegion{ .name = "Entrance", .sceneId = SCENE_SINKAI,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_INNER, RANDO_ACCESS[RANDO_ACCESS_SEAHORSE] && CAN_BE_ZORA)
+        }
+    } },
+    { RR_PINNACLE_ROCK_INNER, RandoRegion{ .name = "Inner", .sceneId = SCENE_SINKAI,
         .checks = {
             CHECK(RC_PINNACLE_ROCK_CHEST_1,     CAN_BE_ZORA),
             CHECK(RC_PINNACLE_ROCK_CHEST_2,     CAN_BE_ZORA && HAS_MAGIC),
@@ -1052,8 +1070,13 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             CHECK(RC_PINNACLE_ROCK_POT_11,      CAN_BE_ZORA),
             // TODO: Missing HP check to add here later.
         },
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(GREAT_BAY_COAST, 3),              ENTRANCE(PINNACLE_ROCK, 0), true),
+        .connections = {
+            CONNECTION(RR_PINNACLE_ROCK_ENTRANCE, true)
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_MAGIC && HAS_BOTTLE && CAN_BE_ZORA),
         },
     } },
     { RR_PIRATES_FORTRESS_CAPTAIN_ROOM_UPPER, RandoRegion{ .name = "Captain Room Upper", .sceneId = SCENE_PIRATE,
@@ -1077,6 +1100,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(PIRATES_FORTRESS, 1),             ENTRANCE(PIRATES_FORTRESS_INTERIOR, 0), true),
         },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_3_GUARD_ROOM, RandoRegion{ .name = "3 Guard Room", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -1087,7 +1113,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_PURPLE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_CHEST_EGG_ROOM, RandoRegion{ .name = "Chest Egg Room", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -1101,7 +1130,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, RandoRegion{ .name = "Green Guard Room", .sceneId = SCENE_PIRATE,
         .exits = { //     TO                                         FROM
@@ -1118,7 +1150,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, RandoRegion{ .name = "Maze Room", .sceneId = SCENE_PIRATE,
         .exits = { //     TO                                         FROM
@@ -1126,7 +1161,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_GREEN_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_INSIDE_ORANGE_GUARD, RandoRegion{ .name = "Orange Guard Room", .sceneId = SCENE_PIRATE,
         .connections = {
@@ -1142,7 +1180,6 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
     } },
     { RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, RandoRegion{ .name = "Left Clam Room", .sceneId = SCENE_PIRATE,
         .checks = {
-            // Zora Egg Here
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_1, true),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_GUARDED_2, true),
         },
@@ -1151,7 +1188,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_LEFT_CLAM_EGG_ROOM, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
     } },
     { RR_PIRATES_FORTRESS_LEFT_PLATFORM, RandoRegion{ .name = "Left Platform", .sceneId = SCENE_KAIZOKU,
         // The drop down from the LEFT_CLAM_EGG_ROOM
@@ -1186,6 +1226,9 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_MOAT_HIGHER, HAS_ITEM(ITEM_HOOKSHOT)),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
         },
         .oneWayEntrances = {
             ENTRANCE(PIRATES_FORTRESS_EXTERIOR, 3), // Two steams in "RR_PIRATES_FORTRESS_SEWERS_PREGATE" and "RR_PIRATES_FORTRESS_SEWERS_POSTGATE"
@@ -1229,7 +1272,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA_LEFT_LOWER, HAS_ITEM(ITEM_HOOKSHOT))
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_PALAZA_RIGHT_EXIT, RandoRegion{ .name = "Right Side Exit", .sceneId = SCENE_KAIZOKU,
         // The doorway when exiting the RIGHT_CLAM_EGG_ROOM, one way jump down to PALAZA
@@ -1258,7 +1304,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_PALAZA, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_PALAZA, RandoRegion{ .name = "Palaza", .sceneId = SCENE_KAIZOKU,
         .checks = {
@@ -1276,11 +1325,13 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
                 (HAS_ITEM(ITEM_DEKU_NUT) || HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_MASK_STONE)) ||
                 (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_ZORA
             )),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_PIRATE_PICTURE, true),
+        },
     } },
     { RR_PIRATES_FORTRESS_RIGHT_CLAM_EGG_ROOM, RandoRegion{ .name = "Right Clam Room", .sceneId = SCENE_PIRATE,
         .checks = {
-            // Zora Egg Here
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_1, true),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_2, true),
             CHECK(RC_PIRATE_FORTRESS_INTERIOR_POT_BARREL_MAZE_3, true),
@@ -1290,7 +1341,10 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .connections = {
             CONNECTION(RR_PIRATES_FORTRESS_INSIDE_MAZE_GUARD, true),
-        }
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_ZORA_EGG, HAS_ITEM(ITEM_HOOKSHOT) && HAS_BOTTLE && CAN_BE_ZORA),
+        },
     } },
     { RR_PIRATES_FORTRESS_SEWERS_POSTGATE, RandoRegion{ .name = "Sewers Postgate", .sceneId = SCENE_PIRATE,
         .checks = {
@@ -1403,7 +1457,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
             EXIT(ENTRANCE(SWAMP_SHOOTING_GALLERY, 0),       ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 2), true),
         },
         .events = {
-            EVENT_RANDOINF("Access To Spring Water", RANDO_INF_HAS_ACCESS_TO_SPRING_WATER, true),
+            EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
         },
     } },
     { RR_ROMANI_RANCH, RandoRegion{ .sceneId = SCENE_F01,
@@ -1769,7 +1823,7 @@ std::unordered_map<RandoRegionId, RandoRegion> Regions = {
         },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP),
-            EVENT_RANDOINF("Access To Spring Water", RANDO_INF_HAS_ACCESS_TO_SPRING_WATER, true),
+            EVENT_ACCESS(RANDO_ACCESS_SPRING_WATER, true),
         },
         .oneWayEntrances = {
             ENTRANCE(SOUTHERN_SWAMP_POISONED, 9), // From river in Ikana

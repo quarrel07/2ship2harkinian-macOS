@@ -5,6 +5,7 @@
 extern "C" {
 #include "variables.h"
 #include "ShipUtils.h"
+uint64_t GetUnixTimestamp();
 }
 
 namespace Rando {
@@ -24,14 +25,18 @@ void ApplyGlitchlessLogicToSaveContext() {
     std::unordered_map<RandoCheckId, RandoPoolEntry> randoCheckPool;
     std::set<RandoEvent*> randoEventsTriggered;
     SaveContext copiedSaveContext;
+    uint64_t tick = GetUnixTimestamp();
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
+    std::set<RandoCheckId> allChecksThatAreInLogic;
+    std::set<RandoCheckId> allChecksThatHaveBeenReachedAtLeastOnce;
 
     // #region TODO: This just gives us a bunch of stuff that isn't technically in logic yet, so that generation can
     // happen prior to these items being in logic. Each time an item is logically placed, it should be removed from this
     // section.
     std::vector<RandoItemId> startingItems = {
-        RI_ARROW_FIRE, RI_MAGIC_BEAN,     RI_SONG_STORMS,  RI_MASK_COUPLE, RI_SONG_NOVA,  RI_MASK_GARO, RI_ARROW_LIGHT,
-        RI_ARROW_ICE,  RI_MASK_ALL_NIGHT, RI_SONG_LULLABY, RI_SONG_ELEGY,  RI_DEKU_STICK, RI_DEKU_NUT,
+        RI_ARROW_FIRE, RI_MAGIC_BEAN,  RI_SONG_STORMS, RI_MASK_COUPLE,    RI_SONG_NOVA,
+        RI_MASK_GARO,  RI_ARROW_LIGHT, RI_ARROW_ICE,   RI_MASK_ALL_NIGHT, RI_SONG_LULLABY,
+        RI_SONG_ELEGY, RI_DEKU_STICK,  RI_DEKU_NUT,    RI_PICTOGRAPH_BOX,
     };
 
     for (RandoItemId randoItemId : startingItems) {
@@ -70,12 +75,32 @@ void ApplyGlitchlessLogicToSaveContext() {
                 }
             }
 
+            allChecksThatAreInLogic.insert(randoCheckId);
             randoCheckPool[randoCheckId] = { true, randoStaticCheck.randoItemId, RI_UNKNOWN, false, false, false };
         }
     }
 
     // Recursive lambda for backtracking placement
     std::function<bool(std::set<RandoRegionId>)> PlaceItems = [&](std::set<RandoRegionId> reachableRegions) -> bool {
+        if (GetUnixTimestamp() - tick > 5000) {
+            tick = GetUnixTimestamp();
+
+            // Log checks that have never been reached
+            std::vector<RandoCheckId> checksThatHaveNeverBeenReached;
+
+            std::set_difference(allChecksThatAreInLogic.begin(), allChecksThatAreInLogic.end(),
+                                allChecksThatHaveBeenReachedAtLeastOnce.begin(),
+                                allChecksThatHaveBeenReachedAtLeastOnce.end(),
+                                std::inserter(checksThatHaveNeverBeenReached, checksThatHaveNeverBeenReached.begin()));
+
+            SPDLOG_ERROR("Checks that have never been reached:");
+            for (RandoCheckId randoCheckId : checksThatHaveNeverBeenReached) {
+                SPDLOG_ERROR("{}", Rando::StaticData::Checks[randoCheckId].name);
+            }
+
+            throw std::runtime_error("Logic Generation Timeout");
+        }
+
         // Crawl through all reachable regions and add any new reachable regions
         std::set<RandoRegionId> currentReachableRegions = reachableRegions;
         for (RandoRegionId regionId : reachableRegions) {
@@ -94,10 +119,11 @@ void ApplyGlitchlessLogicToSaveContext() {
                     randoCheckPool[randoCheckId].inPool == false) {
                     // Check is accessible
                     if (accessLogicFunc.first()) {
+                        allChecksThatHaveBeenReachedAtLeastOnce.insert(randoCheckId);
                         randoCheckPool[randoCheckId].inPool = true;
                         newChecksInPool.push_back(randoCheckId);
                     } else {
-                        SPDLOG_INFO("Check {} is not accessible", Rando::StaticData::Checks[randoCheckId].name);
+                        SPDLOG_TRACE("Check {} is not accessible", Rando::StaticData::Checks[randoCheckId].name);
                     }
                 }
             }
@@ -162,8 +188,8 @@ void ApplyGlitchlessLogicToSaveContext() {
             // Place the item in the check
             RandoCheckId randoCheckId = currentCheckPool[i];
             auto [randoItemId, randoCheckIdFromItem] = currentItemPool[i];
-            SPDLOG_INFO("Placing item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
-                        Rando::StaticData::Checks[randoCheckId].name);
+            SPDLOG_TRACE("Placing item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
+                         Rando::StaticData::Checks[randoCheckId].name);
             randoCheckPool[randoCheckId].checkFilled = true;
             randoCheckPool[randoCheckId].placedItemId = randoItemId;
             randoCheckPool[randoCheckIdFromItem].itemPlaced = true;
@@ -175,8 +201,8 @@ void ApplyGlitchlessLogicToSaveContext() {
                 return true; // Found a solution
             }
 
-            SPDLOG_INFO("Failed to place item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
-                        Rando::StaticData::Checks[randoCheckId].name);
+            SPDLOG_TRACE("Failed to place item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
+                         Rando::StaticData::Checks[randoCheckId].name);
             // Backtrack: remove the item and try another check
             randoCheckPool[randoCheckId].checkFilled = false;
             randoCheckPool[randoCheckId].placedItemId = RI_UNKNOWN;
