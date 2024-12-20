@@ -893,6 +893,18 @@ typedef enum {
 } RandoCheckId;
 
 typedef enum {
+    RITYPE_JUNK,
+    RITYPE_LESSER,
+    RITYPE_SMALL_KEY,
+    RITYPE_BOSS_KEY,
+    RITYPE_SKULLTULA_TOKEN,
+    RITYPE_STRAY_FAIRY,
+    RITYPE_MASK,
+    RITYPE_MAJOR,
+    RITYPE_MAX,
+} RandoItemType;
+
+typedef enum {
     RI_UNKNOWN,
     RI_ARROW_FIRE,
     RI_ARROW_ICE,

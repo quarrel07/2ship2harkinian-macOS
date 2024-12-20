@@ -25,7 +25,6 @@ void PlayerCall_Draw(Actor* thisx, PlayState* play);
 #define OSN_STATE_END_CONVERSATION (1 << 5)
 
 void RegisterSkipLearningSongOfHealing() {
-    SPDLOG_INFO("Registering SkipLearningSongOfHealing");
     // TODO: Currently forced on for rando, maybe won't be when you shuffle only song locations (need to override
     // learning mechanism)
     COND_VB_SHOULD(VB_OSN_TEACH_SONG_OF_HEALING, CVAR || IS_RANDO, {

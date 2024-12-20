@@ -485,7 +485,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             Audio_PlayFanfare(NA_BGM_OPEN_CHEST | 0x900);
         }
 
-        if (GameInteractor_Should(VB_CHEST_SPAWN_FAIRY, this->getItemId == GI_STRAY_FAIRY, this)) {
+        if (this->getItemId == GI_STRAY_FAIRY) {
             this->movementFlags |= ENBOX_MOVE_0x20;
         } else {
             if ((this->getItemId == GI_HEART_PIECE) || (this->getItemId == GI_BOTTLE)) {

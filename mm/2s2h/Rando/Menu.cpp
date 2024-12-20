@@ -52,6 +52,8 @@ void Rando::DrawMenu() {
                 UIWidgets::CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Pots", Rando::StaticData::Options[RO_SHUFFLE_POTS].cvar);
                 UIWidgets::CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
+                UIWidgets::CVarCheckbox("Container Style Matches Contents", "gRando.CSMC");
+                UIWidgets::Tooltip("Currently this is fairly limited, will be expanded upon soon");
             }
         }
         UIWidgets::WindowButton("Check Tracker", "gWindows.CheckTracker", BenGui::mRandoCheckTrackerWindow,

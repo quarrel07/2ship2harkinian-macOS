@@ -34,6 +34,7 @@ struct RandoStaticItem {
     const char* spoilerName;
     const char* article;
     const char* name;
+    RandoItemType randoItemType;
     ItemId itemId;
     GetItemId getItemId;
     GetItemDrawId drawId;
