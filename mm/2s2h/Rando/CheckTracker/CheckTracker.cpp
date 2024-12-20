@@ -11,16 +11,33 @@ extern "C" {
 s16 Play_GetOriginalSceneId(s16 sceneId);
 }
 
-bool showLogic = false;
-bool hideCollected = false;
-bool expandHeaders = true;
-bool expandedheaderState = true;
-bool scrollToCurrentScene = true;
-s32 scrollToTargetScene = -1;
-s32 scrollToTargetEntrance = -1;
+#define DEFINE_SCENE(_name, enumValue, _textId, _drawConfig, _restrictionFlags, _persistentCycleFlags, \
+                     _entranceSceneId, betterMapSelectIndex, _humanName)                               \
+    { enumValue, betterMapSelectIndex },
+#define DEFINE_SCENE_UNSET(_enumValue)
+
+static std::unordered_map<s32, s32> betterSceneIndex = {
+#include "tables/scene_table.h"
+};
+
+#undef DEFINE_SCENE
+#undef DEFINE_SCENE_UNSET
+
+#define CVAR_NAME_SHOW_LOGIC "gRando.CheckTracker.OnlyShowChecksInLogic"
+#define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollectedChecks"
+#define CVAR_NAME_SCROLL_TO_SCENE "gRando.CheckTracker.ScrollToCurrentScene"
+#define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
+#define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
+#define CVAR_SCROLL_TO_SCENE CVarGetInteger(CVAR_NAME_SCROLL_TO_SCENE, 0)
+
+static bool sExpandedHeadersToggle = true;
+static bool sExpandedHeadersState = true;
+static s32 sScrollToTargetScene = -1;
+static s32 sScrollToTargetEntrance = -1;
+static ImGuiTextFilter sCheckTrackerFilter;
 
 std::map<SceneId, std::vector<RandoCheckId>> sceneChecks;
-std::vector<SceneId> sceneIdsSortedByAlphabetical;
+std::vector<SceneId> sortedSceneIds;
 std::unordered_map<RandoCheckId, std::string> readableCheckNames;
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {
@@ -46,17 +63,17 @@ void initializeSceneChecks() {
         sceneChecks[sceneId].push_back(randoStaticCheck.randoCheckId);
     }
 
-    sceneIdsSortedByAlphabetical.clear();
+    sortedSceneIds.clear();
     for (auto& [sceneId, _] : sceneChecks) {
-        sceneIdsSortedByAlphabetical.push_back(sceneId);
+        sortedSceneIds.push_back(sceneId);
     }
-    std::sort(sceneIdsSortedByAlphabetical.begin(), sceneIdsSortedByAlphabetical.end(),
-              [](SceneId a, SceneId b) { return std::strcmp(Ship_GetSceneName(a), Ship_GetSceneName(b)) < 0; });
+    std::sort(sortedSceneIds.begin(), sortedSceneIds.end(),
+              [](SceneId a, SceneId b) { return betterSceneIndex[a] < betterSceneIndex[b]; });
 }
 
 bool checkTrackerShouldShowRow(bool obtained) {
     bool showCheck = true;
-    if (hideCollected && obtained) {
+    if (CVAR_HIDE_COLLECTED && obtained) {
         showCheck = false;
     }
     return showCheck;
@@ -67,18 +84,23 @@ namespace Rando {
 namespace CheckTracker {
 
 void Window::DrawElement() {
-    static ImGuiTextFilter filter;
+    if (!gPlayState || !IS_RANDO) {
+        ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("No Rando Save Loaded").x) / 2);
+        ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2 - 10.0f);
+        ImGui::TextColored(UIWidgets::Colors::Gray, "No Rando Save Loaded");
+        return;
+    }
 
     UIWidgets::PushStyleCombobox();
-    filter.Draw("##filter", ImGui::GetContentRegionAvail().x);
+    sCheckTrackerFilter.Draw("##filter", ImGui::GetContentRegionAvail().x);
     UIWidgets::PopStyleCombobox();
-    if (!filter.IsActive()) {
+    if (!sCheckTrackerFilter.IsActive()) {
         ImGui::SameLine(18.0f);
         ImGui::Text("Search");
     }
 
     ImGui::BeginChild("Checks", ImVec2(0, 0));
-    if (showLogic) {
+    if (CVAR_SHOW_LOGIC) {
         std::set<RandoRegionId> reachableRegions = {};
         // Get connected entrances from starting & warp points
         Rando::Logic::FindReachableRegions(RR_MAX, reachableRegions);
@@ -86,12 +108,21 @@ void Window::DrawElement() {
         Rando::Logic::FindReachableRegions(Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance),
                                            reachableRegions);
 
-        for (RandoRegionId regionId : reachableRegions) {
-            if (scrollToCurrentScene && scrollToTargetEntrance != -1 &&
-                Rando::Logic::GetRegionIdFromEntrance(scrollToTargetEntrance) == regionId) {
+        std::vector<RandoRegionId> sortedRegionIds;
+        for (auto& regionId : reachableRegions) {
+            sortedRegionIds.push_back(regionId);
+        }
+        std::sort(sortedRegionIds.begin(), sortedRegionIds.end(), [](RandoRegionId a, RandoRegionId b) {
+            return betterSceneIndex[Rando::Logic::Regions[a].sceneId] <
+                   betterSceneIndex[Rando::Logic::Regions[b].sceneId];
+        });
+
+        for (RandoRegionId regionId : sortedRegionIds) {
+            if (CVAR_SCROLL_TO_SCENE && sScrollToTargetEntrance != -1 &&
+                Rando::Logic::GetRegionIdFromEntrance(sScrollToTargetEntrance) == regionId) {
                 ImGui::SetScrollHereY();
-                scrollToTargetScene = -1;
-                scrollToTargetEntrance = -1;
+                sScrollToTargetScene = -1;
+                sScrollToTargetEntrance = -1;
             }
             auto& randoRegion = Rando::Logic::Regions[regionId];
             std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
@@ -102,19 +133,23 @@ void Window::DrawElement() {
                 auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                 auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
                 if (randoSaveCheck.shuffled && accessLogicFunc.first()) {
-                    if (!filter.PassFilter(readableCheckNames[randoCheckId].c_str())) {
+                    if (!sCheckTrackerFilter.PassFilter(readableCheckNames[randoCheckId].c_str())) {
                         continue;
                     }
 
-                    availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
                     if (randoSaveCheck.obtained) {
                         obtainedCheckSum++;
+                        if (CVAR_HIDE_COLLECTED) {
+                            continue;
+                        }
                     }
+
+                    availableChecks.push_back({ randoCheckId, accessLogicFunc.second });
                 }
             }
 
             for (auto& event : randoRegion.events) {
-                if (!filter.PassFilter(event.name.c_str())) {
+                if (!sCheckTrackerFilter.PassFilter(event.name.c_str())) {
                     continue;
                 }
 
@@ -136,8 +171,8 @@ void Window::DrawElement() {
                 ImGui::PushID(regionId);
                 ImGui::Separator();
                 ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
-                if (expandedheaderState != expandHeaders) {
-                    ImGui::SetNextItemOpen(expandHeaders);
+                if (sExpandedHeadersState != sExpandedHeadersToggle) {
+                    ImGui::SetNextItemOpen(sExpandedHeadersToggle);
                 }
                 if (ImGui::CollapsingHeader(regionName.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                     ImGui::Indent(20.0f);
@@ -172,9 +207,9 @@ void Window::DrawElement() {
                 ImGui::PopID();
             }
         }
-        expandedheaderState = expandHeaders;
+        sExpandedHeadersState = sExpandedHeadersToggle;
     } else {
-        for (auto& sceneId : sceneIdsSortedByAlphabetical) {
+        for (auto& sceneId : sortedSceneIds) {
             if (sceneId == SCENE_MAX) {
                 continue;
             }
@@ -186,12 +221,12 @@ void Window::DrawElement() {
             for (auto& checkId : unfilteredChecks) {
                 if (RANDO_SAVE_CHECKS[checkId].obtained) {
                     obtainedCheckSum++;
-                    if (hideCollected) {
+                    if (CVAR_HIDE_COLLECTED) {
                         continue;
                     }
                 }
 
-                if (!filter.PassFilter(readableCheckNames[checkId].c_str())) {
+                if (!sCheckTrackerFilter.PassFilter(readableCheckNames[checkId].c_str())) {
                     continue;
                 }
 
@@ -202,10 +237,10 @@ void Window::DrawElement() {
                 continue;
             }
 
-            if (scrollToCurrentScene && scrollToTargetScene != -1 && scrollToTargetScene == sceneId) {
+            if (CVAR_SCROLL_TO_SCENE && sScrollToTargetScene != -1 && sScrollToTargetScene == sceneId) {
                 ImGui::SetScrollHereY();
-                scrollToTargetScene = -1;
-                scrollToTargetEntrance = -1;
+                sScrollToTargetScene = -1;
+                sScrollToTargetEntrance = -1;
             }
 
             ImGui::PushID(sceneId);
@@ -218,8 +253,8 @@ void Window::DrawElement() {
                                                      ? UIWidgets::Colors::LightGreen
                                                      : UIWidgets::Colors::White);
 
-            if (expandedheaderState != expandHeaders) {
-                ImGui::SetNextItemOpen(expandHeaders);
+            if (sExpandedHeadersState != sExpandedHeadersToggle) {
+                ImGui::SetNextItemOpen(sExpandedHeadersToggle);
             }
             if (ImGui::CollapsingHeader(headerText.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Indent(20.0f);
@@ -242,18 +277,18 @@ void Window::DrawElement() {
             ImGui::PopStyleColor(2);
             ImGui::PopID();
         }
-        expandedheaderState = expandHeaders;
+        sExpandedHeadersState = sExpandedHeadersToggle;
     }
     ImGui::EndChild();
 }
 
 void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
-    UIWidgets::Checkbox("Show Logic", &showLogic);
-    UIWidgets::Checkbox("Hide Collected", &hideCollected);
-    UIWidgets::Checkbox("Auto Scroll To Current Scene", &scrollToCurrentScene);
+    UIWidgets::CVarCheckbox("Only Show Checks In Logic", CVAR_NAME_SHOW_LOGIC);
+    UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
+    UIWidgets::CVarCheckbox("Auto Scroll To Current Scene", CVAR_NAME_SCROLL_TO_SCENE);
     if (UIWidgets::Button("Expand/Collapse All")) {
-        expandHeaders = !expandHeaders;
+        sExpandedHeadersToggle = !sExpandedHeadersToggle;
     }
 }
 
@@ -262,9 +297,9 @@ void Init() {
         readableCheckNames[randoCheckId] = convertEnumToReadableName(randoStaticCheck.name);
     }
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](s8 sceneId, s8 spawnNum) {
-        if (scrollToCurrentScene) {
-            scrollToTargetScene = Play_GetOriginalSceneId(sceneId);
-            scrollToTargetEntrance = gSaveContext.save.entrance;
+        if (CVAR_SCROLL_TO_SCENE) {
+            sScrollToTargetScene = Play_GetOriginalSceneId(sceneId);
+            sScrollToTargetEntrance = gSaveContext.save.entrance;
         }
     });
 }
