@@ -8,6 +8,12 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost_custom/container_hash/hash_32.hpp>
 
+// Image Icons
+#include "assets/interface/parameter_static/parameter_static.h"
+#include "assets/archives/icon_item_24_static/icon_item_24_static_yar.h"
+#include "assets/archives/schedule_dma_static/schedule_dma_static_yar.h"
+#include "assets/interface/icon_item_field_static/icon_item_field_static.h"
+
 extern "C" {
 #include "macros.h"
 #include "z64.h"
@@ -31,6 +37,14 @@ std::unordered_map<s16, const char*> sceneNames = {
 
 #undef DEFINE_SCENE
 #undef DEFINE_SCENE_UNSET
+
+// These textures are not in existing lists that we iterate over.
+std::vector<const char*> miscellaneousTextures = {
+    gRupeeCounterIconTex,
+    gStrayFairyGreatBayIconTex,
+    gQuestIconGoldSkulltulaTex,
+    gWorldMapOwlFaceTex,
+};
 
 extern "C" const char* Ship_GetSceneName(s16 sceneId) {
     if (sceneNames.contains(sceneId)) {
@@ -119,6 +133,10 @@ void LoadGuiTextures() {
         const char* path = static_cast<const char*>(entry);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
     }
+    for (auto& entry : miscellaneousTextures) {
+        const char* path = static_cast<const char*>(entry);
+        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(path, path, ImVec4(1, 1, 1, 1));
+    }
 }
 
 std::string convertEnumToReadableName(const std::string& input) {
@@ -143,7 +161,11 @@ std::string convertEnumToReadableName(const std::string& input) {
     for (auto& w : words) {
         std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
         if (!w.empty()) {
-            w[0] = std::toupper(w[0]);
+            if (w == "hp") {
+                w = "HP";
+            } else {
+                w[0] = std::toupper(w[0]);
+            }
         }
     }
 
