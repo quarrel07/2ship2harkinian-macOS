@@ -32,6 +32,7 @@ void InitEnKnightBehavior();
 void InitEnKujiyaBehavior();
 void InitEnMa4Behavior();
 void InitEnMaYtoBehavior();
+void InitEnLiftNutsBehavior();
 void InitEnOsnBehavior();
 void InitEnRuppecrowBehavior();
 void InitEnSellnutsBehavior();

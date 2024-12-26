@@ -51,6 +51,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnKgyBehavior();
     Rando::ActorBehavior::InitEnKnightBehavior();
     Rando::ActorBehavior::InitEnKujiyaBehavior();
+    Rando::ActorBehavior::InitEnLiftNutsBehavior();
     Rando::ActorBehavior::InitEnMa4Behavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
