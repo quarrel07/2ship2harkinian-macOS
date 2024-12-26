@@ -54,7 +54,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_POT_BEFORE_WART_9,  true),
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  true), // Key Door
+            CONNECTION(RR_GREAT_BAY_TEMPLE_RED_PIPE_BEFORE_WART,  true), // TODO: Key Door
             CONNECTION(RR_GREAT_BAY_TEMPLE_WART,                  true),
         },
     };
@@ -107,7 +107,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_ENTRANCE_CHEST, CAN_LIGHT_TORCH_NEAR_ANOTHER),
         },
         .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(ZORA_CAPE, 7),                    ENTRANCE(GREAT_BAY_TEMPLE, 0), true),
+            EXIT(ENTRANCE(ZORA_CAPE, 7),                    ENTRANCE(GREAT_BAY_TEMPLE, 0), HAS_ITEM(ITEM_HOOKSHOT)),
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_WATER_WHEEL_ROOM,  true),
@@ -200,7 +200,6 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(GYORGS_LAIR, 0),                           ONE_WAY_EXIT, CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE)),
         },
         .connections = {
-            CONNECTION(RR_GREAT_BAY_TEMPLE_BOSS_ROOM,    CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, DUNGEON_INDEX_GREAT_BAY_TEMPLE)),
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM, CAN_BE_ZORA),
         },
     };
@@ -213,7 +212,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_GREAT_BAY_TEMPLE_CENTRAL_ROOM,    CAN_BE_ZORA),
-            CONNECTION(RR_GREAT_BAY_TEMPLE_BEFORE_WART,     true), // Key Door
+            CONNECTION(RR_GREAT_BAY_TEMPLE_BEFORE_WART,     true), // TODO: Key Door
         },
     };
     Regions[RR_GREAT_BAY_TEMPLE_RED_PIPE_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_SEA,
