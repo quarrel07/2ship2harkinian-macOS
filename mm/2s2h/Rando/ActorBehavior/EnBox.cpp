@@ -173,16 +173,18 @@ static RegisterShipInitFunc initFunc(
     },
     { "gRando.CSMC", "IS_RANDO" });
 
-static RegisterShipInitFunc initializeChestCopyDLs([]() {
-    Gfx* baseDL = ResourceMgr_LoadGfxByName(gBoxChestBaseOrnateDL);
-    memcpy(gBoxChestBaseCopyDL, baseDL, sizeof(gBoxChestBaseCopyDL));
-    gBoxChestBaseCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
-    gBoxChestBaseCopyDL[8] = gsDPNoOp();
-    gBoxChestBaseCopyDL[25] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
-    gBoxChestBaseCopyDL[26] = gsDPNoOp();
+static RegisterShipInitFunc initializeChestCopyDLs(
+    []() {
+        Gfx* baseDL = ResourceMgr_LoadGfxByName(gBoxChestBaseOrnateDL);
+        memcpy(gBoxChestBaseCopyDL, baseDL, sizeof(gBoxChestBaseCopyDL));
+        gBoxChestBaseCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestBaseCopyDL[8] = gsDPNoOp();
+        gBoxChestBaseCopyDL[25] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x0A000000 | 1);
+        gBoxChestBaseCopyDL[26] = gsDPNoOp();
 
-    Gfx* lidDL = ResourceMgr_LoadGfxByName(gBoxChestLidOrnateDL);
-    memcpy(gBoxChestLidCopyDL, lidDL, sizeof(gBoxChestLidCopyDL));
-    gBoxChestLidCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
-    gBoxChestLidCopyDL[8] = gsDPNoOp();
-}, {});
+        Gfx* lidDL = ResourceMgr_LoadGfxByName(gBoxChestLidOrnateDL);
+        memcpy(gBoxChestLidCopyDL, lidDL, sizeof(gBoxChestLidCopyDL));
+        gBoxChestLidCopyDL[7] = gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, 0x09000000 | 1);
+        gBoxChestLidCopyDL[8] = gsDPNoOp();
+    },
+    {});
