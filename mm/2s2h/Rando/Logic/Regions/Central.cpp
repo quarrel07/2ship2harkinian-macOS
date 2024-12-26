@@ -76,6 +76,9 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_CLOCK_TOWER_ROOF_POT_3, true),
             CHECK(RC_CLOCK_TOWER_ROOF_POT_4, true),
         },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(THE_MOON, 0),                              ONE_WAY_EXIT, CAN_PLAY_SONG(OATH) && CHECK_QUEST_ITEM(QUEST_REMAINS_ODOLWA) && CHECK_QUEST_ITEM(QUEST_REMAINS_GOHT) && CHECK_QUEST_ITEM(QUEST_REMAINS_GYORG) && CHECK_QUEST_ITEM(QUEST_REMAINS_TWINMOLD)),
+        },
         .oneWayEntrances = {
             ENTRANCE(CLOCK_TOWER_ROOFTOP, 0), // From clock tower platform
         },
