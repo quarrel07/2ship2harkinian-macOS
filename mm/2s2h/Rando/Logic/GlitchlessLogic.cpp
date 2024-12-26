@@ -77,7 +77,8 @@ void ApplyGlitchlessLogicToSaveContext() {
                 continue;
             }
 
-            if (randoStaticCheck.randoCheckType == RCTYPE_POT && RANDO_SAVE_OPTIONS[RO_SHUFFLE_POTS] == RO_GENERIC_NO) {
+            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE) &&
+                RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
                 continue;
             }
 
