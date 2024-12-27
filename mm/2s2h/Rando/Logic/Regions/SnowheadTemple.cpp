@@ -8,33 +8,6 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_SNOWHEAD_TEMPLE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
-        .checks = {
-            // TODO: CAN_KILL_BOSS(Goht)?
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_HC,           CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_WARP,         CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_1,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_10,       CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_2,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_3,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_4,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_5,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_6,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_7,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_8,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_9,        CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_1,  true),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_2,  true),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_3,  true),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_4,  true),
-        },
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),
-        },
-        .oneWayEntrances = {
-            ENTRANCE(GOHTS_LAIR, 0), // Snowhead Temple Boss Room
-        },
-    };
     Regions[RR_SNOWHEAD_TEMPLE_BLOCK_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
         .checks = {
             CHECK(RC_SNOWHEAD_TEMPLE_BLOCK_ROOM, true),
@@ -46,6 +19,33 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR,  true),
             CONNECTION(RR_SNOWHEAD_TEMPLE_COMPASS_ROOM,  HAS_ITEM(ITEM_HOOKSHOT)),
             CONNECTION(RR_SNOWHEAD_TEMPLE_ENTRANCE,  true),
+        },
+    };
+    Regions[RR_SNOWHEAD_TEMPLE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
+        .checks = {
+            // TODO: CAN_KILL_BOSS(Goht)?
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_HC,           CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_WARP,         CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_01,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_10,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_02,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_03,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_04,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_05,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_06,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_07,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_08,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_09,       CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_1,  true),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_2,  true),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_3,  true),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_4,  true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(GOHTS_LAIR, 0), // Snowhead Temple Boss Room
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_BRIDGE_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
@@ -77,6 +77,11 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM,             true),
         },
     };
+    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
+        .connections = {
+            CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
+        },
+    };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
         .connections = {
             CONNECTION(RR_SNOWHEAD_TEMPLE_BLOCK_ROOM,           true),
@@ -86,9 +91,14 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM,         CAN_USE_MAGIC_ARROW(FIRE)),
         },
     };
-    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_FIRST_FLOOR_SWITCH_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
+    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_DOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
+        .checks = {
+            CHECK(RC_SNOWHEAD_TEMPLE_POT_CENTRAL_ROOM_NEAR_BOSS_KEY_1, true),
+            CHECK(RC_SNOWHEAD_TEMPLE_POT_CENTRAL_ROOM_NEAR_BOSS_KEY_2, true),
+        },
         .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_PILLARS_ROOM, CAN_BE_DEKU && CAN_USE_MAGIC_ARROW(FIRE)),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, true),
+            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, true),
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
@@ -116,16 +126,6 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_SNOWHEAD_TEMPLE_BOSS_ROOM, CAN_BE_GORON),
             CONNECTION(RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_SECOND_FLOOR, CAN_BE_GORON && CAN_USE_MAGIC_ARROW(FIRE)),
             CONNECTION(RR_SNOWHEAD_TEMPLE_SNOW_ROOM, (CAN_BE_GORON || HAS_ITEM(ITEM_HOOKSHOT))),
-        },
-    };
-    Regions[RR_SNOWHEAD_TEMPLE_CENTRAL_ROOM_NEAR_BOSS_DOOR] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
-        .checks = {
-            CHECK(RC_SNOWHEAD_TEMPLE_POT_CENTRAL_ROOM_NEAR_BOSS_KEY_1, true),
-            CHECK(RC_SNOWHEAD_TEMPLE_POT_CENTRAL_ROOM_NEAR_BOSS_KEY_2, true),
-        },
-        .connections = {
-            CONNECTION(RR_SNOWHEAD_TEMPLE_DINOLFOS_ROOM, true),
-            CONNECTION(RR_SNOWHEAD_TEMPLE_UPPER_WIZZROBE_ROOM, true),
         },
     };
     Regions[RR_SNOWHEAD_TEMPLE_COMPASS_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,

@@ -31,11 +31,13 @@ void Rando::ActorBehavior::Init() {
 }
 
 void Rando::ActorBehavior::OnFileLoad() {
-    Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitDmChar05Behavior();
     Rando::ActorBehavior::InitDmHinaBehavior();
     Rando::ActorBehavior::InitDmStkBehavior();
+    Rando::ActorBehavior::InitDoorWarp1VBehavior();
     Rando::ActorBehavior::InitEnAkindonutsBehavior();
+    Rando::ActorBehavior::InitEnBabaBehavior();
+    Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnBoxBehavior();
     Rando::ActorBehavior::InitEnCowBehavior();
     Rando::ActorBehavior::InitEnElfgrpBehavior();
@@ -55,17 +57,15 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnLiftNutsBehavior();
     Rando::ActorBehavior::InitEnMa4Behavior();
     Rando::ActorBehavior::InitEnMaYtoBehavior();
+    Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnOsnBehavior();
     Rando::ActorBehavior::InitEnRuppecrowBehavior();
+    Rando::ActorBehavior::InitEnRzBehavior();
     Rando::ActorBehavior::InitEnSellnutsBehavior();
     Rando::ActorBehavior::InitEnSiBehavior();
     Rando::ActorBehavior::InitEnStoneheishiBehavior();
     Rando::ActorBehavior::InitEnSyatekiManBehavior();
-    Rando::ActorBehavior::InitEnBabaBehavior();
-    Rando::ActorBehavior::InitEnBalBehavior();
     Rando::ActorBehavior::InitEnYbBehavior();
-    Rando::ActorBehavior::InitEnRzBehavior();
-    Rando::ActorBehavior::InitEnMnkBehavior();
     Rando::ActorBehavior::InitEnZogBehavior();
     Rando::ActorBehavior::InitItemBHeartBehavior();
     Rando::ActorBehavior::InitObjMoonStoneBehavior();
