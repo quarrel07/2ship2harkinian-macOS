@@ -136,6 +136,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MUSIC_BOX_HOUSE, 0),              ENTRANCE(IKANA_CANYON, 2), CHECK_WEEKEVENTREG(WEEKEVENTREG_14_04)),
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
+            EXIT(ENTRANCE(IKANA_CASTLE, 1),                 ENTRANCE(IKANA_CANYON, 8), true),
             EXIT(ENTRANCE(IKANA_CANYON, 14),                ENTRANCE(IKANA_CANYON, 13), true), // Cave
         },
         .connections = {
@@ -149,12 +150,6 @@ static RegisterShipInitFunc initFunc([]() {
             ENTRANCE(IKANA_CANYON, 4), // From Song of Soaring
             ENTRANCE(IKANA_CANYON, 15), // From Stone Tower Temple Blue Warp
         }
-    };
-    Regions[RR_IKANA_CASTLE] = RandoRegion{ .sceneId = SCENE_CASTLE,
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(BENEATH_THE_WELL, 1),             ENTRANCE(IKANA_CASTLE, 0), true),
-            EXIT(ENTRANCE(IKANA_CANYON, 8),                 ENTRANCE(IKANA_CASTLE, 1), true),
-        },
     };
     Regions[RR_IKANA_GRAVEYARD_LOWER] = RandoRegion{ .name = "Lower", .sceneId = SCENE_BOTI,
         .checks = {
