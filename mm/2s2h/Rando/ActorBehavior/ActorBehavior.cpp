@@ -41,6 +41,7 @@ void Rando::ActorBehavior::OnFileLoad() {
     Rando::ActorBehavior::InitEnElfgrpBehavior();
     Rando::ActorBehavior::InitEnElforgBehavior();
     Rando::ActorBehavior::InitEnFuBehavior();
+    Rando::ActorBehavior::InitEnGamelupyBehavior();
     Rando::ActorBehavior::InitEnGgBehavior();
     Rando::ActorBehavior::InitEnGinkoBehavior();
     Rando::ActorBehavior::InitEnGirlABehavior();
