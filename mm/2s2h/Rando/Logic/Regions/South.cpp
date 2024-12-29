@@ -31,7 +31,9 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_DEKU_PALACE_INSIDE] = RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
         .checks = {
-            CHECK(RC_DEKU_PALACE_HP, true),
+            CHECK(RC_DEKU_PALACE_HP,    true),
+            CHECK(RC_DEKU_PALACE_POT_1, CAN_BE_DEKU),
+            CHECK(RC_DEKU_PALACE_POT_2, CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_KINGS_CHAMBER, 0),           ENTRANCE(DEKU_PALACE, 2), true),
@@ -53,16 +55,22 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_DEKU_SHRINE] = RandoRegion{ .sceneId = SCENE_DANPEI,
         .checks = {
-            // Commenting out checks because I'm not sure on the logic. 
-            // Glitchless logic doesn't finish when uncommented
-            // CHECK(RC_DEKU_SHRINE_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
-            // CHECK(RC_DEKU_SHRINE_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_DEKU_SHRINE_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_DEKU_SHRINE_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
         },
     };
     Regions[RR_DOGGY_RACETRACK] = RandoRegion{ .sceneId = SCENE_F01_B,
+        .checks = {
+            // TODO: Trick: Jumpslash to clip through (similar to Clock Town Straw).
+            CHECK(RC_DOGGY_RACETRACK_CHEST, HAS_ITEM(ITEM_HOOKSHOT)),
+            CHECK(RC_DOGGY_RACETRACK_POT_1, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_2, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_3, true),
+            CHECK(RC_DOGGY_RACETRACK_POT_4, true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROMANI_RANCH, 5),                 ENTRANCE(DOGGY_RACETRACK, 0), true),
         },
@@ -159,6 +167,12 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SOUTHERN_SWAMP_SCRUB_DEED, Flags_GetRandoInf(RANDO_INF_OBTAINED_DEED_LAND)),
             CHECK(RC_SOUTHERN_SWAMP_SCRUB_BEANS, CAN_BE_DEKU),
             CHECK(RC_SOUTHERN_SWAMP_OWL_STATUE, CAN_USE_SWORD),
+            CHECK(RC_SOUTHERN_SWAMP_POT_1, true),
+            CHECK(RC_SOUTHERN_SWAMP_POT_2, true),
+            CHECK(RC_SOUTHERN_SWAMP_POT_3, true),
+            CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_1, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_2, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
+            CHECK(RC_SOUTHERN_SWAMP_CLEAR_POT_3, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ROAD_TO_SOUTHERN_SWAMP, 1),       ENTRANCE(SOUTHERN_SWAMP_POISONED, 0), true),
@@ -215,8 +229,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_WOODFALL_GREAT_FAIRY_FOUNTAIN] = RandoRegion{ .name = "Woodfall", .sceneId = SCENE_YOUSEI_IZUMI,
         .checks = {
-            // TODO: We can't add this till all stray fairies are in the pool
-            // CHECK(RC_WOODFALL_GREAT_FAIRY, gSaveContext.save.saveInfo.inventory.strayFairies[DUNGEON_INDEX_WOODFALL_TEMPLE] >= 15),
+            CHECK(RC_WOODFALL_GREAT_FAIRY, HAS_ALL_STRAY_FAIRIES(DUNGEON_INDEX_WOODFALL_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(WOODFALL, 2),                     ENTRANCE(FAIRY_FOUNTAIN, 1), true),
@@ -228,6 +241,9 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_WOODFALL_HP_CHEST, CAN_BE_DEKU),
             CHECK(RC_WOODFALL_OWL_STATUE, CAN_USE_SWORD),
             CHECK(RC_WOODFALL_NEAR_OWL_CHEST, CAN_BE_DEKU),
+            CHECK(RC_WOODFALL_POT_1, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
+            CHECK(RC_WOODFALL_POT_2, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
+            CHECK(RC_WOODFALL_POT_3, CAN_BE_DEKU || CAN_OWL_WARP(OWL_WARP_WOODFALL)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 2),      ENTRANCE(WOODFALL, 0), true),

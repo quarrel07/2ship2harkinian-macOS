@@ -137,8 +137,9 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,    CAN_BE_GORON && HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER),
             CHECK(RC_MOUNTAIN_VILLAGE_OWL_STATUE,       CAN_USE_SWORD),
-            // TODO : Remove below comment when snowhead is clearable.
-            //CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC)
+            CHECK(RC_MOUNTAIN_VILLAGE_WATERFALL_CHEST,  CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) && HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC),
+            CHECK(RC_MOUNTAIN_VILLAGE_POT,              CAN_HOOK_SCARECROW),
+            CHECK(RC_MOUNTAIN_VILLAGE_SPRING_POT,       CAN_HOOK_SCARECROW && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
             // TODO : Add Grotto
@@ -159,8 +160,10 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_PATH_TO_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_17SETUGEN,
         .checks = {
             // TODO : Add Spring only checks.
-            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_1, CAN_USE_PROJECTILE),
-            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_2, CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_1,         CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_2,         CAN_USE_PROJECTILE),
+            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_1,   CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
+            CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_2,   CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
         },
         .exits = { //     TO                                     FROM
             // TODO : Add Grottos
@@ -202,6 +205,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN] = RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
+        .checks = {
+            CHECK(RC_SNOWHEAD_GREAT_FAIRY, HAS_ALL_STRAY_FAIRIES(DUNGEON_INDEX_SNOWHEAD_TEMPLE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SNOWHEAD, 2),                     ENTRANCE(FAIRY_FOUNTAIN, 2), true),
         },

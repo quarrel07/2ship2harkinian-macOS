@@ -137,6 +137,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(STONE_TOWER, 0),                  ENTRANCE(IKANA_CANYON, 3), true),
             EXIT(ENTRANCE(BENEATH_THE_WELL, 0),             ENTRANCE(IKANA_CANYON, 5), true),
             EXIT(ENTRANCE(IKANA_CASTLE, 1),                 ENTRANCE(IKANA_CANYON, 8), true),
+            EXIT(ENTRANCE(FAIRY_FOUNTAIN, 4),               ENTRANCE(IKANA_CANYON, 11), true),
             EXIT(ENTRANCE(IKANA_CANYON, 14),                ENTRANCE(IKANA_CANYON, 13), true), // Cave
         },
         .connections = {
@@ -178,6 +179,9 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_IKANA_GREAT_FAIRY_FOUNTAIN] = RandoRegion{ .name = "Ikana", .sceneId = SCENE_YOUSEI_IZUMI,
+        .checks = {
+            CHECK(RC_IKANA_GREAT_FAIRY, HAS_ALL_STRAY_FAIRIES(DUNGEON_INDEX_STONE_TOWER_TEMPLE)),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 11),                ENTRANCE(FAIRY_FOUNTAIN, 4), true),
         },
@@ -225,6 +229,13 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_SAKON_HIDEOUT] = RandoRegion{ .sceneId = SCENE_SECOM,
+        .checks = {
+            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_1,    true),
+            CHECK(RC_SAKON_HIDEOUT_POT_FIRST_ROOM_2,    true),
+            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_1,   true),
+            CHECK(RC_SAKON_HIDEOUT_POT_SECOND_ROOM_2,   true),
+            CHECK(RC_SAKON_HIDEOUT_POT_THIRD_ROOM,      true),
+        },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 6),                 ENTRANCE(SAKONS_HIDEOUT, 0), true),
         },
