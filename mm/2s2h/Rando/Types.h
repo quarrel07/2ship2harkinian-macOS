@@ -942,6 +942,7 @@ typedef enum {
 
 typedef enum {
     RITYPE_BOSS_KEY,
+    RITYPE_HEALTH,
     RITYPE_JUNK,
     RITYPE_LESSER,
     RITYPE_MAJOR,

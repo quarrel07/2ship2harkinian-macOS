@@ -98,7 +98,8 @@ void EnGirlA_RandoInit(EnGirlA* enGirlA, PlayState* play) {
 
     auto randoSaveCheck = RANDO_SAVE_CHECKS[enGirlA->actor.world.rot.z];
 
-    if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z)) {
+    if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, (RandoCheckId)enGirlA->actor.world.rot.z) &&
+        randoSaveCheck.obtained) {
         enGirlA->isOutOfStock = true;
         enGirlA->actor.draw = NULL;
     } else {
@@ -239,7 +240,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
                                std::string(randoStaticItem.name) + ": " + std::to_string(randoSaveCheck.price) +
                                    " Rupees");
 
-        if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, randoCheckId)) {
+        if (!Rando::IsItemObtainable(randoSaveCheck.randoItemId, randoCheckId) && randoSaveCheck.obtained) {
             CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!", "Out of Stock");
         } else {
             CustomMessage::Replace(&entry.msg, "Recover your energy in one gulp!",
