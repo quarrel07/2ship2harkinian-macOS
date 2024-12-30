@@ -108,7 +108,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             // TODO: Do we want there to be two checks here? In vanilla you can get one right away but the other requires human form. In rando you start as human. Maybe the other should require any form?
             CHECK(RC_CLOCK_TOWN_GREAT_FAIRY, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80)),
-            CHECK(RC_CLOCK_TOWN_GREAT_FAIRY_ALT, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80) && CAN_BE_HUMAN),
+            CHECK(RC_CLOCK_TOWN_GREAT_FAIRY_ALT, CHECK_WEEKEVENTREG(WEEKEVENTREG_08_80) && CAN_BE_DEKU),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(NORTH_CLOCK_TOWN, 3),             ENTRANCE(FAIRY_FOUNTAIN, 0), true),

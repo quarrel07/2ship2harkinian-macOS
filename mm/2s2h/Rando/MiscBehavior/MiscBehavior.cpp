@@ -35,6 +35,14 @@ void Rando::MiscBehavior::OnFileLoad() {
     // slot. In rando, use this flag instead.
     COND_VB_SHOULD(VB_CHECK_FOR_ROOM_KEY, IS_RANDO, { *should = Flags_GetRandoInf(RANDO_INF_OBTAINED_ROOM_KEY); });
 
+    // In the case of receiving a sword, we only want to equip it to the Human's B button. Vanilla avoids this issue by
+    // never letting you be other forms when you get a sword from the smithy or curiosity shop.
+    COND_VB_SHOULD(VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP, IS_RANDO, {
+        u8* item = va_arg(args, u8*);
+        *should = false;
+        BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_B) = *item;
+    });
+
     // In Sram_OpenSave (right before this code runs) for non-owl saves, it overwrites the entrance to
     // ENTRANCE(CUTSCENE, 0), we need to override that with our starting location (Harcoded to South Clock Town)
     if (!gSaveContext.save.isOwlSave && IS_RANDO) {
