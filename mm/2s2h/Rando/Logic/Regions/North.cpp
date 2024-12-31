@@ -135,6 +135,14 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1),      ENTRANCE(MOUNTAIN_SMITHY, 0), true),
         },
     };
+    Regions[RR_MOUNTAIN_VILLAGE_TUNNEL_GROTTO] = RandoRegion{ .name = "Mountain Village Tunnel Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_MOUNTAIN_VILLAGE_TUNNEL_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_MOUNTAIN_VILLAGE, true), // TODO: Grotto mapping
+        },
+    };
     Regions[RR_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_10YUKIYAMANOMURA,
         .checks = {
             CHECK(RC_MOUNTAIN_VILLAGE_DON_GERO_MASK,    CAN_BE_GORON && HAS_MAGIC && CAN_LIGHT_TORCH_NEAR_ANOTHER),
@@ -144,7 +152,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MOUNTAIN_VILLAGE_SPRING_POT,       CAN_HOOK_SCARECROW && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
         },
         .exits = { //     TO                                         FROM
-            // TODO : Add Grotto
             EXIT(ENTRANCE(MOUNTAIN_SMITHY, 0),              ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 1), true),
             EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2), true),
             // TODO: When it's spring you need goron mask or zora mask instead?
@@ -152,12 +159,34 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(PATH_TO_SNOWHEAD, 0),             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 4), true),
             EXIT(ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1),     ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6), true),
         },
+        .connections = {
+            CONNECTION(RR_MOUNTAIN_VILLAGE_TUNNEL_GROTTO, CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)), // TODO: Grotto mapping
+        },
         .events = {
             EVENT_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE),
         },
         .oneWayEntrances = {
             ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 8), // From Song of Soaring
         }
+    };
+    Regions[RR_PATH_TO_GORON_VILLAGE_HOT_SPRING_GROTTO] = RandoRegion{ .name = "Path to Goron Village Hot Spring Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_TWIN_ISLANDS_FROZEN_GROTTO_CHEST, CAN_USE_EXPLOSIVE),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), ENTRANCE(GROTTOS, 5), true), // TODO: Grotto mapping
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_HOT_SPRING_WATER, true),
+        },
+    };
+    Regions[RR_PATH_TO_GORON_VILLAGE_RAMP_GROTTO] = RandoRegion{ .name = "Path to Goron Village Ramp Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_TWIN_ISLANDS_RAMP_GROTTO_CHEST, true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_GORON_VILLAGE, true), // TODO: Grotto mapping
+        },
     };
     Regions[RR_PATH_TO_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_17SETUGEN,
         .checks = {
@@ -168,17 +197,28 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_2,   CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),
         },
         .exits = { //     TO                                     FROM
-            // TODO : Add Grottos
+            EXIT(ENTRANCE(GROTTOS, 5),                  ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE) || CAN_USE_MAGIC_ARROW(FIRE)), // TODO: Grotto mapping Hot spring
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 2),  ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 0), true),
             EXIT(ENTRANCE(GORON_VILLAGE_WINTER, 0),     ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 1), true),
             // This could also be opened by completing Medigoron's test without actually getting the Powder Keg as a item. Not sure what the flag for that is however.
             EXIT(ENTRANCE(GORON_RACETRACK, 0),          ENTRANCE(PATH_TO_GORON_VILLAGE_WINTER, 2), HAS_ITEM(ITEM_POWDER_KEG) && CAN_BE_GORON),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_GORON_VILLAGE_RAMP_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
     };
     Regions[RR_PATH_TO_MOUNTAIN_VILLAGE] = RandoRegion{ .sceneId = SCENE_13HUBUKINOMITI,
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(TERMINA_FIELD, 3),                ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 0), true),
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_WINTER, 6),      ENTRANCE(PATH_TO_MOUNTAIN_VILLAGE, 1), true),
+        },
+    };
+    Regions[RR_PATH_TO_SNOWHEAD_GROTTO] = RandoRegion{ .name = "Path To Snowhead Grotto", .sceneId = SCENE_KAKUSIANA,
+        .checks = {
+            CHECK(RC_PATH_TO_SNOWHEAD_GROTTO, true),
+        },
+        .connections = {
+            CONNECTION(RR_PATH_TO_SNOWHEAD_UPPER, true), // TODO: Grotto mapping
         },
     };
     Regions[RR_PATH_TO_SNOWHEAD_LOWER] = RandoRegion{ .sceneId = SCENE_14YUKIDAMANOMITI,
@@ -204,6 +244,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .connections = {
             CONNECTION(RR_PATH_TO_SNOWHEAD_MIDDLE, CAN_BE_GORON),
+            CONNECTION(RR_PATH_TO_SNOWHEAD_GROTTO, CAN_USE_EXPLOSIVE), // TODO: Grotto mapping
         },
     };
     Regions[RR_SNOWHEAD_GREAT_FAIRY_FOUNTAIN] = RandoRegion{ .sceneId = SCENE_YOUSEI_IZUMI,
