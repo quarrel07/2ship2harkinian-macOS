@@ -83,7 +83,7 @@ void ApplyGlitchlessLogicToSaveContext() {
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
-                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO) {
+                if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO && randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM) {
                     continue;
                 } else {
                     int price = Ship_Random(0, 200);
