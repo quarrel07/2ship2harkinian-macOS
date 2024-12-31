@@ -360,7 +360,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_STONE_TOWER_TEMPLE_BOSS_ROOM] = RandoRegion{ .name = "Twinmold Boss Lair", .sceneId = SCENE_INISIE_BS,
         .checks = {
             CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_HC, CAN_KILL_TWINMOLD),
-            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP, CAN_KILL_TWINMOLD)
+            CHECK(RC_STONE_TOWER_TEMPLE_INVERTED_BOSS_WARP, CAN_KILL_TWINMOLD),
+            CHECK(RC_GIANTS_CHAMBER_OATH, CAN_KILL_TWINMOLD),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_CANYON, 15),                        ONE_WAY_EXIT, true),

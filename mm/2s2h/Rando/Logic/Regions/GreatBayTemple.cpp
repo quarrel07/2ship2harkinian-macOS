@@ -50,6 +50,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_2, CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_3, CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_UNDERWATER_4, CAN_BE_ZORA),
+            CHECK(RC_GIANTS_CHAMBER_OATH, CAN_BE_ZORA && HAS_MAGIC),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 9),                             ONE_WAY_EXIT, true),

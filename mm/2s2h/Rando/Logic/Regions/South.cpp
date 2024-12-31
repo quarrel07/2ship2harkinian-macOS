@@ -28,6 +28,9 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(DEKU_PALACE, 2),                  ENTRANCE(DEKU_KINGS_CHAMBER, 0), true),
         },
+        .events = {
+            EVENT_WEEKEVENTREG("Return Deku Princess", WEEKEVENTREG_23_20, HAS_BOTTLE && CAN_ACCESS(DEKU_PRINCESS)),
+        }
     };
     Regions[RR_DEKU_PALACE_INSIDE] = RandoRegion{ .name = "Inside", .sceneId = SCENE_22DEKUCITY,
         .checks = {
@@ -47,10 +50,18 @@ static RegisterShipInitFunc initFunc([]() {
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 3),      ENTRANCE(DEKU_PALACE, 0), true),
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 4),      ENTRANCE(DEKU_PALACE, 5), CAN_BE_DEKU), // Treetop
-            EXIT(ENTRANCE(DEKU_SHRINE, 0),                  ENTRANCE(DEKU_PALACE, 4), CAN_ACCESS(DEKU_PRINCESS)),
+            EXIT(ENTRANCE(DEKU_SHRINE, 0),                  ENTRANCE(DEKU_PALACE, 4), CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
         },
         .connections = {
             CONNECTION(RR_DEKU_PALACE_INSIDE, CAN_BE_DEKU),
+        },
+    };
+    Regions[RR_DEKU_SHRINE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_DANPEI,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
+        },
+        .connections = {
+            CONNECTION(RR_DEKU_SHRINE, CHECK_WEEKEVENTREG(WEEKEVENTREG_23_20)),
         },
     };
     Regions[RR_DEKU_SHRINE] = RandoRegion{ .sceneId = SCENE_DANPEI,
@@ -89,8 +100,8 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_DEKU_SHRINE_POT_2,                             true),
             CHECK(RC_DEKU_SHRINE_MASK_OF_SCENTS,                    true),
         },
-        .exits = { //     TO                                         FROM
-            EXIT(ENTRANCE(DEKU_PALACE, 4),                  ENTRANCE(DEKU_SHRINE, 0), true),
+        .connections = {
+            CONNECTION(RR_DEKU_SHRINE_ENTRANCE, CHECK_WEEKEVENTREG(WEEKEVENTREG_23_20)),
         },
     };
     Regions[RR_DOGGY_RACETRACK] = RandoRegion{ .sceneId = SCENE_F01_B,
@@ -281,10 +292,8 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(SOUTHERN_SWAMP_POISONED, 2),      ENTRANCE(WOODFALL, 0), true),
             EXIT(ENTRANCE(WOODFALL_TEMPLE, 0),              ENTRANCE(WOODFALL, 1), CAN_BE_DEKU && CAN_PLAY_SONG(SONATA)),
             EXIT(ENTRANCE(FAIRY_FOUNTAIN, 1),               ENTRANCE(WOODFALL, 2), CAN_BE_DEKU),
+            EXIT(ENTRANCE(WOODFALL_TEMPLE, 2),              ENTRANCE(WOODFALL, 3), CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
         },
-        .events = {
-            EVENT_ACCESS(RANDO_ACCESS_DEKU_PRINCESS, HAS_BOTTLE && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_WOODFALL_TEMPLE)),
-        }
     };
     Regions[RR_WOODS_OF_MYSTERY] = RandoRegion{ .sceneId = SCENE_26SARUNOMORI,
         .exits = { //     TO                                         FROM

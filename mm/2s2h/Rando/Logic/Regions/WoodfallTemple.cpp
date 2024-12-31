@@ -26,6 +26,10 @@ static RegisterShipInitFunc initFunc([]() {
             // TODO: CAN_KILL_BOSS(Odolwa)?
             CHECK(RC_WOODFALL_TEMPLE_BOSS_CONTAINER, true),
             CHECK(RC_WOODFALL_TEMPLE_BOSS_WARP, true),
+            CHECK(RC_GIANTS_CHAMBER_OATH, true),
+        },
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(WOODFALL_TEMPLE, 1),                       ONE_WAY_EXIT, true),
         },
         .events = {
             // TODO: CAN_KILL_BOSS(Odolwa)?
@@ -61,6 +65,17 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_WOODFALL_TEMPLE_MAIN_ROOM_UPPER, CAN_BE_DEKU && CAN_LIGHT_TORCH_NEAR_ANOTHER),
             CONNECTION(RR_WOODFALL_TEMPLE_MAZE_ROOM, CAN_LIGHT_TORCH_NEAR_ANOTHER),
+        },
+    };
+    Regions[RR_WOODFALL_TEMPLE_DEKU_PRINCESS_ROOM] = RandoRegion{ .name = "Deku Princess Room", .sceneId = SCENE_MITURIN,
+        .exits = { //     TO                                         FROM
+            EXIT(ENTRANCE(WOODFALL, 3),                     ENTRANCE(WOODFALL_TEMPLE, 2), true),
+        },
+        .events = {
+            EVENT_ACCESS(RANDO_ACCESS_DEKU_PRINCESS, true),
+        },
+        .oneWayEntrances = {
+            ENTRANCE(WOODFALL_TEMPLE, 1), // From boss room
         },
     };
     Regions[RR_WOODFALL_TEMPLE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_MITURIN,

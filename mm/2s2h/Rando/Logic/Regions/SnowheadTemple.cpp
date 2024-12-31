@@ -40,6 +40,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_2,  true),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_3,  true),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_EARLY_4,  true),
+            CHECK(RC_GIANTS_CHAMBER_OATH,               CAN_USE_MAGIC_ARROW(FIRE)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),
