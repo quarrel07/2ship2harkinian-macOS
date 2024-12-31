@@ -152,7 +152,7 @@ void CheckTrackerDrawLogicalList() {
     for (RandoRegionId regionId : sortedRegionIds) {
         if (CVAR_SCROLL_TO_SCENE && sScrollToTargetEntrance != -1 &&
             Rando::Logic::GetRegionIdFromEntrance(sScrollToTargetEntrance) == regionId) {
-            ImGui::SetScrollHereY();
+            ImGui::SetScrollHereY(0.0f);
             sScrollToTargetScene = -1;
             sScrollToTargetEntrance = -1;
         }
@@ -276,7 +276,40 @@ void CheckTrackerDrawLogicalList() {
     }
 }
 
+std::set<RandoCheckId> checksInLogic;
+static u32 lastFrame = 0;
+
+void RefreshChecksInLogic() {
+    if (gGameState == NULL || gGameState->frames - lastFrame < 20 || !CVAR_SHOW_LOGIC) {
+        return;
+    }
+
+    lastFrame = gGameState->frames;
+    checksInLogic.clear();
+
+    std::set<RandoRegionId> reachableRegions = {};
+    // Get connected entrances from starting & warp points
+    Rando::Logic::FindReachableRegions(RR_MAX, reachableRegions);
+    // Get connected regions from current entrance (TODO: Make this optional)
+    Rando::Logic::FindReachableRegions(Rando::Logic::GetRegionIdFromEntrance(gSaveContext.save.entrance),
+                                       reachableRegions);
+    for (RandoRegionId regionId : reachableRegions) {
+        auto& randoRegion = Rando::Logic::Regions[regionId];
+        std::vector<std::pair<RandoCheckId, std::string>> availableChecks;
+
+        for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
+            auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+            auto& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+            if (randoSaveCheck.shuffled && !randoSaveCheck.obtained && accessLogicFunc.first()) {
+                checksInLogic.insert(randoCheckId);
+            }
+        }
+    }
+}
+
 void CheckTrackerDrawNonLogicalList() {
+    RefreshChecksInLogic();
+
     for (auto& sceneId : sortedSceneIds) {
         if (sceneId == SCENE_MAX) {
             continue;
@@ -310,7 +343,7 @@ void CheckTrackerDrawNonLogicalList() {
         }
 
         if (CVAR_SCROLL_TO_SCENE && sScrollToTargetScene != -1 && sScrollToTargetScene == sceneId) {
-            ImGui::SetScrollHereY();
+            ImGui::SetScrollHereY(0.0f);
             sScrollToTargetScene = -1;
             sScrollToTargetEntrance = -1;
         }
@@ -336,9 +369,16 @@ void CheckTrackerDrawNonLogicalList() {
                 for (auto& randoCheckId : checks) {
                     Rando::StaticData::RandoStaticCheck& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
                     RandoSaveCheck& randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
-                    ImGui::PushStyleColor(ImGuiCol_Text, randoSaveCheck.obtained  ? UIWidgets::Colors::LightGreen
-                                                         : randoSaveCheck.skipped ? UIWidgets::Colors::Indigo
-                                                                                  : UIWidgets::Colors::White);
+                    ImVec4 textColor = UIWidgets::Colors::White;
+                    if (randoSaveCheck.obtained) {
+                        textColor = UIWidgets::Colors::LightGreen;
+                    } else if (randoSaveCheck.skipped) {
+                        textColor = UIWidgets::Colors::Indigo;
+                    } else if (CVAR_SHOW_LOGIC && !checksInLogic.contains(randoCheckId)) {
+                        textColor = UIWidgets::Colors::Gray;
+                    }
+
+                    ImGui::PushStyleColor(ImGuiCol_Text, textColor);
 
                     if (checkTrackerShouldShowRow(randoSaveCheck.obtained, randoSaveCheck.skipped)) {
                         ImGui::BeginGroup();
@@ -403,18 +443,18 @@ void Window::DrawElement() {
     ImGui::Text("Total: %s", totalChecksFound().c_str());
 
     ImGui::BeginChild("Checks", ImVec2(0, 0));
-    if (CVAR_SHOW_LOGIC) {
-        CheckTrackerDrawLogicalList();
-    } else {
-        CheckTrackerDrawNonLogicalList();
-    }
+    // if (CVAR_SHOW_LOGIC) {
+    //     CheckTrackerDrawLogicalList();
+    // } else {
+    CheckTrackerDrawNonLogicalList();
+    // }
     sExpandedHeadersState = sExpandedHeadersToggle;
     ImGui::EndChild();
 }
 
 void SettingsWindow::DrawElement() {
     ImGui::SeparatorText("Check Tracker Settings");
-    UIWidgets::CVarCheckbox("Only Show Checks In Logic", CVAR_NAME_SHOW_LOGIC);
+    UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
     UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
     UIWidgets::CVarCheckbox("Hide Skipped Checks", CVAR_NAME_HIDE_SKIPPED);
     UIWidgets::CVarCheckbox("Auto Scroll To Current Scene", CVAR_NAME_SCROLL_TO_SCENE);
