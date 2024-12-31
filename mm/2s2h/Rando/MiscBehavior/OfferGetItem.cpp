@@ -60,6 +60,7 @@ void Rando::MiscBehavior::InitOfferGetItemBehavior() {
                 [[fallthrough]];
             case ACTOR_EN_DNO:
             case ACTOR_EN_GK:
+            case ACTOR_EN_INVADEPOH:
             case ACTOR_EN_JS:
             case ACTOR_EN_KENDO_JS:
             case ACTOR_EN_GURUGURU:
