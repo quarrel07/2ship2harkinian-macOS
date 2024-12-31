@@ -3,12 +3,18 @@
 
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/ShipInit.hpp"
+#include "assets/2s2h_assets.h"
 
 extern "C" {
 #include "variables.h"
 #include "overlays/actors/ovl_Obj_Tsubo/z_obj_tsubo.h"
+#include "objects/object_tsubo/object_tsubo.h"
+
+void ObjTsubo_Draw(Actor* actor, PlayState* play);
 }
 
+#define OBJTSUBO_RC (actor->home.rot.x)
 #define IS_AT(xx, zz) (actor->home.pos.x == xx && actor->home.pos.z == zz)
 
 RandoCheckId IdentifyPot(Actor* actor) {
@@ -883,6 +889,41 @@ RandoCheckId IdentifyPot(Actor* actor) {
     return randoCheckId;
 }
 
+void ObjTsubo_RandoDraw(Actor* actor, PlayState* play) {
+    RandoItemId randoItemId = Rando::ConvertItem(RANDO_SAVE_CHECKS[OBJTSUBO_RC].randoItemId, (RandoCheckId)OBJTSUBO_RC);
+    RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
+
+    switch (randoItemType) {
+        case RITYPE_BOSS_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotBossKeyDL);
+            break;
+        case RITYPE_SMALL_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotSmallKeyDL);
+            break;
+        case RITYPE_HEALTH:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotHeartDL);
+            break;
+        case RITYPE_LESSER:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotMinorDL);
+            break;
+        case RITYPE_MAJOR:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotMajorDL);
+            break;
+        case RITYPE_MASK:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotMaskDL);
+            break;
+        case RITYPE_SKULLTULA_TOKEN:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotTokenDL);
+            break;
+        case RITYPE_STRAY_FAIRY:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotFairyDL);
+            break;
+        default:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotStandardDL);
+            break;
+    }
+}
+
 void Rando::ActorBehavior::InitObjTsuboBehavior() {
     COND_ID_HOOK(OnActorInit, ACTOR_OBJ_TSUBO, IS_RANDO, [](Actor* actor) {
         RandoCheckId randoCheckId = IdentifyPot(actor);
@@ -894,12 +935,20 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
             return;
         }
 
-        actor->home.rot.x = randoCheckId;
+        OBJTSUBO_RC = randoCheckId;
+    });
+
+    COND_VB_SHOULD(VB_POT_DRAW_BE_OVERRIDDEN, IS_RANDO, {
+        Actor* actor = va_arg(args, Actor*);
+        if (CVarGetInteger("gRando.CSMC", 0) && OBJTSUBO_RC != RC_UNKNOWN) {
+            *should = false;
+            actor->draw = ObjTsubo_RandoDraw;
+        }
     });
 
     COND_VB_SHOULD(VB_POT_DROP_COLLECTIBLE, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
-        RandoCheckId randoCheckId = (RandoCheckId)actor->home.rot.x;
+        RandoCheckId randoCheckId = (RandoCheckId)OBJTSUBO_RC;
         if (randoCheckId == RC_UNKNOWN) {
             return;
         }
@@ -922,6 +971,29 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         *should = false;
 
         // Clear the stored Check ID for pots that are on a timed respawn
-        actor->home.rot.x = 0;
+        OBJTSUBO_RC = RC_UNKNOWN;
+        actor->draw = ObjTsubo_Draw;
     });
 }
+
+static RegisterShipInitFunc initFunc(
+    []() {
+        if (gPlayState == NULL) {
+            return;
+        }
+
+        Actor* actor = gPlayState->actorCtx.actorLists[ACTORCAT_PROP].first;
+
+        while (actor != NULL) {
+            if (actor->id == ACTOR_OBJ_TSUBO && OBJTSUBO_RC != RC_UNKNOWN) {
+                if (CVarGetInteger("gRando.CSMC", 0) && IS_RANDO) {
+                    actor->draw = ObjTsubo_RandoDraw;
+                } else if (actor->draw == ObjTsubo_RandoDraw) {
+                    actor->draw = ObjTsubo_Draw;
+                }
+            }
+
+            actor = actor->next;
+        }
+    },
+    { "gRando.CSMC", "IS_RANDO" });

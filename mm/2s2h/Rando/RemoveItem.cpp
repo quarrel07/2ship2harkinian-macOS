@@ -6,6 +6,8 @@ extern "C" {
 #include "functions.h"
 }
 
+#define CLEAR_OWL_WARP(owlId) (gSaveContext.save.saveInfo.playerData.owlActivationFlags &= ~(1 << owlId))
+
 void Rando::RemoveItem(RandoItemId randoItemId) {
     switch (randoItemId) {
         case RI_CLOCK_TOWN_STRAY_FAIRY:
@@ -119,6 +121,36 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
             break;
         case RI_PENDANT_OF_MEMORIES:
             Flags_ClearRandoInf(RANDO_INF_OBTAINED_PENDANT_OF_MEMORIES);
+            break;
+        case RI_OWL_CLOCK_TOWN_SOUTH:
+            CLEAR_OWL_WARP(OWL_WARP_CLOCK_TOWN);
+            break;
+        case RI_OWL_GREAT_BAY_COAST:
+            CLEAR_OWL_WARP(OWL_WARP_GREAT_BAY_COAST);
+            break;
+        case RI_OWL_IKANA_CANYON:
+            CLEAR_OWL_WARP(OWL_WARP_IKANA_CANYON);
+            break;
+        case RI_OWL_MILK_ROAD:
+            CLEAR_OWL_WARP(OWL_WARP_MILK_ROAD);
+            break;
+        case RI_OWL_MOUNTAIN_VILLAGE:
+            CLEAR_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE);
+            break;
+        case RI_OWL_SNOWHEAD:
+            CLEAR_OWL_WARP(OWL_WARP_SNOWHEAD);
+            break;
+        case RI_OWL_SOUTHERN_SWAMP:
+            CLEAR_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP);
+            break;
+        case RI_OWL_STONE_TOWER:
+            CLEAR_OWL_WARP(OWL_WARP_STONE_TOWER);
+            break;
+        case RI_OWL_WOODFALL:
+            CLEAR_OWL_WARP(OWL_WARP_WOODFALL);
+            break;
+        case RI_OWL_ZORA_CAPE:
+            CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE);
             break;
         default:
             // TODO: Handle equipment

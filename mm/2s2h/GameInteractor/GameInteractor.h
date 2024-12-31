@@ -170,6 +170,7 @@ typedef enum {
     VB_GIVE_DON_GERO_MASK,
     VB_TOILET_HAND_TAKE_ITEM,
     VB_ITEM_GIVE_SWORD_SET_FORM_EQUIP,
+    VB_POT_DRAW_BE_OVERRIDDEN,
 } GIVanillaBehavior;
 
 typedef enum {

@@ -20,6 +20,8 @@ extern "C" {
 extern GetItemEntry sGetItemTable[GI_MAX - 1];
 }
 
+#define CAN_OWL_WARP(owlId) ((gSaveContext.save.saveInfo.playerData.owlActivationFlags >> owlId) & 1)
+
 // ALRIGHT BUCKLE UP. This file is for converting items to their "obtainable" form. This is used for various reasons,
 // and you don't always want to convert items, depending on the context. For example, if you're rendering ammo in a shop
 // for an item you don't have yet, you don't want to convert it, because you want to show the player what they're
@@ -341,6 +343,26 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
             return !CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
         case RI_STONE_TOWER_MAP:
             return !CHECK_DUNGEON_ITEM(DUNGEON_MAP, DUNGEON_INDEX_STONE_TOWER_TEMPLE);
+        case RI_OWL_CLOCK_TOWN_SOUTH:
+            return !CAN_OWL_WARP(OWL_WARP_CLOCK_TOWN);
+        case RI_OWL_GREAT_BAY_COAST:
+            return !CAN_OWL_WARP(OWL_WARP_GREAT_BAY_COAST);
+        case RI_OWL_IKANA_CANYON:
+            return !CAN_OWL_WARP(OWL_WARP_IKANA_CANYON);
+        case RI_OWL_MILK_ROAD:
+            return !CAN_OWL_WARP(OWL_WARP_MILK_ROAD);
+        case RI_OWL_MOUNTAIN_VILLAGE:
+            return !CAN_OWL_WARP(OWL_WARP_MOUNTAIN_VILLAGE);
+        case RI_OWL_SNOWHEAD:
+            return !CAN_OWL_WARP(OWL_WARP_SNOWHEAD);
+        case RI_OWL_SOUTHERN_SWAMP:
+            return !CAN_OWL_WARP(OWL_WARP_SOUTHERN_SWAMP);
+        case RI_OWL_STONE_TOWER:
+            return !CAN_OWL_WARP(OWL_WARP_STONE_TOWER);
+        case RI_OWL_WOODFALL:
+            return !CAN_OWL_WARP(OWL_WARP_WOODFALL);
+        case RI_OWL_ZORA_CAPE:
+            return !CAN_OWL_WARP(OWL_WARP_ZORA_CAPE);
         // These items are technically fine to receive again because they don't do anything, but we'll convert them to
         // ensure it's clear to the player something didn't go wrong.
         // Quest Items
@@ -388,14 +410,20 @@ bool Rando::IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId)
         case RI_MASK_CAPTAIN:
         case RI_MASK_COUPLE:
         case RI_MASK_DEKU:
+        case RI_MASK_DON_GERO:
+        case RI_MASK_FIERCE_DEITY:
         case RI_MASK_GARO:
         case RI_MASK_GIANT:
+        case RI_MASK_GIBDO:
         case RI_MASK_GORON:
         case RI_MASK_GREAT_FAIRY:
         case RI_MASK_KAFEIS_MASK:
         case RI_MASK_KAMARO:
+        case RI_MASK_POSTMAN:
         case RI_MASK_ROMANI:
+        case RI_MASK_SCENTS:
         case RI_MASK_STONE:
+        case RI_MASK_TRUTH:
         case RI_MASK_ZORA: {
             ItemId itemId = StaticData::Items[randoItemId].itemId;
             return INV_CONTENT(itemId) != itemId;

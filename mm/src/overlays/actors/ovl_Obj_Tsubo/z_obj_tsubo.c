@@ -440,7 +440,9 @@ void func_80928928(ObjTsubo* this, PlayState* play) {
 }
 
 void func_809289B4(ObjTsubo* this) {
-    this->actor.draw = ObjTsubo_Draw;
+    if (GameInteractor_Should(VB_POT_DRAW_BE_OVERRIDDEN, true, this)) {
+        this->actor.draw = ObjTsubo_Draw;
+    }
     this->actor.flags |= ACTOR_FLAG_10;
     this->unk_195 = false;
     this->actionFunc = func_809289E4;
@@ -643,7 +645,9 @@ void func_8092926C(ObjTsubo* this, PlayState* play) {
     if (this->unk_194 > 0) {
         this->unk_194--;
         if (this->unk_194 == 0) {
-            this->actor.draw = ObjTsubo_Draw;
+            if (GameInteractor_Should(VB_POT_DRAW_BE_OVERRIDDEN, true, this)) {
+                this->actor.draw = ObjTsubo_Draw;
+            }
         }
     } else {
         scale = sPotTypeData[OBJ_TSUBO_GET_TYPE(&this->actor)].scale;
