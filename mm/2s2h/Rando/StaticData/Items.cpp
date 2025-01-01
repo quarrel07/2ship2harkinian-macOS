@@ -45,6 +45,7 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_DOUBLE_DEFENSE,             "",     "Double Defense",             RITYPE_HEALTH,          ITEM_NONE,                       GI_NONE,                     GID_HEART_CONTAINER),
     RI(RI_DOUBLE_MAGIC,               "a",    "Magic Upgrade",              RITYPE_LESSER,          ITEM_NONE,                       GI_NONE,                     GID_MAGIC_JAR_BIG),
     RI(RI_FAIRY_REFILL,               "a",    "Fairy",                      RITYPE_JUNK,            ITEM_FAIRY,                      GI_FAIRY,                    GID_FAIRY_2),
+    RI(RI_GOLD_DUST_REFILL,           "a",    "Gold Dust Refill",           RITYPE_LESSER,          ITEM_GOLD_DUST_2,                GI_GOLD_DUST_2,              GID_GOLD_DUST),
     RI(RI_GREAT_BAY_BOSS_KEY,         "the",  "Great Bay Boss Key",         RITYPE_BOSS_KEY,        ITEM_KEY_BOSS,                   GI_KEY_BOSS,                 GID_KEY_BOSS),
     RI(RI_GREAT_BAY_COMPASS,          "the",  "Great Bay Compass",          RITYPE_LESSER,          ITEM_COMPASS,                    GI_COMPASS,                  GID_COMPASS),
     RI(RI_GREAT_BAY_MAP,              "the",  "Great Bay Map",              RITYPE_LESSER,          ITEM_DUNGEON_MAP,                GI_MAP,                      GID_DUNGEON_MAP),
