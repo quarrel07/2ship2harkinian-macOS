@@ -12,7 +12,6 @@
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "HudEditor.h"
-#include "Rando/Rando.h"
 
 #include "2s2h/Enhancements/Trackers/ItemTracker.h"
 #include "2s2h/Enhancements/Trackers/ItemTrackerSettings.h"
@@ -998,6 +997,12 @@ void BenMenuBar::DrawElement() {
         DrawBenMenu();
 
         ImGui::SetCursorPosY(0.0f);
+        ImGui::Text("Press ESC for the new Menu");
+        ImGui::PopStyleVar(1);
+        ImGui::EndMenuBar();
+        return;
+
+        ImGui::SetCursorPosY(0.0f);
 
         DrawSettingsMenu();
 
@@ -1012,10 +1017,6 @@ void BenMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawDeveloperToolsMenu();
-
-        ImGui::SetCursorPosY(0.0f);
-
-        Rando::DrawMenu();
 
         ImGui::SetCursorPosY(0.0f);
 

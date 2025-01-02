@@ -85,7 +85,8 @@ typedef enum {
     WIDGET_WINDOW_BUTTON,
     WIDGET_AUDIO_BACKEND, // needed because of special operations that can't be handled easily with the normal combobox
                           // widget
-    WIDGET_VIDEO_BACKEND  // same as above
+    WIDGET_VIDEO_BACKEND, // same as above
+    WIDGET_RANDO,
 } WidgetType;
 
 typedef enum {
@@ -261,6 +262,7 @@ static ImGuiTextFilter menuSearch;
 std::vector<SidebarEntry> settingsSidebar;
 std::vector<SidebarEntry> enhancementsSidebar;
 std::vector<SidebarEntry> devToolsSidebar;
+std::vector<SidebarEntry> randoSidebar;
 uint8_t searchSidebarIndex = 0;
 SidebarEntry searchSidebarEntry = {
     "Search",
@@ -2014,6 +2016,9 @@ void SearchMenuGetItem(widgetInfo& widget) {
                     }
                 }
                 ImGui::EndChild();
+            } break;
+            case WIDGET_RANDO: {
+                Rando::DrawMenu();
             } break;
             default:
                 break;
