@@ -8,7 +8,6 @@ extern "C" {
 }
 
 std::map<std::pair<float, float>, RandoCheckId> freestandingMap = {
-    // Deku Palace (TODO: fix Item Gets, items too close?)
     { { 439.640961f, 1368.999390f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_12 },
     { { 439.640961f, 1329.000610f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_13 },
     { { 405.0f, 1309.0f }, RC_DEKU_PALACE_FREESTANDING_RUPEE_14 },
@@ -52,16 +51,10 @@ void Rando::ActorBehavior::InitEnItem00Behavior() {
         // Prevent the original item from spawning
         *should = false;
 
-        // Secret Shrines Freestanding Rupees spawn too high and are out of collection range using CustomItem,
-        // so we lower it slightly so Human Link can reach them.
-        float posY = actor->world.pos.y;
-        if (randoStaticCheck.randoCheckId >= RC_SECRET_SHRINE_FREESTANDING_RUPEE_01 &&
-            randoStaticCheck.randoCheckId <= RC_SECRET_SHRINE_FREESTANDING_RUPEE_17) {
-            posY -= 20.0f;
-        }
         // If it hasn't been collected yet, spawn a dummy item
         CustomItem::Spawn(
-            actor->world.pos.x, posY, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH, randoStaticCheck.randoCheckId,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0, CustomItem::KILL_ON_TOUCH,
+            randoStaticCheck.randoCheckId,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
                 switch (randoStaticCheck.flagType) {
