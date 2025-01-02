@@ -88,7 +88,7 @@ void Rando::DrawMenu() {
         "the earlier phases of this project, some things you may encounter are:\n- X Check is not shuffled\n- X "
         "Cutscene is not skipped\n- Soft lock when interacting with X\n- Unbeatable seed (glitchless logic)\n\nWe are "
         "aware of some of these, but likely not all. Please compare your findings to our list of known issues, which "
-        "is available in the pins of the Dice Alpha thread, or on the main Dice Alpha Pull Request, and let us know if "
+        "is available in the pins of the Rando Alpha Discord thread, or on the Github Issue #211, and let us know if "
         "you encounter any new issues.\n\nExplore the menus for various enhancements and time savers, they are not "
         "enabled by default in Rando.\n\n");
     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.5f, 0.5f, 1.0f));
