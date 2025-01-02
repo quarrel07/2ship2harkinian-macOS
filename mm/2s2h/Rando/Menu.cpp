@@ -4,6 +4,7 @@
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "Rando/CheckTracker/CheckTracker.h"
 #include "BenPort.h"
+#include "build.h"
 
 // TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
 std::vector<std::string> logicOptions = { "No Logic", "Vanilla", "Glitchless" };
@@ -72,6 +73,13 @@ void Rando::DrawMenu() {
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoDisclaimer");
+    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Gray);
+    if (gGitCommitTag[0] == 0) {
+        ImGui::Text("%s | %s", (char*)gGitBranch, (char*)gGitCommitHash);
+    } else {
+        ImGui::Text("%s", (char*)gBuildVersion);
+    }
+    ImGui::PopStyleColor();
     ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Yellow);
     ImGui::SeparatorText("Disclaimer");
     ImGui::PopStyleColor();

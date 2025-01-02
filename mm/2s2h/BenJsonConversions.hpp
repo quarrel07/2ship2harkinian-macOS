@@ -3,6 +3,7 @@
 
 #include "z64.h"
 #include <nlohmann/json.hpp>
+#include "build.h"
 
 using json = nlohmann::json;
 
@@ -61,10 +62,14 @@ void from_json(const json& j, RandoSaveInfo& rando) {
 }
 
 void to_json(json& j, const ShipSaveInfo& shipSaveInfo) {
+    uint8_t commitHash[8];
+    memcpy(commitHash, shipSaveInfo.commitHash, sizeof(commitHash));
+
     j = json {
         { "dpadEquips", shipSaveInfo.dpadEquips },
         { "pauseSaveEntrance", shipSaveInfo.pauseSaveEntrance },
         { "saveType", shipSaveInfo.saveType },
+        { "commitHash", commitHash },
     };
 
     if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
@@ -76,8 +81,14 @@ void from_json(const json& j, ShipSaveInfo& shipSaveInfo) {
     j.at("dpadEquips").get_to(shipSaveInfo.dpadEquips);
     j.at("pauseSaveEntrance").get_to(shipSaveInfo.pauseSaveEntrance);
     j.at("saveType").get_to(shipSaveInfo.saveType);
+    j.at("commitHash").get_to(shipSaveInfo.commitHash);
 
     if (shipSaveInfo.saveType == SAVETYPE_RANDO) {
+        if (strcmp(shipSaveInfo.commitHash, gGitCommitHash) != 0) {
+            SPDLOG_ERROR("Randomizer saves cannot be loaded from a different version.");
+            throw new std::runtime_error("Randomizer saves cannot be loaded from a different version.");
+        }
+
         j.at("rando").get_to(shipSaveInfo.rando);
     }
 }
