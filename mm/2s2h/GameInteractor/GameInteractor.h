@@ -175,7 +175,7 @@ typedef enum {
     VB_HAVE_MAGIC_FOR_TINGLE,
     VB_GIVE_KEATON_MASK,
     VB_GIVE_LETTER_TO_MAMA,
-    VB_DROP_COLLECTIBLE,
+    VB_BARREL_OR_CRATE_DROP_COLLECTIBLE,
 } GIVanillaBehavior;
 
 typedef enum {

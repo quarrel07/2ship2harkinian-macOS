@@ -83,16 +83,18 @@ static InitChainEntry sInitChain[] = {
 };
 
 void ObjKibako_SpawnCollectible(ObjKibako* this, PlayState* play) {
-    if (GameInteractor_Should(VB_DROP_COLLECTIBLE, true, this)) {
-        s32 dropItem00Id;
+    if (!GameInteractor_Should(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, true, this)) {
+        return;
+    }
 
-        if (this->isDropCollected == 0) {
-            dropItem00Id = func_800A8150(KIBAKO_COLLECTIBLE_ID(&this->actor));
-            if (dropItem00Id > ITEM00_NO_DROP) {
-                Item_DropCollectible(play, &this->actor.world.pos,
-                                     dropItem00Id | KIBAKO_COLLECTIBLE_FLAG(&this->actor) << 8);
-                this->isDropCollected = 1;
-            }
+    s32 dropItem00Id;
+
+    if (this->isDropCollected == 0) {
+        dropItem00Id = func_800A8150(KIBAKO_COLLECTIBLE_ID(&this->actor));
+        if (dropItem00Id > ITEM00_NO_DROP) {
+            Item_DropCollectible(play, &this->actor.world.pos,
+                                 dropItem00Id | KIBAKO_COLLECTIBLE_FLAG(&this->actor) << 8);
+            this->isDropCollected = 1;
         }
     }
 }

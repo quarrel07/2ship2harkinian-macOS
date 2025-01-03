@@ -107,13 +107,15 @@ void ObjKibako2_Break(ObjKibako2* this, PlayState* play) {
 }
 
 void ObjKibako2_SpawnCollectible(ObjKibako2* this, PlayState* play) {
-    if (GameInteractor_Should(VB_DROP_COLLECTIBLE, true, this)) {
-        s32 dropItem00Id = func_800A8150(KIBAKO2_COLLECTIBLE_ID(&this->dyna.actor));
+    if (!GameInteractor_Should(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, true, this)) {
+        return;
+    }
 
-        if (dropItem00Id > ITEM00_NO_DROP) {
-            Item_DropCollectible(play, &this->dyna.actor.world.pos,
-                                 dropItem00Id | KIBAKO2_COLLECTIBLE_FLAG(&this->dyna.actor) << 8);
-        }
+    s32 dropItem00Id = func_800A8150(KIBAKO2_COLLECTIBLE_ID(&this->dyna.actor));
+
+    if (dropItem00Id > ITEM00_NO_DROP) {
+        Item_DropCollectible(play, &this->dyna.actor.world.pos,
+                             dropItem00Id | KIBAKO2_COLLECTIBLE_FLAG(&this->dyna.actor) << 8);
     }
 }
 

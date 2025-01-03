@@ -160,13 +160,15 @@ void func_80B9B9C8(ObjTaru* this, PlayState* play) {
 }
 
 void func_80B9BC64(ObjTaru* this, PlayState* play) {
-    if (GameInteractor_Should(VB_DROP_COLLECTIBLE, true, this)) {
-        s32 item;
+    if (!GameInteractor_Should(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, true, this)) {
+        return;
+    }
 
-        item = func_800A8150(OBJ_TARU_GET_3F(&this->dyna.actor));
-        if (item >= 0) {
-            Item_DropCollectible(play, &this->dyna.actor.world.pos, (OBJ_TARU_GET_7F00(&this->dyna.actor) << 8) | item);
-        }
+    s32 item;
+
+    item = func_800A8150(OBJ_TARU_GET_3F(&this->dyna.actor));
+    if (item >= 0) {
+        Item_DropCollectible(play, &this->dyna.actor.world.pos, (OBJ_TARU_GET_7F00(&this->dyna.actor) << 8) | item);
     }
 }
 

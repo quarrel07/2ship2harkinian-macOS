@@ -57,7 +57,7 @@ std::map<std::pair<float, float>, RandoCheckId> barrelMap = {
 };
 
 void Rando::ActorBehavior::InitObjTaruBehavior() {
-    COND_VB_SHOULD(VB_DROP_COLLECTIBLE, IS_RANDO, {
+    COND_VB_SHOULD(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, IS_RANDO, {
         ObjTaru* refActor = va_arg(args, ObjTaru*);
         auto randoStaticCheck = Rando::StaticData::Checks[RC_UNKNOWN];
 

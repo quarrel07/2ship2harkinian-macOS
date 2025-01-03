@@ -3,8 +3,10 @@
 
 typedef enum {
     RCTYPE_UNKNOWN,
+    RCTYPE_BARREL,
     RCTYPE_CHEST,
     RCTYPE_COW,
+    RCTYPE_CRATE,
     RCTYPE_FREESTANDING,
     RCTYPE_MINIGAME,
     RCTYPE_NPC,
@@ -15,8 +17,6 @@ typedef enum {
     RCTYPE_SKULL_TOKEN,
     RCTYPE_SONG,
     RCTYPE_STRAY_FAIRY,
-    RCTYPE_BARREL,
-    RCTYPE_CRATE,
     RCTYPE_MAX,
 } RandoCheckType;
 

@@ -105,7 +105,7 @@ std::map<std::pair<float, float>, RandoCheckId> crateMap = {
 };
 
 void Rando::ActorBehavior::InitObjKibakoBehavior() {
-    COND_VB_SHOULD(VB_DROP_COLLECTIBLE, IS_RANDO, {
+    COND_VB_SHOULD(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
         auto randoStaticCheck = Rando::StaticData::Checks[RC_UNKNOWN];
 

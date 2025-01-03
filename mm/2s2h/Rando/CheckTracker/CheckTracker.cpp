@@ -54,8 +54,10 @@ std::unordered_map<RandoCheckId, std::string> accessLogicFuncs;
 
 std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_UNKNOWN*/ gItemIconBombersNotebookTex,
+    /*RCTYPE_BARREL*/ gBarrelTrackerIcon,
     /*RCTYPE_CHEST*/ gChestTrackerIcon,
     /*RCTYPE_COW*/ gItemIconRomaniMaskTex,
+    /*RCTYPE_CRATE*/ gCrateTrackerIcon,
     /*RCTYPE_FREESTANDING*/ gRupeeCounterIconTex,
     /*RCTYPE_MINIGAME*/ gArcheryScoreIconTex,
     /*RCTYPE_NPC*/ gItemIconBombersNotebookTex,
@@ -66,8 +68,6 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_SKULL_TOKEN*/ gQuestIconGoldSkulltulaTex,
     /*RCTYPE_SONG*/ gItemIconSongNoteTex,
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
-    /*RCTYPE_BARREL*/ gBarrelTrackerIcon,
-    /*RCTYPE_CRATE*/ gCrateTrackerIcon,
 };
 
 uint32_t getSumOfObtainedChecks(std::vector<RandoCheckId>& checks) {

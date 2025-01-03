@@ -79,7 +79,8 @@ void ApplyGlitchlessLogicToSaveContext() {
                 isShuffled = false;
             }
 
-            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE) &&
+            if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_RUPEE ||
+                 randoStaticCheck.randoCheckType == RCTYPE_BARREL || randoStaticCheck.randoCheckType == RCTYPE_CRATE) &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
                 isShuffled = false;
             }
