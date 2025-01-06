@@ -1065,6 +1065,9 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Two-Handed Sword Spin Attack", "gEnhancements.Equipment.TwoHandedSwordSpinAttack",
                 "Enables magic spin attacks for the Fierce Deity Sword and Great Fairy's Sword.",
+                WIDGET_CVAR_CHECKBOX },
+              { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
+                "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
                 WIDGET_CVAR_CHECKBOX } },
             {
                 { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
