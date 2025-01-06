@@ -565,7 +565,17 @@ void DrawEnhancementsMenu() {
                       "the Rupees to Links current Rupees or 0 respectively." });
             UIWidgets::CVarCheckbox(
                 "Fast Text", "gEnhancements.Dialogue.FastText",
-                { .tooltip = "Speeds up text rendering, and enables holding of B progress to next message" });
+                { .tooltip = "Speeds up text rendering, and enables holding of B progress to next message." });
+
+            ImGui::EndMenu();
+        }
+
+        if (UIWidgets::BeginMenu("TimeSavers")) {
+            UIWidgets::CVarCheckbox(
+                "Swamp Boat Timesaver", "gEnhancements.Timesavers.SwampBoatSpeed",
+                { .tooltip = "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat "
+                             "speed up for future attempts. When reaching 20 points, you'll be automatically "
+                             "transported back to Koume, completing the minigame." });
 
             ImGui::EndMenu();
         }

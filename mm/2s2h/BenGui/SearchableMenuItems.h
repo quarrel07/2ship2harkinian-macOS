@@ -1378,6 +1378,13 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Fast Text", "gEnhancements.Dialogue.FastText",
                 "Speeds up text rendering, and enables holding of B progress to next message.",
+                WIDGET_CVAR_CHECKBOX } },
+            // Other
+            { { .widgetName = "Other", .widgetType = WIDGET_SEPARATOR_TEXT },
+              { "Swamp Boat Timesaver", "gEnhancements.Timesavers.SwampBoatSpeed",
+                "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat speed up for "
+                "future attempts. When reaching 20 points, you'll be automatically transported back to Koume, "
+                "completing the minigame.",
                 WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Fixes",
