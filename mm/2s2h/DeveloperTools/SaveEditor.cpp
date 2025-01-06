@@ -17,6 +17,7 @@ extern "C" {
 #include <variables.h>
 #include <functions.h>
 #include "overlays/actors/ovl_En_Test4/z_en_test4.h"
+#include "overlays/actors/ovl_Obj_Tokei_Step/z_obj_tokei_step.h"
 
 extern PlayState* gPlayState;
 extern SaveContext gSaveContext;
@@ -34,6 +35,9 @@ void PlayerCall_Update(Actor* thisx, PlayState* play);
 void PlayerCall_Draw(Actor* thisx, PlayState* play);
 void TransitionFade_SetColor(void* thisx, u32 color);
 
+void ObjTokeiStep_SetupOpen(ObjTokeiStep* objTokeiStep);
+void ObjTokeiStep_DrawOpen(Actor* actor, PlayState* play);
+void ObjTokeiStep_DoNothing(ObjTokeiStep* objTokeiStep, PlayState* play);
 void func_80A42198(EnTest4* thisx);
 void func_80A425E4(EnTest4* thisx, PlayState* play);
 }
@@ -218,6 +222,16 @@ void UpdateGameTime(u16 gameTime) {
         // Unset any screen scaling from the above funcs
         gSaveContext.screenScale = 1000.0f;
         gSaveContext.screenScaleFlag = false;
+    }
+
+    // Open the Clock Tower rooftop
+    if (((CURRENT_DAY == 3) && (gSaveContext.save.time < CLOCK_TIME(6, 0)))) {
+        ObjTokeiStep* objTokeiStep = (ObjTokeiStep*)Actor_FindNearby(gPlayState, &GET_PLAYER(gPlayState)->actor,
+                                                                     ACTOR_OBJ_TOKEI_STEP, ACTORCAT_BG, 99999.9f);
+        if (objTokeiStep != NULL && objTokeiStep->actionFunc == ObjTokeiStep_DoNothing) {
+            objTokeiStep->dyna.actor.draw = ObjTokeiStep_DrawOpen;
+            ObjTokeiStep_SetupOpen(objTokeiStep);
+        }
     }
 }
 
