@@ -309,6 +309,14 @@ void RefreshChecksInLogic() {
                 checksInLogic.insert({ randoCheckId, true });
             }
         }
+
+        for (auto& event : randoRegion.events) {
+            if (!event.isApplied() && event.condition()) {
+                if (event.applyWhenAccessible) {
+                    event.onApply();
+                }
+            }
+        }
     }
 }
 
