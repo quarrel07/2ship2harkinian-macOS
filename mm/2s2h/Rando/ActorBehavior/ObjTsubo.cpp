@@ -889,6 +889,11 @@ RandoCheckId IdentifyPot(Actor* actor) {
 }
 
 void ObjTsubo_RandoDraw(Actor* actor, PlayState* play) {
+    if (!CVarGetInteger("gRando.CSMC", 0)) {
+        Gfx_DrawDListOpa(play, (Gfx*)gPotStandardDL);
+        return;
+    }
+
     RandoItemId randoItemId = Rando::ConvertItem(RANDO_SAVE_CHECKS[OBJTSUBO_RC].randoItemId, (RandoCheckId)OBJTSUBO_RC);
     RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
 
@@ -939,7 +944,7 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
 
     COND_VB_SHOULD(VB_POT_DRAW_BE_OVERRIDDEN, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
-        if (CVarGetInteger("gRando.CSMC", 0) && OBJTSUBO_RC != RC_UNKNOWN) {
+        if (OBJTSUBO_RC != RC_UNKNOWN) {
             *should = false;
             actor->draw = ObjTsubo_RandoDraw;
         }
@@ -974,25 +979,3 @@ void Rando::ActorBehavior::InitObjTsuboBehavior() {
         actor->draw = ObjTsubo_Draw;
     });
 }
-
-static RegisterShipInitFunc initFunc(
-    []() {
-        if (gPlayState == NULL) {
-            return;
-        }
-
-        Actor* actor = gPlayState->actorCtx.actorLists[ACTORCAT_PROP].first;
-
-        while (actor != NULL) {
-            if (actor->id == ACTOR_OBJ_TSUBO && OBJTSUBO_RC != RC_UNKNOWN) {
-                if (CVarGetInteger("gRando.CSMC", 0) && IS_RANDO) {
-                    actor->draw = ObjTsubo_RandoDraw;
-                } else if (actor->draw == ObjTsubo_RandoDraw) {
-                    actor->draw = ObjTsubo_Draw;
-                }
-            }
-
-            actor = actor->next;
-        }
-    },
-    { "gRando.CSMC", "IS_RANDO" });
