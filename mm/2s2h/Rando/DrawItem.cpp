@@ -201,20 +201,20 @@ void DrawSmallKey(RandoItemId randoItemId) {
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
     switch (randoItemId) {
         case RI_WOODFALL_SMALL_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 236, 120, 186, 255);
             break;
         case RI_SNOWHEAD_SMALL_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 129, 173, 70, 255);
             break;
         case RI_GREAT_BAY_SMALL_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 99, 90, 183, 255);
             break;
         case RI_STONE_TOWER_SMALL_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 165, 83, 255);
             break;
         default:
             break;
@@ -243,20 +243,20 @@ void DrawBossKey(RandoItemId randoItemId) {
     Gfx_SetupDL25_Opa(gPlayState->state.gfxCtx);
     switch (randoItemId) {
         case RI_WOODFALL_BOSS_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 255, 0, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 58, 0, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 236, 120, 186, 255);
             break;
         case RI_SNOWHEAD_BOSS_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 167, 167, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 129, 173, 70, 255);
             break;
         case RI_GREAT_BAY_BOSS_KEY:
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 0, 0, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 89, 255);
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 99, 90, 183, 255);
             break;
         case RI_STONE_TOWER_BOSS_KEY:
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-            gDPSetEnvColor(POLY_OPA_DISP++, 177, 137, 0, 255);
+            gDPSetEnvColor(POLY_OPA_DISP++, 177, 165, 83, 255);
             break;
         default:
             break;
