@@ -20,7 +20,7 @@ void ObjTsubo_Draw(Actor* actor, PlayState* play);
 RandoCheckId IdentifyPot(Actor* actor) {
     auto randoStaticCheck =
         Rando::StaticData::GetCheckFromFlag(FLAG_CYCL_SCENE_COLLECTIBLE, OBJ_TSUBO_PFE00(actor), gPlayState->sceneId);
-    if (randoStaticCheck.randoCheckId != RC_UNKNOWN) {
+    if (randoStaticCheck.randoCheckId != RC_UNKNOWN && randoStaticCheck.randoCheckType == RCTYPE_POT) {
         return randoStaticCheck.randoCheckId;
     }
     RandoCheckId randoCheckId = RC_UNKNOWN;
