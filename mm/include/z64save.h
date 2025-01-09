@@ -35,7 +35,7 @@ typedef enum RespawnMode {
 
 // 2S2H [Port] Quadruple the size of the Save Buffer to support more data, eg rando
 #define SAVE_BUFFER_SIZE 0x4000 * 4
-#define HALF_SAVE_BUFFER_SIZE (SAVE_BUFFER_SIZE / 2)
+#define SAVE_BUFFER_SIZE_HALF (SAVE_BUFFER_SIZE / 2)
 
 typedef enum {
     /* 0  */ MAGIC_STATE_IDLE, // Regular gameplay
