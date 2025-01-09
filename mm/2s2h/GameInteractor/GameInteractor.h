@@ -443,6 +443,7 @@ class GameInteractor {
 
     DEFINE_HOOK(OnFileDropped, (std::string path));
 
+    DEFINE_HOOK(OnGameStateMainStart, ());
     DEFINE_HOOK(OnGameStateMainFinish, ());
     DEFINE_HOOK(OnGameStateDrawFinish, ());
     DEFINE_HOOK(OnGameStateUpdate, ());
@@ -495,6 +496,7 @@ class GameInteractor {
 extern "C" {
 #endif // __cplusplus
 
+void GameInteractor_ExecuteOnGameStateMainStart();
 void GameInteractor_ExecuteOnGameStateMainFinish();
 void GameInteractor_ExecuteOnGameStateDrawFinish();
 void GameInteractor_ExecuteOnGameStateUpdate();
