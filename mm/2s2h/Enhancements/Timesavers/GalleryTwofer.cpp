@@ -2,6 +2,7 @@
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
 #include "2s2h/Rando/Rando.h"
+#include "2s2h/CustomItem/CustomItem.h"
 
 extern "C" {
 #include "overlays/actors/ovl_En_Syateki_Man/z_en_syateki_man.h"
@@ -17,54 +18,39 @@ extern "C" {
 static s16 highestScore = 0;
 
 void RegisterGalleryTwofer() {
-    COND_ID_HOOK(OnActorUpdate, ACTOR_EN_SYATEKI_MAN, CVAR, [](Actor* actor) {
-        PlayState* play = gPlayState;
-        Player* player = GET_PLAYER(play);
-        EnSyatekiMan* thisx = (EnSyatekiMan*)actor;
+    COND_HOOK(OnFlagSet, CVAR, [](FlagType flagType, u32 flag) {
+        bool queueHeartPiece = false;
 
-        bool isSwampGallery = (play->sceneId == SCENE_SYATEKI_MORI);
-        bool isTownGallery = (play->sceneId == SCENE_SYATEKI_MIZU);
-        bool hasQuiver = isSwampGallery
-                             ? CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_QUIVER_UPGRADE)
-                             : CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_QUIVER_UPGRADE);
-
-        bool needsHeartPiece = isSwampGallery
-                                   ? !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_HEART_PIECE)
-                                   : !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_HEART_PIECE);
-
-        if (thisx->shootingGameState == SG_GAME_STATE_ENDED && thisx->score > highestScore) {
-            highestScore = thisx->score;
+        if (flagType == FLAG_WEEK_EVENT_REG && flag == WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_QUIVER_UPGRADE &&
+            !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_HEART_PIECE) &&
+            HS_GET_SWAMP_SHOOTING_GALLERY_HIGH_SCORE() >= SWAMP_CVAR) {
+            SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_HEART_PIECE);
+            queueHeartPiece = true;
         }
 
-        bool gotPerfectScore = isSwampGallery ? (highestScore >= SWAMP_CVAR) : (highestScore >= TOWN_CVAR);
+        if (flagType == FLAG_WEEK_EVENT_REG && flag == WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_QUIVER_UPGRADE &&
+            !CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_HEART_PIECE) &&
+            HS_GET_TOWN_SHOOTING_GALLERY_HIGH_SCORE() >= TOWN_CVAR) {
+            SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_HEART_PIECE);
+            queueHeartPiece = true;
+        }
 
-        if (hasQuiver && needsHeartPiece && gotPerfectScore) {
-            if (!Actor_HasParent(&thisx->actor, play) && !(player->stateFlags1 & ~(PLAYER_STATE1_20))) {
-                if (!IS_RANDO) {
-                    // Set player state and position (otherwise player turns around)
-                    // Rando handles giving items differently. As of now, can't change player rotation.
-                    player->actor.shape.rot.y = -0x8000;
-                    player->actor.velocity.z = 0.0f;
-                    player->actor.velocity.x = 0.0f;
-                    player->actor.world.rot.y = player->actor.shape.rot.y;
-                }
-
-                if (IS_RANDO) {
-                    if (isSwampGallery) {
-                        RANDO_SAVE_CHECKS[RC_SWAMP_SHOOTING_GALLERY_HIGH_SCORE].eligible = true;
-                    } else if (isTownGallery) {
-                        RANDO_SAVE_CHECKS[RC_CLOCK_TOWN_EAST_SHOOTING_GALLERY_HIGH_SCORE].eligible = true;
-                    }
-                } else {
-                    Actor_OfferGetItem(&thisx->actor, play, GI_HEART_PIECE, 500.0f, 100.0f);
-                }
-
-                if (isSwampGallery) {
-                    SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_SWAMP_SHOOTING_GALLERY_HEART_PIECE);
-                } else if (isTownGallery) {
-                    SET_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_TOWN_SHOOTING_GALLERY_HEART_PIECE);
-                }
-            }
+        if (!IS_RANDO && queueHeartPiece) {
+            GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
+                .showGetItemCutscene = true,
+                .param = GID_HEART_PIECE,
+                .giveItem =
+                    [](Actor* actor, PlayState* play) {
+                        if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
+                            CustomMessage::SetActiveCustomMessage("You received a Piece of Heart!",
+                                                                  { .textboxType = 2 });
+                        } else {
+                            CustomMessage::StartTextbox("You received a Piece of Heart!\x1C\x02\x10",
+                                                        { .textboxType = 2 });
+                        }
+                        Item_Give(gPlayState, ITEM_HEART_PIECE);
+                    },
+            });
         }
     });
 }
