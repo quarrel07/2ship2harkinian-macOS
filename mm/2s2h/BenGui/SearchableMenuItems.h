@@ -1126,7 +1126,9 @@ void AddEnhancements() {
                 "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX },
               { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
                 "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
-                WIDGET_CVAR_CHECKBOX } },
+                WIDGET_CVAR_CHECKBOX },
+              { "Bombchu Drops", "gEnhancements.Equipment.ChuDrops",
+                "When a bomb drop is spawned, it has a 50% chance to be a bombchu instead.", WIDGET_CVAR_CHECKBOX } },
             {
                 { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
                 { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.",
