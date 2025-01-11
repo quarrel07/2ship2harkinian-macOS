@@ -440,6 +440,10 @@ static const std::unordered_map<int32_t, const char*> dekuGuardSearchBallsOption
     { DEKU_GUARD_SEARCH_BALLS_ALWAYS, "Always" },
 };
 
+static const std::unordered_map<int32_t, const char*> damageMultiplierOptions = {
+    { 0, "1x" }, { 1, "2x" }, { 2, "4x" }, { 3, "8x" }, { 4, "16x" }, { 10, "1 Hit KO" },
+};
+
 void FreeLookPitchMinMax() {
     f32 maxY = CVarGetFloat("gEnhancements.Camera.FreeLook.MaxPitch", 72.0f);
     f32 minY = CVarGetFloat("gEnhancements.Camera.FreeLook.MinPitch", -49.0f);
@@ -1538,24 +1542,42 @@ void AddEnhancements() {
         { "Difficulty Options",
           3,
           { {
-              { "Disable Takkuri Steal", "gEnhancements.Cheats.DisableTakkuriSteal",
-                "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other items.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Deku Guard Search Balls",
-                "gEnhancements.Cheats.DekuGuardSearchBalls",
-                "Choose when to show the Deku Palace Guards' search balls\n"
-                "- Never: Never show the search balls. This matches Majora's Mask 3D behaviour\n"
-                "- Night Only: Only show the search balls at night. This matches original N64 behaviour.\n"
-                "- Always: Always show the search balls.",
-                WIDGET_CVAR_COMBOBOX,
-                { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
-                  .comboBoxOptions = dekuGuardSearchBallsOptions } },
-              { "Lower Bank Reward Thresholds", "gEnhancements.DifficultyOptions.LowerBankRewardThresholds",
-                "Reduces the amount of rupees required to receive the rewards from the bank.\n"
-                "From: 200 -> 1000 -> 5000\n"
-                "To:   100 ->  500 -> 1000",
-                WIDGET_CVAR_CHECKBOX },
-          } } });
+                { "Disable Takkuri Steal", "gEnhancements.Cheats.DisableTakkuriSteal",
+                  "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other "
+                  "items.",
+                  WIDGET_CVAR_CHECKBOX },
+                { "Deku Guard Search Balls",
+                  "gEnhancements.Cheats.DekuGuardSearchBalls",
+                  "Choose when to show the Deku Palace Guards' search balls\n"
+                  "- Never: Never show the search balls. This matches Majora's Mask 3D behaviour\n"
+                  "- Night Only: Only show the search balls at night. This matches original N64 behaviour.\n"
+                  "- Always: Always show the search balls.",
+                  WIDGET_CVAR_COMBOBOX,
+                  { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
+                    .comboBoxOptions = dekuGuardSearchBallsOptions } },
+                { "Lower Bank Reward Thresholds", "gEnhancements.DifficultyOptions.LowerBankRewardThresholds",
+                  "Reduces the amount of rupees required to receive the rewards from the bank.\n"
+                  "From: 200 -> 1000 -> 5000\n"
+                  "To:   100 ->  500 -> 1000",
+                  WIDGET_CVAR_CHECKBOX },
+            },
+            {
+                {
+                    "Damage Multiplier",
+                    "gEnhancements.DifficultyOptions.DamageMultiplier",
+                    "Adjusts the amount of damage Link takes from all sources.",
+                    WIDGET_CVAR_COMBOBOX,
+                    { .comboBoxOptions = damageMultiplierOptions },
+                },
+                { "Permanent Heart Loss", "gEnhancements.DifficultyOptions.PermanentHeartLoss",
+                  "When you lose 4 quarters of a heart you will permanently lose that heart container.\n\nDisabling "
+                  "this after the fact will not restore any received heart containers.",
+                  WIDGET_CVAR_CHECKBOX },
+                { "Delete File on Death", "gEnhancements.DifficultyOptions.DeleteFileOnDeath",
+                  "Dying will delete your file\n\n     " ICON_FA_EXCLAMATION_TRIANGLE
+                  " WARNING " ICON_FA_EXCLAMATION_TRIANGLE "\nTHIS IS NOT REVERSABLE\nUSE AT YOUR OWN RISK!",
+                  WIDGET_CVAR_CHECKBOX },
+            } } });
     enhancementsSidebar.push_back({ "HUD Editor",
                                     1,
                                     { // HUD Editor
