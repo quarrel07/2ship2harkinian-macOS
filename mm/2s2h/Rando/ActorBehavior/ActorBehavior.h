@@ -52,6 +52,7 @@ void InitEnRuppecrowBehavior();
 void InitEnRzBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
+void InitEnSob1Behavior();
 void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
 void InitEnTotoBehavior();

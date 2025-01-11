@@ -191,6 +191,7 @@ typedef enum {
     VB_SETUP_EAST_CLOCK_TOWN_BOM_BOWL_MAN,
     VB_BE_ELIGBLE_FOR_BOMBERS_NOTEBOOK,
     VB_BOM_BOWL_MAN_GIVE_ITEM,
+    VB_DRAW_ITEM_FROM_SOB1,
 } GIVanillaBehavior;
 
 typedef enum {
