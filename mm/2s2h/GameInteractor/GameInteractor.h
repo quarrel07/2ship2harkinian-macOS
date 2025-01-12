@@ -193,6 +193,7 @@ typedef enum {
     VB_BOM_BOWL_MAN_GIVE_ITEM,
     VB_DRAW_ITEM_FROM_SOB1,
     VB_MULTIPLY_INFLICTED_DMG,
+    VB_ELEGY_STATUE_FADE_IN_OUT,
 } GIVanillaBehavior;
 
 typedef enum {
