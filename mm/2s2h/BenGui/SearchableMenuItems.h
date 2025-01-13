@@ -1017,7 +1017,7 @@ void AddEnhancements() {
                 "gEnhancements.Camera.RightStick.InvertYAxis",
                 "Inverts the Camera Y Axis",
                 WIDGET_CVAR_CHECKBOX,
-                {},
+                { .defaultVariant = true },
                 nullptr,
                 [](widgetInfo& info) {
                     if (disabledMap.at(DISABLE_FOR_CAMERAS_OFF).active) {
@@ -1105,6 +1105,8 @@ void AddEnhancements() {
               { "Fast Deku Flower Launch", "gEnhancements.Player.FastFlowerLaunch",
                 "Speeds up the time it takes to be able to get maximum height from launching out of a deku flower",
                 WIDGET_CVAR_CHECKBOX },
+              { "Infinite Deku Hopping", "gEnhancements.Player.InfiniteDekuHopping",
+                "Allows Deku Link to hop indefinitely in water without drowning.", WIDGET_CVAR_CHECKBOX },
               { "Instant Putaway", "gEnhancements.Player.InstantPutaway",
                 "Allows Link to instantly puts away held item without waiting.", WIDGET_CVAR_CHECKBOX },
               { "Fierce Deity Putaway", "gEnhancements.Player.FierceDeityPutaway",
@@ -1400,7 +1402,12 @@ void AddEnhancements() {
                 "'A' on it in the mask menu.",
                 WIDGET_CVAR_CHECKBOX },
               { "No Blast Mask Cooldown", "gEnhancements.Masks.NoBlastMaskCooldown",
-                "Eliminates the Cooldown between Blast Mask usage.", WIDGET_CVAR_CHECKBOX } },
+                "Eliminates the Cooldown between Blast Mask usage.", WIDGET_CVAR_CHECKBOX },
+              { "Goron Rolling Ignores Magic", "gEnhancements.Masks.GoronRollingIgnoresMagic",
+                "Goron rolling will use spikes even when Link doesn't have magic, and doesn't consume any.",
+                WIDGET_CVAR_CHECKBOX },
+              { "Goron Rolling Fast Spikes", "gEnhancements.Masks.GoronRollingFastSpikes",
+                "Speeds up the wind-up towards spiky rolling to be near instant.", WIDGET_CVAR_CHECKBOX } },
             // Song Enhancements
             { { .widgetName = "Ocarina", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Better Song of Double Time", "gEnhancements.Songs.BetterSongOfDoubleTime",
