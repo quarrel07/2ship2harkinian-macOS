@@ -79,6 +79,8 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                     Rando::Logic::ApplyNoLogicToSaveContext();
                 } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_GLITCHLESS) {
                     Rando::Logic::ApplyGlitchlessLogicToSaveContext();
+                } else if (RANDO_SAVE_OPTIONS[RO_LOGIC] == RO_LOGIC_FRENCH_VANILLA) {
+                    Rando::Logic::ApplyFrenchVanillaLogicToSaveContext();
                 } else {
                     throw std::runtime_error("Logic option not implemented: " +
                                              std::to_string(RANDO_SAVE_OPTIONS[RO_LOGIC]));

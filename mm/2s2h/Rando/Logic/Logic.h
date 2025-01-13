@@ -20,6 +20,7 @@ namespace Logic {
 
 void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& reachableRegions);
 RandoRegionId GetRegionIdFromEntrance(s32 entrance);
+void ApplyFrenchVanillaLogicToSaveContext();
 void ApplyGlitchlessLogicToSaveContext();
 void ApplyNoLogicToSaveContext();
 

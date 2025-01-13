@@ -938,7 +938,7 @@ s32 Flags_GetRandoInf(s32 flag) {
 
 void Flags_SetRandoInf(s32 flag) {
     u8 previouslyOff = !Flags_GetRandoInf(flag);
-    gSaveContext.save.shipSaveInfo.rando.randoInf[(flag) >> 4] |= (1 << ((flag)&0xF));
+    gSaveContext.save.shipSaveInfo.rando.randoInf[flag >> 4] |= (1 << (flag & 0xF));
     if (previouslyOff) {
         GameInteractor_ExecuteOnFlagSet(FLAG_RANDO_INF, flag);
     }
@@ -946,7 +946,7 @@ void Flags_SetRandoInf(s32 flag) {
 
 void Flags_ClearRandoInf(s32 flag) {
     u8 previouslyOn = Flags_GetRandoInf(flag);
-    gSaveContext.save.shipSaveInfo.rando.randoInf[(flag) >> 4] &= (u8) ~(1 << ((flag)&0xF));
+    gSaveContext.save.shipSaveInfo.rando.randoInf[flag >> 4] &= ~(1 << (flag & 0xF));
     if (previouslyOn) {
         GameInteractor_ExecuteOnFlagUnset(FLAG_RANDO_INF, flag);
     }

@@ -7,7 +7,7 @@
 #include "build.h"
 
 // TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
-std::vector<std::string> logicOptions = { "No Logic", "Vanilla", "Glitchless" };
+std::vector<std::string> logicOptions = { "Glitchless", "No Logic", "French Vanilla", "Vanilla" };
 
 namespace BenGui {
 extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
@@ -50,7 +50,16 @@ void Rando::DrawMenu() {
 
         UIWidgets::CVarCheckbox("Generate Spoiler File", "gRando.GenerateSpoiler");
 
-        UIWidgets::CVarCombobox("Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions);
+        UIWidgets::CVarCombobox(
+            "Logic", Rando::StaticData::Options[RO_LOGIC].cvar, logicOptions,
+            { .tooltip =
+                  "Glitchless - The items are shuffled in a way that guarantees the seed is beatable without "
+                  "glitches\n\n"
+                  "No Logic - The items are shuffled completely randomly, this can result in unbeatable seeds, and "
+                  "will require heavy use of glitches\n\n"
+                  "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
+                  "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
+                  "Vanilla - The items are not shuffled." });
 
         if (CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, RO_LOGIC_NO_LOGIC) != RO_LOGIC_VANILLA) {
             UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",

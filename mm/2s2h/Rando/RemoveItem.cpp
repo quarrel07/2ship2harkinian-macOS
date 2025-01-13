@@ -152,10 +152,60 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
         case RI_OWL_ZORA_CAPE:
             CLEAR_OWL_WARP(OWL_WARP_ZORA_CAPE);
             break;
+        case RI_TINGLE_MAP_CLOCK_TOWN:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_CLOCK_TOWN);
+            break;
+        case RI_TINGLE_MAP_WOODFALL:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_WOODFALL);
+            break;
+        case RI_TINGLE_MAP_SNOWHEAD:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_SNOWHEAD);
+            break;
+        case RI_TINGLE_MAP_ROMANI_RANCH:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_ROMANI_RANCH);
+            break;
+        case RI_TINGLE_MAP_GREAT_BAY:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_GREAT_BAY);
+            break;
+        case RI_TINGLE_MAP_STONE_TOWER:
+            CLEAR_WEEKEVENTREG(WEEKEVENTREG_TINGLE_MAP_BOUGHT_STONE_TOWER);
+            break;
+        case RI_HEART_CONTAINER:
+            gSaveContext.save.saveInfo.playerData.healthCapacity -= 0x10;
+            gSaveContext.save.saveInfo.playerData.health =
+                MIN(gSaveContext.save.saveInfo.playerData.health, gSaveContext.save.saveInfo.playerData.healthCapacity);
+            break;
+        case RI_HEART_PIECE:
+            if (GET_QUEST_HEART_PIECE_COUNT == 0) {
+                INCREMENT_QUEST_HEART_PIECE_COUNT;
+                INCREMENT_QUEST_HEART_PIECE_COUNT;
+                INCREMENT_QUEST_HEART_PIECE_COUNT;
+                gSaveContext.save.saveInfo.playerData.healthCapacity -= 0x10;
+                gSaveContext.save.saveInfo.playerData.health = MIN(
+                    gSaveContext.save.saveInfo.playerData.health, gSaveContext.save.saveInfo.playerData.healthCapacity);
+            } else {
+                DECREMENT_QUEST_HEART_PIECE_COUNT;
+            }
+            break;
+        case RI_BOMBERS_NOTEBOOK:
+            REMOVE_QUEST_ITEM(QUEST_BOMBERS_NOTEBOOK);
+            break;
+        // Ignore Ammo
+        case RI_BOMBCHU:
+        case RI_DEKU_STICK:
+        case RI_DEKU_NUT:
+        case RI_MILK_REFILL:
+        case RI_RED_POTION_REFILL:
+        case RI_GREEN_POTION_REFILL:
+        case RI_BLUE_POTION_REFILL:
+        case RI_FAIRY_REFILL:
+        case RI_GOLD_DUST_REFILL:
+            break;
         default:
-            // TODO: Handle equipment
-            Inventory_DeleteItem(Rando::StaticData::Items[randoItemId].itemId,
-                                 SLOT(Rando::StaticData::Items[randoItemId].itemId));
+            if (Rando::StaticData::Items[randoItemId].itemId < 77) {
+                Inventory_DeleteItem(Rando::StaticData::Items[randoItemId].itemId,
+                                     SLOT(Rando::StaticData::Items[randoItemId].itemId));
+            }
             break;
     }
 }

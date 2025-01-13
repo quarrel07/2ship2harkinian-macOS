@@ -12,39 +12,8 @@ namespace Rando {
 
 namespace Logic {
 
-struct RandoPoolEntry {
-    bool shuffled;
-    RandoItemId vanillaItemId;
-    RandoItemId placedItemId;
-    bool itemPlaced;
-    bool checkFilled;
-    bool inPool;
-};
-
-struct RandoPoolPlacement {
-    RandoCheckId randoCheckId;
-    RandoCheckId randoCheckIdFromItem;
-    RandoItemId placedItemId;
-};
-
 void ApplyGlitchlessLogicToSaveContext() {
     uint64_t tick = GetUnixTimestamp();
-    std::set<RandoCheckId> allChecksThatAreInLogic;
-    std::set<RandoCheckId> allChecksThatHaveBeenReachedAtLeastOnce;
-
-    // Used across all iterations
-    std::unordered_map<RandoCheckId, RandoPoolEntry> currentCheckPool;
-    std::set<RandoRegionId> currentReachableRegions = { RR_MAX };
-    std::set<RandoEvent*> currentEventsTriggered;
-
-    // Used for backtracking
-    std::vector<RandoPoolPlacement> placements;
-    std::vector<RandoRegionId> newlyAccessibleRegions;
-    std::vector<int> amountOfNewlyAccessibleRegions;
-    std::vector<RandoCheckId> newlyAccessibleChecks;
-    std::vector<int> amountOfNewlyAccessibleChecks;
-    std::vector<RandoEvent*> newlyTriggeredEvents;
-    std::vector<int> amountOfNewlyTriggeredEvents;
 
     SaveContext copiedSaveContext;
     memcpy(&copiedSaveContext, &gSaveContext, sizeof(SaveContext));
@@ -62,34 +31,47 @@ void ApplyGlitchlessLogicToSaveContext() {
     }
     // #endregion
 
+    std::vector<RandoItemId> itemPool;
+    std::unordered_map<RandoCheckId, bool> checkPool;
+
+    std::set<RandoRegionId> regionsInLogic = { RR_MAX };
+    std::unordered_map<RandoCheckId, bool> checksInLogic;
+    std::set<RandoEvent*> eventsInLogic;
+
+    RandoCheckId checkWithJunk = RC_UNKNOWN;
+    std::set<RandoItemId> nonJunkItemsThatWeHaveTried;
+
     // First loop through all regions and add checks/items to the pool
     for (auto& [randoRegionId, randoRegion] : Rando::Logic::Regions) {
         for (auto& [randoCheckId, _] : randoRegion.checks) {
             auto& randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
-            bool isShuffled = true;
+            // Skip checks that are already in the pool
+            if (checkPool.find(randoCheckId) != checkPool.end()) {
+                continue;
+            }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
-                isShuffled = false;
+                continue;
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_OWL &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_OWL_STATUES] == RO_GENERIC_NO) {
-                isShuffled = false;
+                continue;
             }
 
             if ((randoStaticCheck.randoCheckType == RCTYPE_POT || randoStaticCheck.randoCheckType == RCTYPE_BARREL ||
                  randoStaticCheck.randoCheckType == RCTYPE_CRATE ||
                  randoStaticCheck.randoCheckType == RCTYPE_FREESTANDING) &&
                 RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUNDANE] == RO_GENERIC_NO) {
-                isShuffled = false;
+                continue;
             }
 
             if (randoStaticCheck.randoCheckType == RCTYPE_SHOP) {
                 if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_SHOPS] == RO_GENERIC_NO &&
                     randoCheckId != RC_CURIOSITY_SHOP_SPECIAL_ITEM &&
                     randoCheckId != RC_BOMB_SHOP_ITEM_04_OR_CURIOSITY_SHOP_ITEM) {
-                    isShuffled = false;
+                    continue;
                 } else {
                     int price = Ship_Random(0, 200);
                     // We need the price to be saved in the current save context for logic, as well as the backed
@@ -99,168 +81,208 @@ void ApplyGlitchlessLogicToSaveContext() {
                 }
             }
 
-            allChecksThatAreInLogic.insert(randoCheckId);
-            currentCheckPool[randoCheckId] = {
-                isShuffled, randoStaticCheck.randoItemId, RI_UNKNOWN, false, false, false
-            };
+            checkPool.insert({ randoCheckId, true });
+            itemPool.push_back(randoStaticCheck.randoItemId);
         }
     }
 
+    // Replace junk items with new items here
+    for (int i = 0; i < itemPool.size(); i++) {
+        switch (itemPool[i]) {
+            case RI_OCARINA:
+            case RI_SONG_TIME:
+                itemPool[i] = RI_JUNK;
+                break;
+        }
+    }
+
+    if (checkPool.empty()) {
+        throw std::runtime_error("No checks in logic");
+    }
+    if (itemPool.empty()) {
+        throw std::runtime_error("No items in logic");
+    }
+    if (checkPool.size() != itemPool.size()) {
+        throw std::runtime_error("Mismatched check and item pool sizes");
+    }
+
+    // Inital shuffle of the item pool (Following shuffles done at the end of the loop)
+    if (itemPool.size() > 1) {
+        for (size_t i = 0; i < itemPool.size(); i++) {
+            size_t j = Ship_Random(0, itemPool.size() - 1);
+            std::swap(itemPool[i], itemPool[j]);
+        }
+    }
+
+    auto handleError = [&](std::string message) {
+        SPDLOG_ERROR("Items/Checks: {}/{}", itemPool.size(), checkPool.size());
+
+        // Log out the checks that are still in the pool
+        for (auto& [randoCheckId, _] : checkPool) {
+            SPDLOG_ERROR("Check still in pool: {}", Rando::StaticData::Checks[randoCheckId].name);
+        }
+        // Log out the items that are still in the pool
+        for (RandoItemId randoItemId : itemPool) {
+            SPDLOG_ERROR("Item still in pool: {}", Rando::StaticData::Items[randoItemId].spoilerName);
+        }
+
+        memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
+        throw std::runtime_error(message);
+    };
+
     while (true) {
         // Break if we've been running for too long
-        if (GetUnixTimestamp() - tick > 5000) {
-            tick = GetUnixTimestamp();
-
-            // Log checks that have never been reached
-            std::vector<RandoCheckId> checksThatHaveNeverBeenReached;
-
-            std::set_difference(allChecksThatAreInLogic.begin(), allChecksThatAreInLogic.end(),
-                                allChecksThatHaveBeenReachedAtLeastOnce.begin(),
-                                allChecksThatHaveBeenReachedAtLeastOnce.end(),
-                                std::inserter(checksThatHaveNeverBeenReached, checksThatHaveNeverBeenReached.begin()));
-
-            SPDLOG_ERROR("Checks that have never been reached:");
-            for (RandoCheckId randoCheckId : checksThatHaveNeverBeenReached) {
-                SPDLOG_ERROR("{}", Rando::StaticData::Checks[randoCheckId].name);
-            }
-
-            throw std::runtime_error("Logic Generation Timeout");
+        if (GetUnixTimestamp() - tick > 10000) {
+            handleError("Logic Generation Timeout");
         }
+
+        bool regionsInLogicChanged = false;
+        bool eventsInLogicChanged = false;
+        bool checksInLogicChanged = false;
 
         // Crawl through all reachable regions and add any new reachable regions
-        int currentAmountOfNewlyAccessibleRegions = newlyAccessibleRegions.size();
-        std::set<RandoRegionId> currentReachableRegionsCopy = currentReachableRegions;
-        for (RandoRegionId regionId : currentReachableRegions) {
-            FindReachableRegions(regionId, currentReachableRegions);
+        auto prevRegionsInLogicSize = regionsInLogic.size();
+        for (RandoRegionId regionId : regionsInLogic) {
+            FindReachableRegions(regionId, regionsInLogic);
         }
-        // Difference between the new and old reachable regions
-        std::set_difference(currentReachableRegions.begin(), currentReachableRegions.end(),
-                            currentReachableRegionsCopy.begin(), currentReachableRegionsCopy.end(),
-                            std::inserter(newlyAccessibleRegions,
-                                          newlyAccessibleRegions.begin() + currentAmountOfNewlyAccessibleRegions));
-        amountOfNewlyAccessibleRegions.push_back(newlyAccessibleRegions.size() - currentAmountOfNewlyAccessibleRegions);
-
-        // Track newly accessible checks
-        int currentAmountOfNewlyAccessibleChecks = newlyAccessibleChecks.size();
-        for (RandoRegionId regionId : currentReachableRegions) {
-            auto& randoRegion = Rando::Logic::Regions[regionId];
-            for (auto& [randoCheckId, accessLogicFunc] : randoRegion.checks) {
-                if (
-                    // Check is not already in the pool
-                    currentCheckPool[randoCheckId].inPool == false &&
-                    // Check is accessible
-                    accessLogicFunc.first()) {
-                    allChecksThatHaveBeenReachedAtLeastOnce.insert(randoCheckId);
-                    currentCheckPool[randoCheckId].inPool = true;
-                    newlyAccessibleChecks.push_back(randoCheckId);
-                }
-            }
+        if (regionsInLogic.size() != prevRegionsInLogicSize) {
+            regionsInLogicChanged = true;
         }
-        amountOfNewlyAccessibleChecks.push_back(newlyAccessibleChecks.size() - currentAmountOfNewlyAccessibleChecks);
 
-        // Track newly triggered events
-        int currentAmountOfNewlyTriggeredEvents = newlyTriggeredEvents.size();
-        for (RandoRegionId regionId : currentReachableRegions) {
-            auto& randoRegion = Rando::Logic::Regions[regionId];
+        for (RandoRegionId regionId : regionsInLogic) {
+            auto& randoRegion = Regions[regionId];
+
+            // Apply any new events
             for (auto& randoEvent : randoRegion.events) {
-                if (
-                    // Event is not already triggered
-                    !currentEventsTriggered.contains(&randoEvent) &&
-                    // Event condition is met
-                    randoEvent.condition()) {
-                    currentEventsTriggered.insert(&randoEvent);
-                    newlyTriggeredEvents.push_back(&randoEvent);
+                if (!eventsInLogic.contains(&randoEvent) && randoEvent.condition()) {
                     randoEvent.onApply();
+                    eventsInLogic.insert(&randoEvent);
+                    SPDLOG_TRACE("Event: {}", randoEvent.name);
+                    eventsInLogicChanged = true;
+                }
+            }
+
+            // Apply any new checks
+            for (auto& [randoCheckId, checkLogic] : randoRegion.checks) {
+                if (checksInLogic.find(randoCheckId) == checksInLogic.end() && checkLogic.first()) {
+                    bool isShuffled = checkPool.find(randoCheckId) != checkPool.end();
+                    checksInLogic.insert({ randoCheckId, isShuffled });
+                    checkPool.erase(randoCheckId);
+
+                    RandoItemId randoItemId;
+
+                    if (isShuffled) {
+                        randoItemId = itemPool.back();
+                        itemPool.pop_back();
+                    } else {
+                        randoItemId = Rando::StaticData::Checks[randoCheckId].randoItemId;
+                    }
+
+                    RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoItemId;
+                    RANDO_SAVE_CHECKS[randoCheckId].shuffled = isShuffled;
+                    GiveItem(ConvertItem(randoItemId));
+                    SPDLOG_TRACE("Check: {}:{}", Rando::StaticData::Checks[randoCheckId].name,
+                                 Rando::StaticData::Items[randoItemId].spoilerName);
+                    checksInLogicChanged = true;
                 }
             }
         }
-        amountOfNewlyTriggeredEvents.push_back(newlyTriggeredEvents.size() - currentAmountOfNewlyTriggeredEvents);
 
-        // Determine if we have placed all items
-        int checksLeft = 0;
-        std::vector<RandoCheckId> currentCheckList;
-        std::vector<std::pair<RandoItemId, RandoCheckId>> currentItemList;
-        for (auto& [randoCheckId, randoPoolEntry] : currentCheckPool) {
-            if (randoPoolEntry.inPool) {
-                if (!randoPoolEntry.itemPlaced && randoPoolEntry.shuffled) {
-                    currentItemList.push_back({ randoPoolEntry.vanillaItemId, randoCheckId });
+        if (itemPool.empty()) {
+            // Done!
+            break;
+        }
+
+        // Choose a random check with junk, and attempt to place progressive items until we unlock something
+        if (!regionsInLogicChanged && !checksInLogicChanged && !eventsInLogicChanged) {
+            if (checkWithJunk == RC_UNKNOWN) {
+                std::vector<RandoCheckId> checksWithJunk;
+                for (auto& [randoCheckId, isShuffled] : checksInLogic) {
+                    if (isShuffled &&
+                        (Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].randoItemType ==
+                             RITYPE_JUNK ||
+                         Rando::StaticData::Items[RANDO_SAVE_CHECKS[randoCheckId].randoItemId].randoItemType ==
+                             RITYPE_HEALTH)) {
+                        checksWithJunk.push_back(randoCheckId);
+                    }
                 }
-                if (!randoPoolEntry.checkFilled) {
-                    currentCheckList.push_back(randoCheckId);
+
+                if (checksWithJunk.empty()) {
+                    handleError("No checks with junk, not sure what to do");
+                }
+
+                if (checksWithJunk.size() == 1) {
+                    checkWithJunk = checksWithJunk[0];
+                } else {
+                    checkWithJunk = checksWithJunk[Ship_Random(0, checksWithJunk.size() - 1)];
                 }
             }
-            if (!randoPoolEntry.checkFilled) {
-                checksLeft++;
-            }
-        }
-        if (checksLeft == 0) {
-            break; // All items placed
-        }
 
-        // If there are no items to place, backtrack
-        if (currentCheckList.size() == 0) {
-            for (int i = 0; i < amountOfNewlyAccessibleRegions.back(); i++) {
-                currentReachableRegions.erase(newlyAccessibleRegions.back());
-                newlyAccessibleRegions.pop_back();
+            std::vector<std::pair<RandoItemId, int>> nonJunkItemsThatWeHaveNotTried;
+            bool anyNonJunkItemsLeft = false;
+            for (size_t i = 0; i < itemPool.size(); i++) {
+                if (Rando::StaticData::Items[itemPool[i]].randoItemType != RITYPE_JUNK &&
+                    Rando::StaticData::Items[itemPool[i]].randoItemType != RITYPE_HEALTH) {
+                    anyNonJunkItemsLeft = true;
+                    if (nonJunkItemsThatWeHaveTried.find(itemPool[i]) == nonJunkItemsThatWeHaveTried.end()) {
+                        nonJunkItemsThatWeHaveNotTried.push_back({ itemPool[i], i });
+                    }
+                }
             }
-            amountOfNewlyAccessibleRegions.pop_back();
-            for (int i = 0; i < amountOfNewlyAccessibleChecks.back(); i++) {
-                currentCheckPool[newlyAccessibleChecks.back()].inPool = false;
-                newlyAccessibleChecks.pop_back();
-            }
-            amountOfNewlyAccessibleChecks.pop_back();
-            for (int i = 0; i < amountOfNewlyTriggeredEvents.back(); i++) {
-                newlyTriggeredEvents.back()->onRemove();
-                currentEventsTriggered.erase(newlyTriggeredEvents.back());
-                newlyTriggeredEvents.pop_back();
-            }
-            amountOfNewlyTriggeredEvents.pop_back();
-            auto [randoCheckId, randoCheckIdFromItem, convertedItemId] = placements.back();
-            currentCheckPool[randoCheckId].checkFilled = false;
-            currentCheckPool[randoCheckId].placedItemId = RI_UNKNOWN;
-            currentCheckPool[randoCheckIdFromItem].itemPlaced = false;
-            RemoveItem(convertedItemId);
-            placements.pop_back();
-            continue;
-        }
 
-        // Select a random check
-        size_t checkIndex = currentCheckList.size() > 1 ? Ship_Random(0, currentCheckList.size() - 1) : 0;
-        RandoCheckId randoCheckId = currentCheckList[checkIndex];
-        if (currentCheckPool[randoCheckId].shuffled) {
-            // Select a random item
-            size_t itemIndex = currentItemList.size() > 1 ? Ship_Random(0, currentItemList.size() - 1) : 0;
-            auto [randoItemId, randoCheckIdFromItem] = currentItemList[itemIndex];
-            SPDLOG_TRACE("Placing item {} in check {}", Rando::StaticData::Items[randoItemId].spoilerName,
-                         Rando::StaticData::Checks[randoCheckId].name);
-            // Place the item in the check
-            currentCheckPool[randoCheckId].checkFilled = true;
-            currentCheckPool[randoCheckId].placedItemId = randoItemId;
-            currentCheckPool[randoCheckIdFromItem].itemPlaced = true;
-            RandoItemId convertedItemId = ConvertItem(randoItemId);
-            GiveItem(convertedItemId);
-            placements.push_back({ randoCheckId, randoCheckIdFromItem, convertedItemId });
+            if (!anyNonJunkItemsLeft) {
+                handleError("No non-junk items left");
+            }
+
+            if (nonJunkItemsThatWeHaveNotTried.empty()) {
+                // SPDLOG_TRACE("Already tried all non-junk items, leaving the last non-junk item in place {}",
+                // Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
+                checkWithJunk = RC_UNKNOWN;
+                nonJunkItemsThatWeHaveTried.clear();
+                continue;
+            }
+
+            // Remove item and place it back in the pool
+            RandoItemId oldRandoItemId = RANDO_SAVE_CHECKS[checkWithJunk].randoItemId;
+            auto& [newRandoItemId, indexInPool] = nonJunkItemsThatWeHaveNotTried[0];
+
+            RANDO_SAVE_CHECKS[checkWithJunk].randoItemId = newRandoItemId;
+
+            RemoveItem(oldRandoItemId);
+            GiveItem(ConvertItem(newRandoItemId));
+
+            itemPool.erase(itemPool.begin() + indexInPool);
+            itemPool.push_back(oldRandoItemId);
+
+            nonJunkItemsThatWeHaveTried.insert(newRandoItemId);
+            // SPDLOG_TRACE("Replaced junk item with: {}", Rando::StaticData::Items[newRandoItemId].spoilerName);
         } else {
-            // Place vanilla item in the check
-            currentCheckPool[randoCheckId].checkFilled = true;
-            currentCheckPool[randoCheckId].placedItemId = currentCheckPool[randoCheckId].vanillaItemId;
-            currentCheckPool[randoCheckId].itemPlaced = true;
-            RandoItemId convertedItemId = ConvertItem(currentCheckPool[randoCheckId].vanillaItemId);
-            GiveItem(convertedItemId);
-            placements.push_back({ randoCheckId, randoCheckId, convertedItemId });
+            if (checkWithJunk != RC_UNKNOWN) {
+                // SPDLOG_TRACE("Replacing junk item with: {}",
+                // Rando::StaticData::Items[RANDO_SAVE_CHECKS[checkWithJunk].randoItemId].spoilerName);
+            }
+            checkWithJunk = RC_UNKNOWN;
+            nonJunkItemsThatWeHaveTried.clear();
+
+            // Shuffle the item pool
+            if (itemPool.size() > 1) {
+                for (size_t i = 0; i < itemPool.size(); i++) {
+                    size_t j = Ship_Random(0, itemPool.size() - 1);
+                    std::swap(itemPool[i], itemPool[j]);
+                }
+            }
         }
+    }
+
+    for (auto& [randoCheckId, isShuffled] : checksInLogic) {
+        copiedSaveContext.save.shipSaveInfo.rando.randoSaveChecks[randoCheckId].randoItemId =
+            RANDO_SAVE_CHECKS[randoCheckId].randoItemId;
+        copiedSaveContext.save.shipSaveInfo.rando.randoSaveChecks[randoCheckId].shuffled = isShuffled;
     }
 
     memcpy(&gSaveContext, &copiedSaveContext, sizeof(SaveContext));
 
-    for (auto& [randoCheckId, randoPoolEntry] : currentCheckPool) {
-        if (randoPoolEntry.shuffled) {
-            RANDO_SAVE_CHECKS[randoCheckId].randoItemId = randoPoolEntry.placedItemId;
-            RANDO_SAVE_CHECKS[randoCheckId].shuffled = true;
-        }
-    }
-
-    SPDLOG_INFO("Successfully placed all items in glitchless logic");
+    SPDLOG_INFO("Successfully placed all items with Glitchless logic");
 }
 
 } // namespace Logic
