@@ -23,9 +23,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_SNOWHEAD_TEMPLE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_HAKUGIN_BS,
         .checks = {
-            // TODO: CAN_KILL_BOSS(Goht)?
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_HEART_CONTAINER,  CAN_USE_MAGIC_ARROW(FIRE)),
-            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_WARP,             CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_HEART_CONTAINER,  CanKillEnemy(ACTOR_BOSS_HAKUGIN)),
+            CHECK(RC_SNOWHEAD_TEMPLE_BOSS_WARP,             CanKillEnemy(ACTOR_BOSS_HAKUGIN)),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_01,           CAN_USE_MAGIC_ARROW(FIRE)),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_10,           CAN_USE_MAGIC_ARROW(FIRE)),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_POT_02,           CAN_USE_MAGIC_ARROW(FIRE)),
@@ -40,7 +39,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_EARLY_POT_02,     true),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_EARLY_POT_03,     true),
             CHECK(RC_SNOWHEAD_TEMPLE_BOSS_EARLY_POT_04,     true),
-            CHECK(RC_GIANTS_CHAMBER_OATH_TO_ORDER,                   CAN_USE_MAGIC_ARROW(FIRE)),
+            CHECK(RC_GIANTS_CHAMBER_OATH_TO_ORDER,          CanKillEnemy(ACTOR_BOSS_HAKUGIN)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(MOUNTAIN_VILLAGE_SPRING, 7),               ONE_WAY_EXIT, true),

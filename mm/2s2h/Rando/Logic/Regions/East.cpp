@@ -31,17 +31,17 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_BOSS] = RandoRegion{ .name = "Night 1 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_SONG_OF_STORMS, CAN_KILL_IRONKNUCKLE),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_SONG_OF_STORMS, CanKillEnemy(ACTOR_EN_IK)),
         },
         .connections = {
-            CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CAN_KILL_IRONKNUCKLE),
+            CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE, CanKillEnemy(ACTOR_EN_IK)),
         },
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_1_GRAVE] = RandoRegion{ .name = "Night 1 Grave", .sceneId = SCENE_HAKASHITA,
         .checks = {
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_EARLY_POT_01, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_EARLY_POT_02, true),
-            CHECK(RC_BENEATH_THE_GRAVEYARD_CHEST, CAN_KILL_BAT),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_CHEST, CanKillEnemy(ACTOR_EN_BAT)),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_01, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_02, true),
             CHECK(RC_BENEATH_THE_GRAVEYARD_NIGHT_1_BATS_POT_03, true),
@@ -55,7 +55,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_BENEATH_THE_GRAVEYARD_NIGHT_2_BOSS] = RandoRegion{ .name = "Night 2 Boss", .sceneId = SCENE_HAKASHITA,
         .checks = {
-            CHECK(RC_BENEATH_THE_GRAVEYARD_PIECE_OF_HEART, CAN_KILL_IRONKNUCKLE),
+            CHECK(RC_BENEATH_THE_GRAVEYARD_PIECE_OF_HEART, CanKillEnemy(ACTOR_EN_IK)),
         },
         .connections = {
             CONNECTION(RR_BENEATH_THE_GRAVEYARD_NIGHT_2_GRAVE_AFTER_PIT, true),
@@ -267,7 +267,7 @@ static RegisterShipInitFunc initFunc([]() {
             EXIT(ENTRANCE(IKANA_CANYON, 6),                 ENTRANCE(SAKONS_HIDEOUT, 0), true),
         },
         .events = {
-            EVENT_WEEKEVENTREG("Help Kafei get the Sun Mask", WEEKEVENTREG_ESCAPED_SAKONS_HIDEOUT, CAN_KILL_WOLFOS), // Was gonna do Babas too, but it does not seem to like it when I do both
+            EVENT_WEEKEVENTREG("Help Kafei get the Sun Mask", WEEKEVENTREG_ESCAPED_SAKONS_HIDEOUT, CanKillEnemy(ACTOR_EN_WF)), // Was gonna do Babas too, but it does not seem to like it when I do both
         },
     };
     Regions[RR_SECRET_SHRINE_ENTRANCE] = RandoRegion{ .name = "Entrance", .sceneId = SCENE_RANDOM,
@@ -319,10 +319,10 @@ static RegisterShipInitFunc initFunc([]() {
         },
         .events = {
             // TODO: Allow opting in to health checks
-            EVENT("Kill Dinalfos", Flags_GetSceneClear(SCENE_RANDOM, 0x02), Flags_SetSceneClear(SCENE_RANDOM, 0x02), Flags_UnsetSceneClear(SCENE_RANDOM, 0x02), /* CHECK_MAX_HP(4) && */ CAN_KILL_DINALFOS),
-            EVENT("Kill Wizzrobe", Flags_GetSceneClear(SCENE_RANDOM, 0x03), Flags_SetSceneClear(SCENE_RANDOM, 0x03), Flags_UnsetSceneClear(SCENE_RANDOM, 0x03), /* CHECK_MAX_HP(8) && */ CAN_KILL_WIZZROBE),
-            EVENT("Kill Wart", Flags_GetSceneClear(SCENE_RANDOM, 0x04), Flags_SetSceneClear(SCENE_RANDOM, 0x04), Flags_UnsetSceneClear(SCENE_RANDOM, 0x04), /* CHECK_MAX_HP(12) && */ CAN_KILL_WART),
-            EVENT("Kill Garo Master", Flags_GetSceneClear(SCENE_RANDOM, 0x05), Flags_SetSceneClear(SCENE_RANDOM, 0x05), Flags_UnsetSceneClear(SCENE_RANDOM, 0x05), /* CHECK_MAX_HP(16) && */ CAN_KILL_GARO_MASTER),
+            EVENT("Kill Dinalfos", Flags_GetSceneClear(SCENE_RANDOM, 0x02), Flags_SetSceneClear(SCENE_RANDOM, 0x02), Flags_UnsetSceneClear(SCENE_RANDOM, 0x02), /* CHECK_MAX_HP(4) && */ CanKillEnemy(ACTOR_EN_DINOFOS)),
+            EVENT("Kill Wizzrobe", Flags_GetSceneClear(SCENE_RANDOM, 0x03), Flags_SetSceneClear(SCENE_RANDOM, 0x03), Flags_UnsetSceneClear(SCENE_RANDOM, 0x03), /* CHECK_MAX_HP(8) && */ CanKillEnemy(ACTOR_EN_WIZ)),
+            EVENT("Kill Wart", Flags_GetSceneClear(SCENE_RANDOM, 0x04), Flags_SetSceneClear(SCENE_RANDOM, 0x04), Flags_UnsetSceneClear(SCENE_RANDOM, 0x04), /* CHECK_MAX_HP(12) && */ CanKillEnemy(ACTOR_BOSS_04)),
+            EVENT("Kill Garo Master", Flags_GetSceneClear(SCENE_RANDOM, 0x05), Flags_SetSceneClear(SCENE_RANDOM, 0x05), Flags_UnsetSceneClear(SCENE_RANDOM, 0x05), /* CHECK_MAX_HP(16) && */ CanKillEnemy(ACTOR_EN_JSO2)),
         },
     };
     Regions[RR_STONE_TOWER_BOTTOM] = RandoRegion{ .name = "Bottom", .sceneId = SCENE_F40,

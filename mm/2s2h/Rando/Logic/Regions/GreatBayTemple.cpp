@@ -40,8 +40,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_GREAT_BAY_TEMPLE_BOSS_ROOM] = RandoRegion{ .sceneId = SCENE_SEA_BS,
         .checks = {
             // TODO: CAN_KILL_BOSS(Gyorg)?
-            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_HEART_CONTAINER, CAN_BE_ZORA && HAS_MAGIC),
-            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_WARP, CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_HEART_CONTAINER, CanKillEnemy(ACTOR_BOSS_03)),
+            CHECK(RC_GREAT_BAY_TEMPLE_BOSS_WARP, CanKillEnemy(ACTOR_BOSS_03)),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_01, true),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_02, true),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_POT_03, true),
@@ -50,7 +50,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_UNDERWATER_POT_02, CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_UNDERWATER_POT_03, CAN_BE_ZORA),
             CHECK(RC_GREAT_BAY_TEMPLE_BOSS_UNDERWATER_POT_04, CAN_BE_ZORA),
-            CHECK(RC_GIANTS_CHAMBER_OATH_TO_ORDER, CAN_BE_ZORA && HAS_MAGIC),
+            CHECK(RC_GIANTS_CHAMBER_OATH_TO_ORDER, CanKillEnemy(ACTOR_BOSS_03)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(ZORA_CAPE, 9),                             ONE_WAY_EXIT, true),

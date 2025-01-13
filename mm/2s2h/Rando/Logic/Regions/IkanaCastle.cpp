@@ -142,7 +142,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_THRONE_ROOM] = RandoRegion{ .name = "Throne Room", .sceneId = SCENE_IKNINSIDE,
         .checks = {
-            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS, CAN_USE_MAGIC_ARROW(FIRE) && (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) && (CAN_USE_HUMAN_SWORD || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA)),
+            CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS, CanKillEnemy(ACTOR_EN_KNIGHT)),
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_01, true),
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_02, true),
             CHECK(RC_ANCIENT_CASTLE_OF_IKANA_BOSS_POT_03, true),
@@ -158,8 +158,8 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_IKANA_CASTLE_WIZZROBE_ROOM] = RandoRegion{ .name = "Wizzrobe Room", .sceneId = SCENE_CASTLE,
         .connections = {
-            CONNECTION(RR_IKANA_CASTLE_FLOORMASTER_ROOM, CAN_KILL_WIZZROBE),
-            CONNECTION(RR_IKANA_CASTLE_REDEAD_WALKWAY, CAN_KILL_WIZZROBE)
+            CONNECTION(RR_IKANA_CASTLE_FLOORMASTER_ROOM, CanKillEnemy(ACTOR_EN_WIZ)),
+            CONNECTION(RR_IKANA_CASTLE_REDEAD_WALKWAY, CanKillEnemy(ACTOR_EN_WIZ))
         },
     };
 }, {});

@@ -89,18 +89,6 @@ extern std::unordered_map<RandoRegionId, RandoRegion> Regions;
     (HAS_ITEM(ITEM_MAGIC_BEANS) && \
      (CAN_PLAY_SONG(STORMS) || (HAS_BOTTLE && (CAN_ACCESS(SPRING_WATER) || CAN_ACCESS(HOT_SPRING_WATER)))))
 #define CAN_USE_MAGIC_ARROW(arrowType) (HAS_ITEM(ITEM_BOW) && HAS_ITEM(ITEM_ARROW_##arrowType) && HAS_MAGIC)
-// After thinking about it I decided to cut explosives or "technically possible but annoying" methods from these.
-#define CAN_KILL_TWINMOLD (HAS_ITEM(ITEM_BOW) || (HAS_ITEM(ITEM_MASK_GIANT) && CAN_USE_HUMAN_SWORD))
-#define CAN_KILL_WOLFOS (CAN_USE_HUMAN_SWORD || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_GORON || CAN_BE_ZORA)
-#define CAN_KILL_CURSED_SKULLTULA \
-    (CAN_USE_PROJECTILE || CAN_BE_DEKU || CAN_BE_GORON || CAN_USE_HUMAN_SWORD || CAN_USE_EXPLOSIVE)
-#define CAN_KILL_DINALFOS (CAN_USE_SWORD || CAN_BE_GORON)
-#define CAN_KILL_WIZZROBE (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_USE_SWORD || CAN_BE_GORON)
-#define CAN_KILL_WART (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA)
-#define CAN_KILL_GARO_MASTER (HAS_ITEM(ITEM_BOW) || CAN_BE_GORON || CAN_USE_SWORD)
-#define CAN_KILL_IRONKNUCKLE (CAN_USE_HUMAN_SWORD || CAN_BE_GORON)
-#define CAN_KILL_BAT \
-    (CAN_USE_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE || CAN_BE_GORON || CAN_BE_ZORA)
 #define CAN_LIGHT_TORCH_NEAR_ANOTHER (HAS_ITEM(ITEM_DEKU_STICK) || CAN_USE_MAGIC_ARROW(FIRE))
 #define KEY_COUNT(dungeon) (gSaveContext.save.shipSaveInfo.rando.foundDungeonKeys[DUNGEON_INDEX_##dungeon])
 #define CAN_AFFORD(rc)                                                                                                \
@@ -213,6 +201,61 @@ inline uint32_t MoonMaskCount() {
         }
     }
     return count;
+}
+
+inline bool CanKillEnemy(ActorId EnemyId) {
+    switch (EnemyId) {
+        case ACTOR_BOSS_01: // Odolwa
+            return (CAN_USE_SWORD || CAN_BE_GORON || CAN_BE_ZORA || CAN_USE_EXPLOSIVE || CAN_USE_MAGIC_ARROW(FIRE) ||
+                    CAN_USE_MAGIC_ARROW(LIGHT));
+        case ACTOR_BOSS_02: // Twinmold
+            return (HAS_ITEM(ITEM_BOW) || (HAS_ITEM(ITEM_MASK_GIANT) && HAS_MAGIC && CAN_USE_HUMAN_SWORD));
+        case ACTOR_BOSS_03: // Gyorg
+            return ((CAN_BE_DEITY && HAS_MAGIC) || (CAN_BE_ZORA && HAS_MAGIC));
+        case ACTOR_BOSS_04: // Wart
+            return (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_BE_ZORA);
+        case ACTOR_BOSS_HAKUGIN: // Goht
+            return (CAN_USE_MAGIC_ARROW(FIRE));
+        case ACTOR_EN_KNIGHT: // Igos du Ikana/IdI Lackey
+            return (CAN_USE_MAGIC_ARROW(FIRE) &&
+                    (GET_CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) >= EQUIP_VALUE_SHIELD_MIRROR) &&
+                    (CAN_USE_HUMAN_SWORD || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA));
+        case ACTOR_EN_KAIZOKU: // Fighter Pirate
+            return (CAN_USE_SWORD || CAN_BE_ZORA);
+        case ACTOR_EN_PAMETFROG: // Swamp Gekko
+            return (HAS_ITEM(ITEM_BOW) && (CAN_BE_DEKU || CAN_USE_EXPLOSIVE || CAN_BE_GORON));
+        case ACTOR_EN_SW: // Gold Skulltula
+            return (CAN_USE_PROJECTILE || CAN_BE_DEKU || CAN_BE_GORON || CAN_USE_HUMAN_SWORD || CAN_USE_EXPLOSIVE);
+        case ACTOR_EN_DINOFOS: // Dinofos
+            return (CAN_USE_SWORD || CAN_BE_GORON || HAS_ITEM(ITEM_BOW) || (CAN_BE_DEKU && HAS_MAGIC));
+        case ACTOR_EN_WIZ: // Wizrobe
+            return (HAS_ITEM(ITEM_BOW) || HAS_ITEM(ITEM_HOOKSHOT) || CAN_USE_SWORD || CAN_BE_GORON);
+        case ACTOR_EN_WF: // Wolfos
+            return (CAN_USE_HUMAN_SWORD || (CAN_BE_DEKU && HAS_MAGIC) || CAN_BE_GORON || CAN_BE_ZORA);
+        case ACTOR_EN_JSO2: // Garo Master
+            return (HAS_ITEM(ITEM_BOW) || CAN_BE_GORON || CAN_USE_SWORD);
+        case ACTOR_EN_IK: // Iron Knuckle
+            return (CAN_USE_HUMAN_SWORD || CAN_BE_GORON);
+        case ACTOR_EN_GRASSHOPPER: // Dragonfly
+            return ((CAN_BE_DEKU && HAS_MAGIC) || CAN_USE_EXPLOSIVE || HAS_ITEM(ITEM_DEKU_NUT) || CAN_USE_SWORD ||
+                    CAN_BE_ZORA);
+        case ACTOR_EN_MKK: // Boe
+            return ((CAN_BE_DEKU && HAS_MAGIC) || CAN_USE_EXPLOSIVE || HAS_ITEM(ITEM_DEKU_NUT) || CAN_USE_SWORD ||
+                    CAN_BE_ZORA || CAN_BE_GORON);
+        case ACTOR_EN_BIGPAMET: // Snapper
+            return (CAN_BE_DEKU || CAN_USE_EXPLOSIVE || CAN_BE_GORON);
+        case ACTOR_EN_ST: // Large Skulltula
+            return (CAN_USE_SWORD || CAN_USE_PROJECTILE || CAN_BE_GORON || CAN_USE_EXPLOSIVE);
+        case ACTOR_EN_BAT: // Bat Bat
+            return (CAN_USE_SWORD || HAS_ITEM(ITEM_HOOKSHOT) || HAS_ITEM(ITEM_BOW) || CAN_USE_EXPLOSIVE ||
+                    CAN_BE_GORON || CAN_BE_ZORA);
+        case ACTOR_EN_DEKUBABA: // Neck bending Deku Baba
+            return (CAN_USE_HUMAN_SWORD || CAN_BE_DEKU || CAN_BE_GORON || CAN_BE_ZORA || HAS_ITEM(ITEM_BOW) ||
+                    CAN_USE_EXPLOSIVE || HAS_ITEM(ITEM_DEKU_STICK));
+        default: // Incorrect actor ID inputed.
+            assert(false);
+            return false;
+    }
 }
 
 } // namespace Logic
