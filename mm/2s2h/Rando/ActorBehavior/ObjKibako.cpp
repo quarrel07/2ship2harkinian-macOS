@@ -1,12 +1,15 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
 #include "2s2h/CustomItem/CustomItem.h"
+#include "assets/2s2h_assets.h"
 
 extern "C" {
 #include "variables.h"
 #include "src/overlays/actors/ovl_Obj_Kibako/z_obj_kibako.h"
 #include "src/overlays/actors/ovl_Obj_Kibako2/z_obj_kibako2.h"
 }
+
+#define OBJKIBAKO_RC (actor->home.rot.x)
 
 std::map<std::pair<float, float>, RandoCheckId> crateMap = {
     // Clock Town //
@@ -114,40 +117,155 @@ std::map<std::pair<float, float>, RandoCheckId> crateMap = {
     { { -241.0f, -1299.0f }, RC_SWAMP_SPIDER_HOUSE_GOLD_ROOM_UPPER_LARGE_CRATE_02 },
 };
 
+void ObjKibako_RandoDraw(Actor* actor, PlayState* play) {
+    if (!CVarGetInteger("gRando.CSMC", 0)) {
+        Gfx_DrawDListOpa(play, (Gfx*)gSmallJunkCrateDL);
+        return;
+    }
+
+    RandoItemId randoItemId =
+        Rando::ConvertItem(RANDO_SAVE_CHECKS[OBJKIBAKO_RC].randoItemId, (RandoCheckId)OBJKIBAKO_RC);
+    RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
+
+    switch (randoItemType) {
+        case RITYPE_BOSS_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallBossKeyCrateDL);
+            break;
+        case RITYPE_HEALTH:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallHeartCrateDL);
+            break;
+        case RITYPE_LESSER:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallMinorCrateDL);
+            break;
+        case RITYPE_MAJOR:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallMajorCrateDL);
+            break;
+        case RITYPE_MASK:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallMaskCrateDL);
+            break;
+        case RITYPE_SKULLTULA_TOKEN:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallTokenCrateDL);
+            break;
+        case RITYPE_SMALL_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallSmallKeyCrateDL);
+            break;
+        case RITYPE_STRAY_FAIRY:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallFairyCrateDL);
+            break;
+        default:
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallJunkCrateDL);
+            break;
+    }
+}
+
+void ObjKibako2_RandoDraw(Actor* actor, PlayState* play) {
+    if (!CVarGetInteger("gRando.CSMC", 0)) {
+        Gfx_DrawDListOpa(play, (Gfx*)gLargeJunkCrateDL);
+        return;
+    }
+
+    RandoItemId randoItemId =
+        Rando::ConvertItem(RANDO_SAVE_CHECKS[OBJKIBAKO_RC].randoItemId, (RandoCheckId)OBJKIBAKO_RC);
+    RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
+
+    switch (randoItemType) {
+        case RITYPE_BOSS_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeBossKeyCrateDL);
+            break;
+        case RITYPE_HEALTH:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeHeartCrateDL);
+            break;
+        case RITYPE_LESSER:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeMinorCrateDL);
+            break;
+        case RITYPE_MAJOR:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeMajorCrateDL);
+            break;
+        case RITYPE_MASK:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeMaskCrateDL);
+            break;
+        case RITYPE_SKULLTULA_TOKEN:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeTokenCrateDL);
+            break;
+        case RITYPE_SMALL_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeSmallKeyCrateDL);
+            break;
+        case RITYPE_STRAY_FAIRY:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeFairyCrateDL);
+            break;
+        default:
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeJunkCrateDL);
+            break;
+    }
+}
+
 void Rando::ActorBehavior::InitObjKibakoBehavior() {
+    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_KIBAKO, IS_RANDO, [](Actor* actor) {
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+
+        auto it = crateMap.find({ actor->home.pos.x, actor->home.pos.z });
+        if (it == crateMap.end()) {
+            return;
+        }
+
+        randoCheckId = it->second;
+
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+            return;
+        }
+
+        OBJKIBAKO_RC = randoCheckId;
+        actor->draw = ObjKibako_RandoDraw;
+    });
+
+    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_KIBAKO2, IS_RANDO, [](Actor* actor) {
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+
+        auto it = crateMap.find({ actor->home.pos.x, actor->home.pos.z });
+        if (it == crateMap.end()) {
+            return;
+        }
+
+        randoCheckId = it->second;
+
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+            return;
+        }
+
+        OBJKIBAKO_RC = randoCheckId;
+        actor->draw = ObjKibako2_RandoDraw;
+    });
+
+    COND_VB_SHOULD(VB_CRATE_DRAW_BE_OVERRIDDEN, IS_RANDO, {
+        Actor* actor = va_arg(args, Actor*);
+        if (OBJKIBAKO_RC != RC_UNKNOWN) {
+            *should = false;
+            actor->draw = ObjKibako_RandoDraw;
+        }
+    });
+
     COND_VB_SHOULD(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, IS_RANDO, {
         Actor* actor = va_arg(args, Actor*);
-        auto randoStaticCheck = Rando::StaticData::Checks[RC_UNKNOWN];
 
         if (actor->id != ACTOR_OBJ_KIBAKO && actor->id != ACTOR_OBJ_KIBAKO2) {
             return;
         }
 
-        auto it = crateMap.find({ actor->home.pos.x, actor->home.pos.z });
-        if (it == crateMap.end()) {
-            return;
-        } else {
-            randoStaticCheck = Rando::StaticData::Checks[it->second];
-        }
-
-        if (!RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled ||
-            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
+        if (OBJKIBAKO_RC == RC_UNKNOWN) {
             return;
         }
 
         *should = false;
 
-        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-
         EnItem00* spawn = CustomItem::Spawn(
             actor->home.pos.x, actor->home.pos.y, actor->home.pos.z, 0,
-            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoStaticCheck.randoCheckId,
+            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, OBJKIBAKO_RC,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
                 switch (randoStaticCheck.flagType) {
                     case FLAG_NONE:
-                        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
-                            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].eligible = true;
+                        if (RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM].shuffled) {
+                            RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM].eligible = true;
                         }
                         break;
                     case FLAG_CYCL_SCENE_COLLECTIBLE:

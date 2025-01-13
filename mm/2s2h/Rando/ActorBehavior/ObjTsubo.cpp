@@ -394,9 +394,6 @@ void ObjTsubo_RandoDraw(Actor* actor, PlayState* play) {
         case RITYPE_BOSS_KEY:
             Gfx_DrawDListOpa(play, (Gfx*)gPotBossKeyDL);
             break;
-        case RITYPE_SMALL_KEY:
-            Gfx_DrawDListOpa(play, (Gfx*)gPotSmallKeyDL);
-            break;
         case RITYPE_HEALTH:
             Gfx_DrawDListOpa(play, (Gfx*)gPotHeartDL);
             break;
@@ -411,6 +408,9 @@ void ObjTsubo_RandoDraw(Actor* actor, PlayState* play) {
             break;
         case RITYPE_SKULLTULA_TOKEN:
             Gfx_DrawDListOpa(play, (Gfx*)gPotTokenDL);
+            break;
+        case RITYPE_SMALL_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gPotSmallKeyDL);
             break;
         case RITYPE_STRAY_FAIRY:
             Gfx_DrawDListOpa(play, (Gfx*)gPotFairyDL);

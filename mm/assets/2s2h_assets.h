@@ -209,6 +209,96 @@ static const ALIGN_ASSET(2) char gPotStandardDL[] = dgPotStandardDL;
 #define dgPotTokenDL "__OTR__objects/object_tsubo/gPotTokenDL"
 static const ALIGN_ASSET(2) char gPotTokenDL[] = dgPotTokenDL;
 
+#define dgLargeMajorCrateDL "__OTR__objects/object_kibako2/gLargeMajorCrateDL"
+static const ALIGN_ASSET(2) char gLargeMajorCrateDL[] = dgLargeMajorCrateDL;
+
+#define dgLargeMaskCrateDL "__OTR__objects/object_kibako2/gLargeMaskCrateDL"
+static const ALIGN_ASSET(2) char gLargeMaskCrateDL[] = dgLargeMaskCrateDL;
+
+#define dgLargeMinorCrateDL "__OTR__objects/object_kibako2/gLargeMinorCrateDL"
+static const ALIGN_ASSET(2) char gLargeMinorCrateDL[] = dgLargeMinorCrateDL;
+
+#define dgLargeRandoCrateDL "__OTR__objects/object_kibako2/gLargeRandoCrateDL"
+static const ALIGN_ASSET(2) char gLargeRandoCrateDL[] = dgLargeRandoCrateDL;
+
+#define dgLargeSmallKeyCrateDL "__OTR__objects/object_kibako2/gLargeSmallKeyCrateDL"
+static const ALIGN_ASSET(2) char gLargeSmallKeyCrateDL[] = dgLargeSmallKeyCrateDL;
+
+#define dgLargeTokenCrateDL "__OTR__objects/object_kibako2/gLargeTokenCrateDL"
+static const ALIGN_ASSET(2) char gLargeTokenCrateDL[] = dgLargeTokenCrateDL;
+
+#define dgLargeBossKeyCrateDL "__OTR__objects/object_kibako2/gLargeBossKeyCrateDL"
+static const ALIGN_ASSET(2) char gLargeBossKeyCrateDL[] = dgLargeBossKeyCrateDL;
+
+#define dgLargeFairyCrateDL "__OTR__objects/object_kibako2/gLargeFairyCrateDL"
+static const ALIGN_ASSET(2) char gLargeFairyCrateDL[] = dgLargeFairyCrateDL;
+
+#define dgLargeHeartCrateDL "__OTR__objects/object_kibako2/gLargeHeartCrateDL"
+static const ALIGN_ASSET(2) char gLargeHeartCrateDL[] = dgLargeHeartCrateDL;
+
+#define dgLargeJunkCrateDL "__OTR__objects/object_kibako2/gLargeJunkCrateDL"
+static const ALIGN_ASSET(2) char gLargeJunkCrateDL[] = dgLargeJunkCrateDL;
+
+#define dgSmallMajorCrateDL "__OTR__objects/object_kibako/gSmallMajorCrateDL"
+static const ALIGN_ASSET(2) char gSmallMajorCrateDL[] = dgSmallMajorCrateDL;
+
+#define dgSmallMaskCrateDL "__OTR__objects/object_kibako/gSmallMaskCrateDL"
+static const ALIGN_ASSET(2) char gSmallMaskCrateDL[] = dgSmallMaskCrateDL;
+
+#define dgSmallMinorCrateDL "__OTR__objects/object_kibako/gSmallMinorCrateDL"
+static const ALIGN_ASSET(2) char gSmallMinorCrateDL[] = dgSmallMinorCrateDL;
+
+#define dgSmallRandoCrateDL "__OTR__objects/object_kibako/gSmallRandoCrateDL"
+static const ALIGN_ASSET(2) char gSmallRandoCrateDL[] = dgSmallRandoCrateDL;
+
+#define dgSmallSmallKeyCrateDL "__OTR__objects/object_kibako/gSmallSmallKeyCrateDL"
+static const ALIGN_ASSET(2) char gSmallSmallKeyCrateDL[] = dgSmallSmallKeyCrateDL;
+
+#define dgSmallTokenCrateDL "__OTR__objects/object_kibako/gSmallTokenCrateDL"
+static const ALIGN_ASSET(2) char gSmallTokenCrateDL[] = dgSmallTokenCrateDL;
+
+#define dgSmallBossKeyCrateDL "__OTR__objects/object_kibako/gSmallBossKeyCrateDL"
+static const ALIGN_ASSET(2) char gSmallBossKeyCrateDL[] = dgSmallBossKeyCrateDL;
+
+#define dgSmallFairyCrateDL "__OTR__objects/object_kibako/gSmallFairyCrateDL"
+static const ALIGN_ASSET(2) char gSmallFairyCrateDL[] = dgSmallFairyCrateDL;
+
+#define dgSmallHeartCrateDL "__OTR__objects/object_kibako/gSmallHeartCrateDL"
+static const ALIGN_ASSET(2) char gSmallHeartCrateDL[] = dgSmallHeartCrateDL;
+
+#define dgSmallJunkCrateDL "__OTR__objects/object_kibako/gSmallJunkCrateDL"
+static const ALIGN_ASSET(2) char gSmallJunkCrateDL[] = dgSmallJunkCrateDL;
+
+#define dgBarrelMajorDL "__OTR__objects/object_taru/gBarrelMajorDL"
+static const ALIGN_ASSET(2) char gBarrelMajorDL[] = dgBarrelMajorDL;
+
+#define dgBarrelMaskDL "__OTR__objects/object_taru/gBarrelMaskDL"
+static const ALIGN_ASSET(2) char gBarrelMaskDL[] = dgBarrelMaskDL;
+
+#define dgBarrelMinorDL "__OTR__objects/object_taru/gBarrelMinorDL"
+static const ALIGN_ASSET(2) char gBarrelMinorDL[] = dgBarrelMinorDL;
+
+#define dgBarrelRandoDL "__OTR__objects/object_taru/gBarrelRandoDL"
+static const ALIGN_ASSET(2) char gBarrelRandoDL[] = dgBarrelRandoDL;
+
+#define dgBarrelSmallKeyDL "__OTR__objects/object_taru/gBarrelSmallKeyDL"
+static const ALIGN_ASSET(2) char gBarrelSmallKeyDL[] = dgBarrelSmallKeyDL;
+
+#define dgBarrelTokenDL "__OTR__objects/object_taru/gBarrelTokenDL"
+static const ALIGN_ASSET(2) char gBarrelTokenDL[] = dgBarrelTokenDL;
+
+#define dgBarrelBossKeyDL "__OTR__objects/object_taru/gBarrelBossKeyDL"
+static const ALIGN_ASSET(2) char gBarrelBossKeyDL[] = dgBarrelBossKeyDL;
+
+#define dgBarrelFairyDL "__OTR__objects/object_taru/gBarrelFairyDL"
+static const ALIGN_ASSET(2) char gBarrelFairyDL[] = dgBarrelFairyDL;
+
+#define dgBarrelHeartDL "__OTR__objects/object_taru/gBarrelHeartDL"
+static const ALIGN_ASSET(2) char gBarrelHeartDL[] = dgBarrelHeartDL;
+
+#define dgBarrelJunkDL "__OTR__objects/object_taru/gBarrelJunkDL"
+static const ALIGN_ASSET(2) char gBarrelJunkDL[] = dgBarrelJunkDL;
+
 #define dgChestTrackerIcon "__OTR__textures/icons/gChestTrackerIcon"
 static const ALIGN_ASSET(2) char gChestTrackerIcon[] = dgChestTrackerIcon;
 

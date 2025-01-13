@@ -1,11 +1,14 @@
 #include "ActorBehavior.h"
 #include <libultraship/libultraship.h>
 #include "2s2h/CustomItem/CustomItem.h"
+#include "assets/2s2h_assets.h"
 
 extern "C" {
 #include "variables.h"
 #include "src/overlays/actors/ovl_Obj_Taru/z_obj_taru.h"
 }
+
+#define OBJTARU_RC (actor->home.rot.x)
 
 std::map<std::pair<float, float>, RandoCheckId> barrelMap = {
     // Great Bay Temple //
@@ -57,36 +60,83 @@ std::map<std::pair<float, float>, RandoCheckId> barrelMap = {
     { { 1510.0f, -2430.0f }, RC_PIRATE_FORTRESS_SEWERS_HEART_PIECE_ROOM_BARREL_16 },
 };
 
-void Rando::ActorBehavior::InitObjTaruBehavior() {
-    COND_VB_SHOULD(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, IS_RANDO, {
-        ObjTaru* refActor = va_arg(args, ObjTaru*);
-        auto randoStaticCheck = Rando::StaticData::Checks[RC_UNKNOWN];
+void ObjTaru_RandoDraw(Actor* actor, PlayState* play) {
+    if (!CVarGetInteger("gRando.CSMC", 0)) {
+        Gfx_DrawDListOpa(play, (Gfx*)gBarrelJunkDL);
+        return;
+    }
 
-        auto it = barrelMap.find({ refActor->dyna.actor.home.pos.x, refActor->dyna.actor.home.pos.z });
+    RandoItemId randoItemId = Rando::ConvertItem(RANDO_SAVE_CHECKS[OBJTARU_RC].randoItemId, (RandoCheckId)OBJTARU_RC);
+    RandoItemType randoItemType = Rando::StaticData::Items[randoItemId].randoItemType;
+
+    switch (randoItemType) {
+        case RITYPE_BOSS_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelBossKeyDL);
+            break;
+        case RITYPE_HEALTH:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelHeartDL);
+            break;
+        case RITYPE_LESSER:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelMinorDL);
+            break;
+        case RITYPE_MAJOR:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelMajorDL);
+            break;
+        case RITYPE_MASK:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelMaskDL);
+            break;
+        case RITYPE_SKULLTULA_TOKEN:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelTokenDL);
+            break;
+        case RITYPE_SMALL_KEY:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelSmallKeyDL);
+            break;
+        case RITYPE_STRAY_FAIRY:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelFairyDL);
+            break;
+        default:
+            Gfx_DrawDListOpa(play, (Gfx*)gBarrelJunkDL);
+            break;
+    }
+}
+
+void Rando::ActorBehavior::InitObjTaruBehavior() {
+    COND_ID_HOOK(OnActorInit, ACTOR_OBJ_TARU, IS_RANDO, [](Actor* actor) {
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+
+        auto it = barrelMap.find({ actor->home.pos.x, actor->home.pos.z });
         if (it == barrelMap.end()) {
             return;
-        } else {
-            randoStaticCheck = Rando::StaticData::Checks[it->second];
         }
 
-        if (!RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled ||
-            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].obtained) {
+        randoCheckId = it->second;
+
+        if (!RANDO_SAVE_CHECKS[randoCheckId].shuffled || RANDO_SAVE_CHECKS[randoCheckId].obtained) {
+            return;
+        }
+
+        OBJTARU_RC = randoCheckId;
+        actor->draw = ObjTaru_RandoDraw;
+    });
+
+    COND_VB_SHOULD(VB_BARREL_OR_CRATE_DROP_COLLECTIBLE, IS_RANDO, {
+        Actor* actor = va_arg(args, Actor*);
+
+        if (actor->id != ACTOR_OBJ_TARU || OBJTARU_RC == RC_UNKNOWN) {
             return;
         }
 
         *should = false;
 
-        auto randoSaveCheck = RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId];
-
         EnItem00* spawn = CustomItem::Spawn(
-            refActor->dyna.actor.world.pos.x, refActor->dyna.actor.world.pos.y, refActor->dyna.actor.world.pos.z, 0,
-            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, randoStaticCheck.randoCheckId,
+            actor->world.pos.x, actor->world.pos.y, actor->world.pos.z, 0,
+            CustomItem::KILL_ON_TOUCH | CustomItem::TOSS_ON_SPAWN, OBJTARU_RC,
             [](Actor* actor, PlayState* play) {
                 auto& randoStaticCheck = Rando::StaticData::Checks[(RandoCheckId)CUSTOM_ITEM_PARAM];
                 switch (randoStaticCheck.flagType) {
                     case FLAG_NONE:
-                        if (RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].shuffled) {
-                            RANDO_SAVE_CHECKS[randoStaticCheck.randoCheckId].eligible = true;
+                        if (RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM].shuffled) {
+                            RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM].eligible = true;
                         }
                         break;
                     case FLAG_CYCL_SCENE_COLLECTIBLE:

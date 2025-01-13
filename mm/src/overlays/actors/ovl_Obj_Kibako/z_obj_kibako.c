@@ -260,7 +260,9 @@ void func_80926B54(ObjKibako* this, PlayState* play) {
     Actor_UpdateBgCheckInfo(play, &this->actor, 18.0f, 15.0f, 0.0f,
                             UPDBGCHECKINFO_FLAG_1 | UPDBGCHECKINFO_FLAG_4 | UPDBGCHECKINFO_FLAG_40);
     if (Object_IsLoaded(&play->objectCtx, this->objectSlot)) {
-        this->actor.draw = ObjKibako_Draw;
+        if (GameInteractor_Should(VB_CRATE_DRAW_BE_OVERRIDDEN, true, this)) {
+            this->actor.draw = ObjKibako_Draw;
+        }
         this->actor.objectSlot = this->objectSlot;
         ObjKibako_SetupIdle(this);
     }
