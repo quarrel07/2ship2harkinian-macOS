@@ -190,6 +190,57 @@ void Rando::RemoveItem(RandoItemId randoItemId) {
         case RI_BOMBERS_NOTEBOOK:
             REMOVE_QUEST_ITEM(QUEST_BOMBERS_NOTEBOOK);
             break;
+        case RI_SONG_ELEGY:
+            REMOVE_QUEST_ITEM(QUEST_SONG_ELEGY);
+            break;
+        case RI_SONG_EPONA:
+            REMOVE_QUEST_ITEM(QUEST_SONG_EPONA);
+            break;
+        case RI_SONG_HEALING:
+            REMOVE_QUEST_ITEM(QUEST_SONG_HEALING);
+            break;
+        case RI_SONG_LULLABY_INTRO:
+            REMOVE_QUEST_ITEM(QUEST_SONG_LULLABY_INTRO);
+            break;
+        case RI_SONG_LULLABY:
+            REMOVE_QUEST_ITEM(QUEST_SONG_LULLABY);
+            break;
+        case RI_SONG_NOVA:
+            REMOVE_QUEST_ITEM(QUEST_SONG_BOSSA_NOVA);
+            break;
+        case RI_SONG_OATH:
+            REMOVE_QUEST_ITEM(QUEST_SONG_OATH);
+            break;
+        case RI_SONG_SARIA:
+            REMOVE_QUEST_ITEM(QUEST_SONG_SARIA);
+            break;
+        case RI_SONG_SOARING:
+            REMOVE_QUEST_ITEM(QUEST_SONG_SOARING);
+            break;
+        case RI_SONG_SONATA:
+            REMOVE_QUEST_ITEM(QUEST_SONG_SONATA);
+            break;
+        case RI_SONG_STORMS:
+            REMOVE_QUEST_ITEM(QUEST_SONG_STORMS);
+            break;
+        case RI_SONG_SUN:
+            REMOVE_QUEST_ITEM(QUEST_SONG_SUN);
+            break;
+        case RI_SONG_TIME:
+            REMOVE_QUEST_ITEM(QUEST_SONG_TIME);
+            break;
+        case RI_REMAINS_GOHT:
+            REMOVE_QUEST_ITEM(QUEST_REMAINS_GOHT);
+            break;
+        case RI_REMAINS_GYORG:
+            REMOVE_QUEST_ITEM(QUEST_REMAINS_GYORG);
+            break;
+        case RI_REMAINS_ODOLWA:
+            REMOVE_QUEST_ITEM(QUEST_REMAINS_ODOLWA);
+            break;
+        case RI_REMAINS_TWINMOLD:
+            REMOVE_QUEST_ITEM(QUEST_REMAINS_TWINMOLD);
+            break;
         // Ignore Ammo
         case RI_BOMBCHU:
         case RI_DEKU_STICK:
