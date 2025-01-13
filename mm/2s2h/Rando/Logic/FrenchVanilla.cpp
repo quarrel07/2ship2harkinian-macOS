@@ -100,6 +100,11 @@ void ApplyFrenchVanillaLogicToSaveContext() {
                 }
             }
 
+            if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
+                RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
+                isShuffled = false;
+            }
+
             allChecksThatAreInLogic.insert(randoCheckId);
             currentCheckPool[randoCheckId] = {
                 isShuffled, randoStaticCheck.randoItemId, RI_UNKNOWN, false, false, false

@@ -45,6 +45,11 @@ void ApplyNoLogicToSaveContext() {
             }
         }
 
+        if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
+            RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
+            continue;
+        }
+
         checkPool.push_back(randoCheckId);
         itemPool.push_back(randoStaticCheck.randoItemId);
     }

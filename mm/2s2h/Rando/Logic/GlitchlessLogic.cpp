@@ -81,6 +81,11 @@ void ApplyGlitchlessLogicToSaveContext() {
                 }
             }
 
+            if (randoStaticCheck.randoCheckType == RCTYPE_REMAINS &&
+                RANDO_SAVE_OPTIONS[RO_SHUFFLE_BOSS_REMAINS] == RO_GENERIC_NO) {
+                continue;
+            }
+
             checkPool.insert({ randoCheckId, true });
             itemPool.push_back(randoStaticCheck.randoItemId);
         }

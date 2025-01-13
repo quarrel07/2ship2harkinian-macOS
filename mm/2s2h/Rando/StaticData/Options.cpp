@@ -18,6 +18,7 @@ std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_SHUFFLE_OWL_STATUES),
     RO(RO_SHUFFLE_MUNDANE),
     RO(RO_SHUFFLE_SHOPS),
+    RO(RO_SHUFFLE_BOSS_REMAINS),
 };
 // clang-format on
 
