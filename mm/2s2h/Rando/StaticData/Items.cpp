@@ -1,4 +1,5 @@
 #include "StaticData.h"
+#include "libultraship/bridge.h"
 
 extern "C" {
 extern s16 D_801CFF94[250];
@@ -269,6 +270,25 @@ const char* GetIconTexturePath(RandoItemId randoItemId) {
     }
 
     return itemId < ITEM_RECOVERY_HEART ? (const char*)gItemIcons[itemId] : nullptr;
+}
+
+bool ShouldShowGetItemCutscene(RandoItemId itemId) {
+    if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+        return true;
+    }
+
+    switch (Rando::StaticData::Items[itemId].randoItemType) {
+        case RITYPE_JUNK:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 1;
+        case RITYPE_HEALTH:
+        case RITYPE_LESSER:
+        case RITYPE_STRAY_FAIRY:
+        case RITYPE_SKULLTULA_TOKEN:
+        case RITYPE_SMALL_KEY:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 2;
+        default:
+            return CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0) < 3;
+    }
 }
 
 // clang-format on

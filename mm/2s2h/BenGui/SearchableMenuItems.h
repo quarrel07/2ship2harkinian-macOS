@@ -440,6 +440,13 @@ static const std::unordered_map<int32_t, const char*> dekuGuardSearchBallsOption
     { DEKU_GUARD_SEARCH_BALLS_ALWAYS, "Always" },
 };
 
+static const std::unordered_map<int32_t, const char*> skipGetItemCutscenesOptions = {
+    { 0, "Never" },
+    { 1, "Junk Items Only" },
+    { 2, "Everything But Major" },
+    { 3, "Always" },
+};
+
 static const std::unordered_map<int32_t, const char*> damageMultiplierOptions = {
     { 0, "1x" }, { 1, "2x" }, { 2, "4x" }, { 3, "8x" }, { 4, "16x" }, { 10, "1 Hit KO" },
 };
@@ -1469,8 +1476,11 @@ void AddEnhancements() {
               { "Skip Misc Interactions", "gEnhancements.Cutscenes.SkipMiscInteractions",
                 "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time.",
                 WIDGET_CVAR_CHECKBOX },
-              { "Skip Item Get Cutscene", "gEnhancements.Cutscenes.SkipGetItemCutscenes",
-                "Note: This only works in Randomizer currently", WIDGET_CVAR_CHECKBOX } },
+              { "Skip Item Get Cutscene",
+                "gEnhancements.Cutscenes.SkipGetItemCutscenes",
+                "Note: This only works in Randomizer currently",
+                WIDGET_CVAR_COMBOBOX,
+                { .comboBoxOptions = skipGetItemCutscenesOptions } } },
             // Dialogue Enhancements
             { { .widgetName = "Dialogue", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Fast Bank Selection", "gEnhancements.Dialogue.FastBankSelection",

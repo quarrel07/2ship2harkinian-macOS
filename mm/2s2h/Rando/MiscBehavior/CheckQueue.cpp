@@ -4,6 +4,7 @@
 #include "2s2h/CustomItem/CustomItem.h"
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/BenGui/Notification.h"
+#include "2s2h/Rando/StaticData/StaticData.h"
 
 extern "C" {
 #include "variables.h"
@@ -34,7 +35,8 @@ void Rando::MiscBehavior::CheckQueue() {
             queued = true;
 
             GameInteractor::Instance->events.emplace_back(GIEventGiveItem{
-                .showGetItemCutscene = !CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0),
+                .showGetItemCutscene =
+                    Rando::StaticData::ShouldShowGetItemCutscene(ConvertItem(randoSaveCheck.randoItemId, randoCheckId)),
                 .param = (int16_t)randoCheckId,
                 .giveItem =
                     [](Actor* actor, PlayState* play) {
@@ -61,7 +63,8 @@ void Rando::MiscBehavior::CheckQueue() {
 
                         if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
                             CustomMessage::SetActiveCustomMessage(entry.msg, entry);
-                        } else if (!CVarGetInteger("gEnhancements.Cutscenes.SkipGetItemCutscenes", 0)) {
+                        } else if (Rando::StaticData::ShouldShowGetItemCutscene(
+                                       ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM))) {
                             CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                         } else {
                             Notification::Emit({
