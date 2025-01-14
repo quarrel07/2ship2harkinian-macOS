@@ -22,6 +22,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_GORON_SHRINE] = RandoRegion{ .sceneId = SCENE_16GORON_HOUSE,
         .checks = {
+            CHECK(RC_GORON_SHRINE_FULL_LULLABY, CAN_BE_GORON && (CAN_PLAY_SONG(LULLABY) || CAN_PLAY_SONG(LULLABY_INTRO))),
             CHECK(RC_GORON_SHRINE_POT_01, true),
             CHECK(RC_GORON_SHRINE_POT_02, true),
             CHECK(RC_GORON_SHRINE_POT_03, true),
@@ -197,6 +198,7 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_PATH_TO_GORON_VILLAGE] = RandoRegion{ .sceneId = SCENE_17SETUGEN,
         .checks = {
             // TODO : Add Spring only checks.
+            CHECK(RC_PATH_TO_GORON_VILLAGE_LULLABY_INTRO, CAN_BE_GORON && (CAN_USE_MAGIC_ARROW(FIRE) || CAN_ACCESS(HOT_SPRING_WATER))),
             CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_01,          CAN_USE_PROJECTILE),
             CHECK(RC_TWIN_ISLANDS_TINGLE_MAP_02,          CAN_USE_PROJECTILE),
             CHECK(RC_TWIN_ISLANDS_UNDERWATER_CHEST_01,    CAN_BE_ZORA && CHECK_WEEKEVENTREG(WEEKEVENTREG_CLEARED_SNOWHEAD_TEMPLE)),

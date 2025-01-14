@@ -38,6 +38,7 @@ void InitEnGsBehavior();
 void InitEnHgBehavior();
 void InitEnInBehavior();
 void InitEnItem00Behavior();
+void InitEnJgBehavior();
 void InitEnKgyBehavior();
 void InitEnKitanBehavior();
 void InitEnKnightBehavior();

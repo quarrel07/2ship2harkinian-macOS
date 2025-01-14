@@ -103,6 +103,9 @@ void DrawSong(RandoItemId randoItemId) {
         case RI_SONG_ELEGY:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 98, 0, 255);
             break;
+        case RI_SONG_LULLABY_INTRO:
+            gDPSetEnvColor(POLY_XLU_DISP++, 255, 194, 194, 255);
+            break;
         case RI_SONG_LULLABY:
             gDPSetEnvColor(POLY_XLU_DISP++, 255, 100, 100, 255);
             break;
@@ -326,6 +329,7 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_SONG_SOARING:
         case RI_SONG_SONATA:
         case RI_SONG_ELEGY:
+        case RI_SONG_LULLABY_INTRO:
         case RI_SONG_LULLABY:
         case RI_SONG_OATH:
         case RI_SONG_EPONA:
@@ -357,6 +361,7 @@ void Rando::DrawItem(RandoItemId randoItemId, Actor* actor) {
         case RI_OWL_ZORA_CAPE:
             DrawOwlStatue();
             break;
+        case RI_PROGRESSIVE_LULLABY:
         case RI_PROGRESSIVE_MAGIC:
         case RI_PROGRESSIVE_BOW:
         case RI_PROGRESSIVE_BOMB_BAG:
