@@ -1453,7 +1453,9 @@ void AddEnhancements() {
               { "Hide Title Cards", "gEnhancements.Cutscenes.HideTitleCards", "Hides Title Cards when entering areas.",
                 WIDGET_CVAR_CHECKBOX },
               { "Skip One Point Cutscenes", "gEnhancements.Cutscenes.SkipOnePointCutscenes",
-                "Skip One Point Cutscenes.", WIDGET_CVAR_CHECKBOX },
+                "Skips freezing Link to focus on various events like chest spawning, door unlocking, switch pressed, "
+                "etc",
+                WIDGET_CVAR_CHECKBOX },
               { "Skip Entrance Cutscenes", "gEnhancements.Cutscenes.SkipEntranceCutscenes",
                 "Skip cutscenes that occur when first entering a new area.", WIDGET_CVAR_CHECKBOX },
               { "Skip to File Select", "gEnhancements.Cutscenes.SkipToFileSelect",
