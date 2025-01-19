@@ -23,6 +23,7 @@ void InitEnBalBehavior();
 void InitEnBomBowlManBehavior();
 void InitEnBoxBehavior();
 void InitEnCowBehavior();
+void InitEnDnhBehavior();
 void InitEnElfgrpBehavior();
 void InitEnElforgBehavior();
 void InitEnFsnBehavior();
