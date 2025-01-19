@@ -1728,6 +1728,7 @@ typedef enum {
 typedef enum {
     RO_LOGIC_GLITCHLESS,
     RO_LOGIC_NO_LOGIC,
+    RO_LOGIC_NEARLY_NO_LOGIC,
     RO_LOGIC_FRENCH_VANILLA,
     RO_LOGIC_VANILLA,
 } RandoOptionLogic;

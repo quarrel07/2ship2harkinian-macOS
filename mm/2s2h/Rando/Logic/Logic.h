@@ -22,6 +22,7 @@ void FindReachableRegions(RandoRegionId currentRegion, std::set<RandoRegionId>& 
 RandoRegionId GetRegionIdFromEntrance(s32 entrance);
 void ApplyFrenchVanillaLogicToSaveContext();
 void ApplyGlitchlessLogicToSaveContext();
+void ApplyNearlyNoLogicToSaveContext();
 void ApplyNoLogicToSaveContext();
 
 struct RandoEvent {
