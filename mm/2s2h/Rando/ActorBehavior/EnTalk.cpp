@@ -63,8 +63,8 @@ void ApplyRemainsHint(u16* textId, bool* loadFromMessageTable) {
     }
 
     CustomMessage::Entry entry = {
-        .nextMessageID = remainsHintIndex >= 4 ? 0xFFFF : 0x1C06,
         .icon = icon,
+        .nextMessageID = remainsHintIndex >= 4 ? 0xFFFF : 0x1C06,
         .msg = msg,
     };
 
