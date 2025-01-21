@@ -57,6 +57,7 @@ void InitEnRzBehavior();
 void InitEnSellnutsBehavior();
 void InitEnSiBehavior();
 void InitEnSob1Behavior();
+void InitEnSshBehavior();
 void InitEnStoneheishiBehavior();
 void InitEnSyatekiManBehavior();
 void InitEnTalkBehavior();
