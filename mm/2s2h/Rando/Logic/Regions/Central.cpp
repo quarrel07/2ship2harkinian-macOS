@@ -61,8 +61,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLOCK_TOWER_INTERIOR] = RandoRegion{ .sceneId = SCENE_INSIDETOWER,
         .checks = {
-            CHECK(RC_CLOCK_TOWER_INTERIOR_SONG_OF_HEALING, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
-            CHECK(RC_CLOCK_TOWER_INTERIOR_DEKU_MASK, HAS_ITEM(ITEM_OCARINA_OF_TIME)),
+            // There are no checks here, the 2 that the mask salesman would give you are in RR_MAX
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(SOUTH_CLOCK_TOWN, 0),             ENTRANCE(CLOCK_TOWER_INTERIOR, 1), true),
