@@ -224,15 +224,14 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_ROAD_TO_IKANA_BELOW_LEDGE] = RandoRegion{ .name = "Below Ledge", .sceneId = SCENE_IKANAMAE,
         .checks = {
             CHECK(RC_ROAD_TO_IKANA_POT, CAN_HOOK_SCARECROW),
-            // TODO: HAS_ACCESS_TO_POTION_REFILL?
-            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC /* && (HAS_ITEM(ITEM_POTION_RED) || HAS_ITEM(ITEM_POTION_BLUE)) */),
+            CHECK(RC_ROAD_TO_IKANA_STONE_MASK, HAS_ITEM(ITEM_LENS_OF_TRUTH) && HAS_MAGIC && HAS_BOTTLE && (CAN_ACCESS(RED_POTION_REFILL) || CAN_ACCESS(BLUE_POTION_REFILL))),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(IKANA_GRAVEYARD, 0),              ENTRANCE(ROAD_TO_IKANA, 2), true)
         },
         .connections = {
             CONNECTION(RR_ROAD_TO_IKANA_FIELD_SIDE, CAN_RIDE_EPONA),
-            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && HAS_ITEM(ITEM_MASK_GARO)),
+            CONNECTION(RR_ROAD_TO_IKANA_ABOVE_LEDGE, HAS_ITEM(ITEM_HOOKSHOT) && (HAS_ITEM(ITEM_MASK_GARO) || HAS_ITEM(ITEM_MASK_GIBDO))),
         },
     };
     Regions[RR_ROAD_TO_IKANA_FIELD_SIDE] = RandoRegion{ .name = "Field Side", .sceneId = SCENE_IKANAMAE,
