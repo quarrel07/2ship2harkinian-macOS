@@ -850,7 +850,6 @@ void BenMenu::AddEnhancements() {
             "Playing the Song Of Time will not reset the current time speed set by Inverted Song of Time."));
     AddWidget(path, "Keep Express Mail", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Cycle.KeepExpressMail")
-        .Callback([](WidgetInfo& info) { RegisterKeepExpressMail(); })
         .Options(CheckboxOptions().Tooltip(
             "Allows the player to keep the Express Mail in their inventory after delivering it "
             "the first time, so that both deliveries can be done within one cycle"));
