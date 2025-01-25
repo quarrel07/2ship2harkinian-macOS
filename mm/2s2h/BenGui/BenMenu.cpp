@@ -355,8 +355,9 @@ void BenMenu::AddSettings() {
         .WindowName("2S2H Input Editor")
         .Options(ButtonOptions().Tooltip("Enables the separate Bindings Window.").Size(Sizes::Inline));
 
-    path.sidebarName = "Notifications";
-    AddSidebarEntry("Settings", "Notifications", 1);
+    path.sidebarName = "Overlay";
+    AddSidebarEntry("Settings", "Overlay", 2);
+    AddWidget(path, "Notifications", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Position", WIDGET_CVAR_COMBOBOX)
         .CVar("gNotifications.Position")
         .Options(ComboboxOptions()
@@ -397,6 +398,24 @@ void BenMenu::AddSettings() {
             });
         })
         .Options(ButtonOptions().Tooltip("Displays a test notification."));
+    path.column = 2;
+    AddWidget(path, "In-Game Timer", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Toggle Display Overlay", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.DisplayOverlay")
+        .WindowName("Display Overlay")
+        .Options(ButtonOptions().Tooltip("Toggles the Display Overlay window for In-game Timers."));
+    AddWidget(path, "Hide Window Background", WIDGET_CVAR_CHECKBOX)
+        .CVar("gDisplayOverlay.Background")
+        .Options(CheckboxOptions().Tooltip("Hides the background of the Display Overlay window."));
+    AddWidget(path, "Scale: %.0fx", WIDGET_CVAR_SLIDER_FLOAT)
+        .CVar("gDisplayOverlay.Scale")
+        .Options(FloatSliderOptions()
+                     .Tooltip("Adjust the Scale for the Display Overlay window.")
+                     .Min(1.0f)
+                     .Max(5.0f)
+                     .DefaultValue(1.0f)
+                     .Format("%.1f")
+                     .Step(0.1f));
 }
 int32_t motionBlurStrength;
 
@@ -694,6 +713,9 @@ void BenMenu::AddEnhancements() {
                      .Min(1)
                      .Max(5)
                      .DefaultValue(1));
+    AddWidget(path, "Faster Push/Pull", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Player.FasterPushAndPull")
+        .Options(CheckboxOptions().Tooltip("Speeds up the time it takes to push/pull various objects."));
     AddWidget(path, "Dpad Equips", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Dpad.DpadEquips")
         .Options(CheckboxOptions().Tooltip("Allows you to equip items to your d-pad"));
@@ -708,10 +730,18 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Equipment.TwoHandedSwordSpinAttack")
         .Options(CheckboxOptions().Tooltip(
             "Enables magic spin attacks for the Fierce Deity Sword and Great Fairy's Sword."));
+    AddWidget(path, "Better Picto Message", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Equipment.BetterPictoMessage")
+        .Options(
+            CheckboxOptions().Tooltip("Inform the player what target if any is being captured in the pictograph."));
     AddWidget(path, "Arrow Type Cycling", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.PlayerActions.ArrowCycle")
         .Options(CheckboxOptions().Tooltip(
             "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows."));
+    AddWidget(path, "Bombchu Drops", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Equipment.ChuDrops")
+        .Options(
+            CheckboxOptions().Tooltip("When a bomb drop is spawned, it has a 50% chance to be a bombchu instead."));
 
     path.column = 2;
     AddWidget(path, "Modes", WIDGET_SEPARATOR_TEXT);
@@ -799,6 +829,20 @@ void BenMenu::AddEnhancements() {
                      .Min(1)
                      .Max(16)
                      .DefaultValue(16));
+    AddWidget(path, "Skip Powder Keg Certification", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Minigames.PowderKegCertification")
+        .Options(CheckboxOptions().Tooltip(
+            "Skips requiring to take the Powder Keg Test before being given the Certification."));
+    AddWidget(path, "Malon Target Practice Winning Score", WIDGET_CVAR_SLIDER_INT)
+        .CVar("gEnhancements.Minigames.MalonTargetPractice")
+        .Options(IntSliderOptions()
+                     .Tooltip("Sets the score required to win Malon's Target Practice.")
+                     .Min(1)
+                     .Max(10)
+                     .DefaultValue(10));
+    AddWidget(path, "Skip Gorman Horse Race", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Minigames.SkipHorseRace")
+        .Options(CheckboxOptions().Tooltip("Instantly win the Gorman Horse Race"));
 
     path.column = 3;
     AddWidget(path, "Saving", WIDGET_SEPARATOR_TEXT);
@@ -1028,6 +1072,10 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Hide Title Cards", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Cutscenes.HideTitleCards")
         .Options(CheckboxOptions().Tooltip("Hides Title Cards when entering areas."));
+    AddWidget(path, "Skip One Point Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Cutscenes.SkipOnePointCutscenes")
+        .Options(CheckboxOptions().Tooltip(
+            "Skips freezing Link to focus on various events like chest spawning, door unlocking, switch pressed, etc"));
     AddWidget(path, "Skip Entrance Cutscenes", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Cutscenes.SkipEntranceCutscenes")
         .Options(CheckboxOptions().Tooltip("Skip cutscenes that occur when first entering a new area."));
@@ -1053,6 +1101,11 @@ void BenMenu::AddEnhancements() {
         .CVar("gEnhancements.Cutscenes.SkipMiscInteractions")
         .Options(CheckboxOptions().Tooltip(
             "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time."));
+    AddWidget(path, "Skip Item Get Cutscene", WIDGET_CVAR_COMBOBOX)
+        .CVar("gEnhancements.Cutscenes.SkipGetItemCutscenes")
+        .Options(ComboboxOptions()
+                     .Tooltip("Note: This only works in Randomizer currently")
+                     .ComboMap(skipGetItemCutscenesOptions));
 
     // Dialogue Enhancements
     path.column = 2;
@@ -1071,6 +1124,10 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Swamp Boat Timesaver", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Timesavers.SwampBoatSpeed")
         .Options(CheckboxOptions().Tooltip("Hold Z to speed up the boat ride in through the Swamp."));
+    AddWidget(path, "Shooting Gallery Both Rewards", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Timesavers.GalleryTwofer")
+        .Options(CheckboxOptions().Tooltip("When getting a perfect score at the Shooting Gallery, receive both rewards "
+                                           "back to back instead of having to play twice."));
 
     // Fixes
     path = { "Enhancements", "Fixes", 1 };
@@ -1080,6 +1137,10 @@ void BenMenu::AddEnhancements() {
         .CVar("gFixes.FixAmmoCountEnvColor")
         .Options(CheckboxOptions().Tooltip("Fixes a missing gDPSetEnvColor, which causes the ammo count to be "
                                            "the wrong color prior to obtaining magic or other conditions."));
+    AddWidget(path, "Fix Epona stealing Sword", WIDGET_CVAR_CHECKBOX)
+        .CVar("gFixes.FixEponaStealingSword")
+        .Options(CheckboxOptions().Tooltip(
+            "This fixes a bug where Epona can steal your sword when you mount her without a bow in your inventory."));
     AddWidget(path, "Fix Fierce Deity Z-Target movement", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Fixes.FierceDeityZTargetMovement")
         .Options(CheckboxOptions().Tooltip("Fixes Fierce Deity movement being choppy when Z-targeting"));
@@ -1166,6 +1227,12 @@ void BenMenu::AddEnhancements() {
                          "- Always: Always show the search balls.")
                 .DefaultIndex(DekuGuardSearchBallsOptions::DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY)
                 .ComboMap(dekuGuardSearchBallsOptions));
+    AddWidget(path, "Lower Bank Reward Thresholds", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.DifficultyOptions.LowerBankRewardThresholds")
+        .Options(
+            CheckboxOptions().Tooltip("Reduces the amount of rupees required to receive the rewards from the bank.\n"
+                                      "From: 200 -> 1000 -> 5000\n"
+                                      "To:   100 ->  500 -> 1000"));
 
     path.column = 2;
     AddWidget(path, "Damage Multiplier", WIDGET_CVAR_COMBOBOX)

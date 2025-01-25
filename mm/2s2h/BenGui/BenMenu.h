@@ -85,6 +85,13 @@ static const std::unordered_map<int32_t, const char*> dekuGuardSearchBallsOption
     { DEKU_GUARD_SEARCH_BALLS_ALWAYS, "Always" },
 };
 
+static const std::unordered_map<int32_t, const char*> skipGetItemCutscenesOptions = {
+    { 0, "Never" },
+    { 1, "Junk Items Only" },
+    { 2, "Everything But Major" },
+    { 3, "Always" },
+};
+
 static const std::unordered_map<int32_t, const char*> damageMultiplierOptions = {
     { 0, "1x" }, { 1, "2x" }, { 2, "4x" }, { 3, "8x" }, { 4, "16x" }, { 10, "1 Hit KO" },
 };

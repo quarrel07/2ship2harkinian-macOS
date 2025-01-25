@@ -62,8 +62,7 @@ void Rando::DrawMenu() {
             "the Moon\n\n"
             "French Vanilla - This is an alternative variant to Glitchless, but the items are biased to be "
             "closer to their vanilla locations. Tends to be an more beginner friendly experience.\n\n"
-            "Vanilla - The items are not shuffled."
-        );
+            "Vanilla - The items are not shuffled.");
 
         if (CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, RO_LOGIC_NO_LOGIC) != RO_LOGIC_VANILLA) {
             UIWidgets::CVarCheckbox("Shuffle Gold Skulltula Tokens",
