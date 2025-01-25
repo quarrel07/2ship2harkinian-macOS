@@ -16,7 +16,6 @@
 
 #include "2s2h/Enhancements/Trackers/ItemTracker.h"
 #include "2s2h/Enhancements/Trackers/ItemTrackerSettings.h"
-#include "Enhancements/Trackers/DisplayOverlay.h"
 
 extern "C" {
 #include "z64.h"
@@ -360,7 +359,6 @@ extern std::shared_ptr<HudEditorWindow> mHudEditorWindow;
 extern std::shared_ptr<CosmeticEditorWindow> mCosmeticEditorWindow;
 extern std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 extern std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
-extern std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
 
 void DrawEnhancementsMenu() {
     if (UIWidgets::BeginMenu("Enhancements")) {
@@ -583,11 +581,6 @@ void DrawEnhancementsMenu() {
                 { .tooltip = "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat "
                              "speed up for future attempts. When reaching 20 points, you'll be automatically "
                              "transported back to Koume, completing the minigame." });
-
-            UIWidgets::CVarCheckbox(
-                "Shooting Gallery Both Rewards", "gEnhancements.Timesavers.GalleryTwofer",
-                { .tooltip = "When getting a perfect score at the Shooting Gallery, receive both rewards back to back "
-                             "instead of having to play twice." });
 
             ImGui::EndMenu();
         }
@@ -842,10 +835,6 @@ void DrawEnhancementsMenu() {
                                     mItemTrackerSettingsWindow);
         }
 
-        if (mDisplayOverlayWindow) {
-            UIWidgets::WindowButton("Display Overlay", "gWindows.DisplayOverlay", mDisplayOverlayWindow);
-        }
-
         ImGui::EndMenu();
     }
 }
@@ -1033,12 +1022,6 @@ void BenMenuBar::DrawElement() {
         ImGui::SetCursorPosY(0.0f);
 
         DrawBenMenu();
-
-        ImGui::SetCursorPosY(0.0f);
-        ImGui::Text("Press ESC for the new Menu");
-        ImGui::PopStyleVar(1);
-        ImGui::EndMenuBar();
-        return;
 
         ImGui::SetCursorPosY(0.0f);
 

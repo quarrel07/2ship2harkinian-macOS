@@ -1,8 +1,6 @@
 #include "2s2h/Enhancements/Enhancements.h"
 #include "2s2h/DeveloperTools/DeveloperTools.h"
 #include "2s2h/Enhancements/GfxPatcher/AuthenticGfxPatches.h"
-#include "2s2h/Rando/Rando.h"
-#include "2s2h/Enhancements/Trackers/DisplayOverlay.h"
 #include "UIWidgets.hpp"
 #include "BenMenuBar.h"
 #include "Notification.h"
@@ -52,7 +50,6 @@ typedef enum {
     DISABLE_FOR_FRAME_ADVANCE_OFF,
     DISABLE_FOR_WARP_POINT_NOT_SET,
     DISABLE_FOR_INTRO_SKIP_OFF,
-    DISABLE_FOR_RANDO,
 } DisableOption;
 
 struct widgetInfo;
@@ -86,8 +83,7 @@ typedef enum {
     WIDGET_WINDOW_BUTTON,
     WIDGET_AUDIO_BACKEND, // needed because of special operations that can't be handled easily with the normal combobox
                           // widget
-    WIDGET_VIDEO_BACKEND, // same as above
-    WIDGET_RANDO,
+    WIDGET_VIDEO_BACKEND  // same as above
 } WidgetType;
 
 typedef enum {
@@ -263,7 +259,6 @@ static ImGuiTextFilter menuSearch;
 std::vector<SidebarEntry> settingsSidebar;
 std::vector<SidebarEntry> enhancementsSidebar;
 std::vector<SidebarEntry> devToolsSidebar;
-std::vector<SidebarEntry> randoSidebar;
 uint8_t searchSidebarIndex = 0;
 SidebarEntry searchSidebarEntry = {
     "Search",
@@ -353,9 +348,7 @@ static std::map<DisableOption, disabledInfo> disabledMap = {
         "Warp Point Not Saved" } },
     { DISABLE_FOR_INTRO_SKIP_OFF,
       { [](disabledInfo& info) -> bool { return !CVarGetInteger("gEnhancements.Cutscenes.SkipIntroSequence", 0); },
-        "Intro Skip Not Selected" } },
-    { DISABLE_FOR_RANDO,
-      { [](disabledInfo& info) -> bool { return IS_RANDO; }, "This is incompatible with Randomizer saves" } },
+        "Intro Skip Not Selected" } }
 };
 
 std::unordered_map<int32_t, const char*> menuThemeOptions = {
@@ -438,13 +431,6 @@ static const std::unordered_map<int32_t, const char*> dekuGuardSearchBallsOption
     { DEKU_GUARD_SEARCH_BALLS_NEVER, "Never" },
     { DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY, "Night Only" },
     { DEKU_GUARD_SEARCH_BALLS_ALWAYS, "Always" },
-};
-
-static const std::unordered_map<int32_t, const char*> skipGetItemCutscenesOptions = {
-    { 0, "Never" },
-    { 1, "Junk Items Only" },
-    { 2, "Everything But Major" },
-    { 3, "Always" },
 };
 
 static const std::unordered_map<int32_t, const char*> damageMultiplierOptions = {
@@ -775,64 +761,43 @@ void AddSettings() {
                 { .size = UIWidgets::Sizes::Inline, .windowName = "2S2H Input Editor" } } } } });
 
     settingsSidebar.push_back(
-        { "Overlay",
-          2,
+        { "Notifications",
+          1,
           { {
-                { .widgetName = "Notifications", .widgetType = WIDGET_SEPARATOR_TEXT },
-                { "Position",
-                  "gNotifications.Position",
-                  "Which corner of the screen notifications appear in.",
-                  WIDGET_CVAR_COMBOBOX,
-                  { .defaultVariant = 3, .comboBoxOptions = notificationPosition } },
-                { "Duration: %.0f seconds",
-                  "gNotifications.Duration",
-                  "How long notifications are displayed for.",
-                  WIDGET_CVAR_SLIDER_FLOAT,
-                  { .min = 3.0f, .max = 30.0f, .defaultVariant = 10.0f, .format = "%.1f", .step = 0.1f } },
-                { "Background Opacity: %.0f%%",
-                  "gNotifications.BgOpacity",
-                  "How opaque the background of notifications is.",
-                  WIDGET_CVAR_SLIDER_FLOAT,
-                  { .min = 0.0f, .max = 1.0f, .defaultVariant = 0.5f, .format = "%.0f%%", .isPercentage = true } },
-                { "Size %.1f",
-                  "gNotifications.Size",
-                  "How large notifications are.",
-                  WIDGET_CVAR_SLIDER_FLOAT,
-                  { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.8f, .format = "%.1f", .step = 0.1f } },
-                { "Test Notification",
-                  "",
-                  "Displays a test notification.",
-                  WIDGET_BUTTON,
-                  {},
-                  [](widgetInfo& info) {
-                      Notification::Emit({
-                          .itemIcon = "__OTR__icon_item_24_static_yar/gQuestIconGoldSkulltulaTex",
-                          .prefix = "This",
-                          .message = "is a",
-                          .suffix = "test.",
-                      });
-                  } },
-            },
-            {
-                { .widgetName = "In-Game Timer", .widgetType = WIDGET_SEPARATOR_TEXT },
-                { "Toggle Display Overlay",
-                  "gWindows.DisplayOverlay",
-                  "Toggles the Display Overlay window for In-game Timers.",
-                  WIDGET_WINDOW_BUTTON,
-                  { .size = UIWidgets::Sizes::Inline, .windowName = "Display Overlay" } },
-                { .widgetName = "Hide Window Background",
-                  .widgetCVar = "gDisplayOverlay.Background",
-                  .widgetTooltip = "Hides the background of the Display Overlay window.",
-                  .widgetType = WIDGET_CVAR_CHECKBOX,
-                  .widgetOptions = { .defaultVariant = false },
-                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
-                { .widgetName = "Scale: %.0fx",
-                  .widgetCVar = "gDisplayOverlay.Scale",
-                  .widgetTooltip = "Adjust the Scale for the Display Overlay window.",
-                  .widgetType = WIDGET_CVAR_SLIDER_FLOAT,
-                  .widgetOptions = { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.0f, .format = "%.1f", .step = 0.1f },
-                  .widgetCallback = [](widgetInfo& info) { DisplayOverlayInitSettings(); } },
-            } } });
+              { "Position",
+                "gNotifications.Position",
+                "Which corner of the screen notifications appear in.",
+                WIDGET_CVAR_COMBOBOX,
+                { .defaultVariant = 3, .comboBoxOptions = notificationPosition } },
+              { "Duration: %.0f seconds",
+                "gNotifications.Duration",
+                "How long notifications are displayed for.",
+                WIDGET_CVAR_SLIDER_FLOAT,
+                { .min = 3.0f, .max = 30.0f, .defaultVariant = 10.0f, .format = "%.1f", .step = 0.1f } },
+              { "Background Opacity: %.0f%%",
+                "gNotifications.BgOpacity",
+                "How opaque the background of notifications is.",
+                WIDGET_CVAR_SLIDER_FLOAT,
+                { .min = 0.0f, .max = 1.0f, .defaultVariant = 0.5f, .format = "%.0f%%", .isPercentage = true } },
+              { "Size %.1f",
+                "gNotifications.Size",
+                "How large notifications are.",
+                WIDGET_CVAR_SLIDER_FLOAT,
+                { .min = 1.0f, .max = 5.0f, .defaultVariant = 1.8f, .format = "%.1f", .step = 0.1f } },
+              { "Test Notification",
+                "",
+                "Displays a test notification.",
+                WIDGET_BUTTON,
+                {},
+                [](widgetInfo& info) {
+                    Notification::Emit({
+                        .itemIcon = "__OTR__icon_item_24_static_yar/gQuestIconGoldSkulltulaTex",
+                        .prefix = "This",
+                        .message = "is a",
+                        .suffix = "test.",
+                    });
+                } },
+          } } });
 
     if (CVarGetInteger("gSettings.SidebarSearch", 0)) {
         settingsSidebar.insert(settingsSidebar.begin() + searchSidebarIndex, searchSidebarEntry);
@@ -1123,8 +1088,6 @@ void AddEnhancements() {
                 "Increases the speed at which Link climbs vines and ladders.",
                 WIDGET_CVAR_SLIDER_INT,
                 { 1, 5, 1 } },
-              { "Faster Push/Pull", "gEnhancements.Player.FasterPushAndPull",
-                "Speeds up the time it takes to push/pull various objects.", WIDGET_CVAR_CHECKBOX },
               { "Dpad Equips", "gEnhancements.Dpad.DpadEquips", "Allows you to equip items to your d-pad",
                 WIDGET_CVAR_CHECKBOX },
               { "Fast Magic Arrow Equip Animation", "gEnhancements.Equipment.MagicArrowEquipSpeed",
@@ -1135,13 +1098,9 @@ void AddEnhancements() {
               { "Two-Handed Sword Spin Attack", "gEnhancements.Equipment.TwoHandedSwordSpinAttack",
                 "Enables magic spin attacks for the Fierce Deity Sword and Great Fairy's Sword.",
                 WIDGET_CVAR_CHECKBOX },
-              { "Better Picto Message", "gEnhancements.Equipment.BetterPictoMessage",
-                "Inform the player what target if any is being captured in the pictograph.", WIDGET_CVAR_CHECKBOX },
               { "Arrow Type Cycling", "gEnhancements.PlayerActions.ArrowCycle",
                 "While aiming the bow, use L to cycle between Normal, Fire, Ice and Light arrows.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Bombchu Drops", "gEnhancements.Equipment.ChuDrops",
-                "When a bomb drop is spawned, it has a 50% chance to be a bombchu instead.", WIDGET_CVAR_CHECKBOX } },
+                WIDGET_CVAR_CHECKBOX } },
             {
                 { .widgetName = "Modes", .widgetType = WIDGET_SEPARATOR_TEXT },
                 { "Play as Kafei", "gModes.PlayAsKafei", "Requires scene reload to take effect.",
@@ -1215,16 +1174,6 @@ void AddEnhancements() {
                   "Sets the score required to win the Honey & Darling minigame on Day 3.",
                   WIDGET_CVAR_SLIDER_INT,
                   { 1, 16, 16 } },
-                { "Skip Powder Keg Certification", "gEnhancements.Minigames.PowderKegCertification",
-                  "Skips requiring to take the Powder Keg Test before being given the Certification.",
-                  WIDGET_CVAR_CHECKBOX },
-                { "Malon Target Practice Winning Score",
-                  "gEnhancements.Minigames.MalonTargetPractice",
-                  "Sets the score required to win Malon's Target Practice.",
-                  WIDGET_CVAR_SLIDER_INT,
-                  { 1, 10, 10 } },
-                { "Skip Gorman Horse Race", "gEnhancements.Minigames.SkipHorseRace",
-                  "Instantly win the Gorman Horse Race", WIDGET_CVAR_CHECKBOX },
             },
             { { .widgetName = "Saving", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "3rd Save File Slot",
@@ -1267,16 +1216,8 @@ void AddEnhancements() {
                 "Playing the Song Of Time will not reset the bottles' content.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Consumables", "gEnhancements.Cycle.DoNotResetConsumables",
                 "Playing the Song Of Time will not reset the consumables.", WIDGET_CVAR_CHECKBOX },
-              { "Do not reset Razor Sword",
-                "gEnhancements.Cycle.DoNotResetRazorSword",
-                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.",
-                WIDGET_CVAR_CHECKBOX,
-                {},
-                nullptr,
-                [](widgetInfo& info) {
-                    if (disabledMap.at(DISABLE_FOR_RANDO).active)
-                        info.activeDisables.push_back(DISABLE_FOR_RANDO);
-                } },
+              { "Do not reset Razor Sword", "gEnhancements.Cycle.DoNotResetRazorSword",
+                "Playing the Song Of Time will not reset the Sword back to Kokiri Sword.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Rupees", "gEnhancements.Cycle.DoNotResetRupees",
                 "Playing the Song Of Time will not reset the your rupees.", WIDGET_CVAR_CHECKBOX },
               { "Do not reset Time Speed", "gEnhancements.Cycle.DoNotResetTimeSpeed",
@@ -1452,10 +1393,6 @@ void AddEnhancements() {
             { { .widgetName = "Cutscenes", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Hide Title Cards", "gEnhancements.Cutscenes.HideTitleCards", "Hides Title Cards when entering areas.",
                 WIDGET_CVAR_CHECKBOX },
-              { "Skip One Point Cutscenes", "gEnhancements.Cutscenes.SkipOnePointCutscenes",
-                "Skips freezing Link to focus on various events like chest spawning, door unlocking, switch pressed, "
-                "etc",
-                WIDGET_CVAR_CHECKBOX },
               { "Skip Entrance Cutscenes", "gEnhancements.Cutscenes.SkipEntranceCutscenes",
                 "Skip cutscenes that occur when first entering a new area.", WIDGET_CVAR_CHECKBOX },
               { "Skip to File Select", "gEnhancements.Cutscenes.SkipToFileSelect",
@@ -1477,12 +1414,7 @@ void AddEnhancements() {
                 WIDGET_CVAR_CHECKBOX },
               { "Skip Misc Interactions", "gEnhancements.Cutscenes.SkipMiscInteractions",
                 "Disclaimer: This doesn't do much yet, we will be progressively adding more skips over time.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Skip Item Get Cutscene",
-                "gEnhancements.Cutscenes.SkipGetItemCutscenes",
-                "Note: This only works in Randomizer currently",
-                WIDGET_CVAR_COMBOBOX,
-                { .comboBoxOptions = skipGetItemCutscenesOptions } } },
+                WIDGET_CVAR_CHECKBOX } },
             // Dialogue Enhancements
             { { .widgetName = "Dialogue", .widgetType = WIDGET_SEPARATOR_TEXT },
               { "Fast Bank Selection", "gEnhancements.Dialogue.FastBankSelection",
@@ -1498,10 +1430,6 @@ void AddEnhancements() {
                 "Pictograph Tour: Hold Z to speed up the boat. Archery: Score 20 points to unlock boat speed up for "
                 "future attempts. When reaching 20 points, you'll be automatically transported back to Koume, "
                 "completing the minigame.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Shooting Gallery Both Rewards", "gEnhancements.Timesavers.GalleryTwofer",
-                "When getting a perfect score at the Shooting Gallery, receive both rewards back to back "
-                "instead of having to play twice.",
                 WIDGET_CVAR_CHECKBOX } } } });
     enhancementsSidebar.push_back(
         { "Fixes",
@@ -1511,9 +1439,6 @@ void AddEnhancements() {
               { "Fix Ammo Count Color", "gFixes.FixAmmoCountEnvColor",
                 "Fixes a missing gDPSetEnvColor, which causes the ammo count to be "
                 "the wrong color prior to obtaining magic or other conditions.",
-                WIDGET_CVAR_CHECKBOX },
-              { "Fix Epona stealing Sword", "gFixes.FixEponaStealingSword",
-                "This fixes a bug where Epona can steal your sword when you mount her without a bow in your inventory.",
                 WIDGET_CVAR_CHECKBOX },
               { "Fix Fierce Deity Z-Target movement", "gEnhancements.Fixes.FierceDeityZTargetMovement",
                 "Fixes Fierce Deity movement being choppy when Z-targeting", WIDGET_CVAR_CHECKBOX },
@@ -1570,26 +1495,18 @@ void AddEnhancements() {
     enhancementsSidebar.push_back(
         { "Difficulty Options",
           3,
-          { {
-                { "Disable Takkuri Steal", "gEnhancements.Cheats.DisableTakkuriSteal",
-                  "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other "
-                  "items.",
-                  WIDGET_CVAR_CHECKBOX },
-                { "Deku Guard Search Balls",
-                  "gEnhancements.Cheats.DekuGuardSearchBalls",
-                  "Choose when to show the Deku Palace Guards' search balls\n"
-                  "- Never: Never show the search balls. This matches Majora's Mask 3D behaviour\n"
-                  "- Night Only: Only show the search balls at night. This matches original N64 behaviour.\n"
-                  "- Always: Always show the search balls.",
-                  WIDGET_CVAR_COMBOBOX,
-                  { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
-                    .comboBoxOptions = dekuGuardSearchBallsOptions } },
-                { "Lower Bank Reward Thresholds", "gEnhancements.DifficultyOptions.LowerBankRewardThresholds",
-                  "Reduces the amount of rupees required to receive the rewards from the bank.\n"
-                  "From: 200 -> 1000 -> 5000\n"
-                  "To:   100 ->  500 -> 1000",
-                  WIDGET_CVAR_CHECKBOX },
-            },
+          { { { "Disable Takkuri Steal", "gEnhancements.Cheats.DisableTakkuriSteal",
+                "Prevents the Takkuri from stealing key items like bottles and swords. It may still steal other items.",
+                WIDGET_CVAR_CHECKBOX },
+              { "Deku Guard Search Balls",
+                "gEnhancements.Cheats.DekuGuardSearchBalls",
+                "Choose when to show the Deku Palace Guards' search balls\n"
+                "- Never: Never show the search balls. This matches Majora's Mask 3D behaviour\n"
+                "- Night Only: Only show the search balls at night. This matches original N64 behaviour.\n"
+                "- Always: Always show the search balls.",
+                WIDGET_CVAR_COMBOBOX,
+                { .defaultVariant = DEKU_GUARD_SEARCH_BALLS_NIGHT_ONLY,
+                  .comboBoxOptions = dekuGuardSearchBallsOptions } } },
             {
                 {
                     "Damage Multiplier",
@@ -2169,9 +2086,6 @@ void SearchMenuGetItem(widgetInfo& widget) {
                     }
                 }
                 ImGui::EndChild();
-            } break;
-            case WIDGET_RANDO: {
-                Rando::DrawMenu();
             } break;
             default:
                 break;

@@ -74,12 +74,10 @@ void BenMenu::InitElement() {
     AddSettings();
     AddEnhancements();
     AddDevTools();
-    randoSidebar.push_back({ "General", 1, { { { .widgetName = "Rando", .widgetType = WIDGET_RANDO } } } });
 
     menuEntries = { { "Settings", settingsSidebar, "gSettings.Menu.SettingsSidebarIndex" },
                     { "Enhancements", enhancementsSidebar, "gSettings.Menu.EnhancementsSidebarIndex" },
-                    { "Developer Tools", devToolsSidebar, "gSettings.Menu.DevToolsSidebarIndex" },
-                    { "Rando", randoSidebar, "gSettings.Menu.RandoSidebarIndex" } };
+                    { "Developer Tools", devToolsSidebar, "gSettings.Menu.DevToolsSidebarIndex" } };
 
     UpdateWindowBackendObjects();
 }
