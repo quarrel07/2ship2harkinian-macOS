@@ -133,19 +133,15 @@ static void DrawGeneralTab() {
 }
 
 static void DrawLocationsTab() {
-
 }
 
 static void DrawItemsTab() {
-
 }
 
 void Rando::RegisterMenu() {
     mBenMenu->AddSidebarEntry("Rando", "General", 1);
     WidgetPath path = { "Rando", "General", 1 };
-    mBenMenu->AddWidget(path, "General", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-        DrawGeneralTab();
-    });
+    mBenMenu->AddWidget(path, "General", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawGeneralTab(); });
     // mBenMenu->AddSidebarEntry("Rando", "Locations", 1);
     // path.sidebarName = "Locations";
     // mBenMenu->AddWidget(path, "Locations", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
