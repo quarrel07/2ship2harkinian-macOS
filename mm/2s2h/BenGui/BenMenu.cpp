@@ -18,6 +18,7 @@
 #include <variant>
 #include <tuple>
 #include "ResolutionEditor.h"
+#include "2s2h/Rando/Rando.h"
 
 extern "C" {
 #include "z64.h"
@@ -39,30 +40,40 @@ void FreeLookPitchMinMax() {
 using namespace UIWidgets;
 
 void BenMenu::AddSidebarEntry(std::string sectionName, std::string sidebarName, uint32_t columnCount) {
-    // TODO: Rework when adding things directly to menuEntries instead of individual sidebar objects
-    std::unordered_map<std::string, SidebarEntry>& sidebar =
-        (sectionName == "Settings" ? settingsSidebar
-                                   : (sectionName == "Enhancements" ? enhancementsSidebar : devToolsSidebar));
-    std::vector<std::string>& order =
-        (sectionName == "Settings" ? settingsOrder
-                                   : (sectionName == "Enhancements" ? enhancementsOrder : devToolsOrder));
-    sidebar.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
-    order.push_back(sidebarName);
+    if (sectionName == "Settings") {
+        settingsSidebar.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
+        settingsOrder.push_back(sidebarName);
+    } else if (sectionName == "Enhancements") {
+        enhancementsSidebar.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
+        enhancementsOrder.push_back(sidebarName);
+    } else if (sectionName == "Dev Tools") {
+        devToolsSidebar.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
+        devToolsOrder.push_back(sidebarName);
+    } else if (sectionName == "Rando") {
+        randoSidebar.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
+        randoOrder.push_back(sidebarName);
+    }
 }
 
 WidgetInfo& BenMenu::AddWidget(WidgetPath& pathInfo, std::string widgetName, WidgetType widgetType) {
     assert(widgetName != ""); // Must be unique
-    std::unordered_map<std::string, SidebarEntry>& sidebar =
-        (pathInfo.sectionName == "Settings"
-             ? settingsSidebar
-             : (pathInfo.sectionName == "Enhancements" ? enhancementsSidebar : devToolsSidebar));
+    std::unordered_map<std::string, SidebarEntry>* sidebar;
+    if (pathInfo.sectionName == "Settings") {
+        sidebar = &settingsSidebar;
+    } else if (pathInfo.sectionName == "Enhancements") {
+        sidebar = &enhancementsSidebar;
+    } else if (pathInfo.sectionName == "Dev Tools") {
+        sidebar = &devToolsSidebar;
+    } else if (pathInfo.sectionName == "Rando") {
+        sidebar = &randoSidebar;
+    }
     uint8_t column = pathInfo.column - 1;
-    if (sidebar.contains(pathInfo.sidebarName)) {
-        while (sidebar.at(pathInfo.sidebarName).columnWidgets.size() < column + 1) {
-            sidebar.at(pathInfo.sidebarName).columnWidgets.push_back({});
+    if (sidebar->contains(pathInfo.sidebarName)) {
+        while (sidebar->at(pathInfo.sidebarName).columnWidgets.size() < column + 1) {
+            sidebar->at(pathInfo.sidebarName).columnWidgets.push_back({});
         }
     }
-    SidebarEntry& entry = sidebar.at(pathInfo.sidebarName);
+    SidebarEntry& entry = sidebar->at(pathInfo.sidebarName);
     entry.columnWidgets.at(column).push_back({ .name = widgetName, .type = widgetType });
     WidgetInfo& widget = entry.columnWidgets.at(column).back();
     switch (widgetType) {
@@ -1485,11 +1496,13 @@ void BenMenu::InitElement() {
     AddEnhancements();
     AddDevTools();
     // RegisterResolutionWidgets();
+    Rando::RegisterMenu();
 
     menuEntries = { { "Settings", settingsSidebar, "gSettings.Menu.SettingsSidebarSection", settingsOrder },
                     { "Enhancements", enhancementsSidebar, "gSettings.Menu.EnhancementsSidebarSection",
                       enhancementsOrder },
-                    { "Developer Tools", devToolsSidebar, "gSettings.Menu.DevToolsSidebarSection", devToolsOrder } };
+                    { "Developer Tools", devToolsSidebar, "gSettings.Menu.DevToolsSidebarSection", devToolsOrder },
+                    { "Rando", randoSidebar, "gSettings.Menu.RandoSidebarSection", randoOrder } };
 
     if (CVarGetInteger("gSettings.Menu.SidebarSearch", 0)) {
         InsertSidebarSearch();

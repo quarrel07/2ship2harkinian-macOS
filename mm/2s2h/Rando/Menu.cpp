@@ -5,20 +5,31 @@
 #include "Rando/CheckTracker/CheckTracker.h"
 #include "BenPort.h"
 #include "build.h"
+#include "2s2h/BenGui/BenMenu.h"
 
 // TODO: This block should come from elsewhere, tied to data in Rando::StaticData::Options
-std::vector<std::string> logicOptions = { "Glitchless", "No Logic", "Nearly No Logic", "French Vanilla", "Vanilla" };
+std::unordered_map<int32_t, const char*> logicOptions = {
+    { RO_LOGIC_GLITCHLESS, "Glitchless" },
+    { RO_LOGIC_NO_LOGIC, "No Logic" },
+    { RO_LOGIC_NEARLY_NO_LOGIC, "Nearly No Logic" },
+    { RO_LOGIC_FRENCH_VANILLA, "French Vanilla" },
+    { RO_LOGIC_VANILLA, "Vanilla" },
+};
 
 namespace BenGui {
 extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 extern std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
+extern std::shared_ptr<BenMenu> mBenMenu;
 } // namespace BenGui
+
+using namespace BenGui;
+using namespace UIWidgets;
 
 extern "C" {
 #include "archives/icon_item_24_static/icon_item_24_static_yar.h"
 }
 
-void Rando::DrawMenu() {
+static void DrawGeneralTab() {
     ImGui::BeginChild("randoSettings", ImVec2(ImGui::GetContentRegionAvail().x / 2, 0));
     ImGui::SeparatorText("Seed Generation");
     UIWidgets::CVarCheckbox("Enable Rando (Randomizes new files upon creation)", "gRando.Enabled");
@@ -89,14 +100,14 @@ void Rando::DrawMenu() {
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoDisclaimer");
-    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Gray);
+    ImGui::PushStyleColor(ImGuiCol_Text, ColorValues.at(Colors::Gray));
     if (gGitCommitTag[0] == 0) {
         ImGui::Text("%s | %s", (char*)gGitBranch, (char*)gGitCommitHash);
     } else {
         ImGui::Text("%s", (char*)gBuildVersion);
     }
     ImGui::PopStyleColor();
-    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::Colors::Yellow);
+    ImGui::PushStyleColor(ImGuiCol_Text, ColorValues.at(Colors::Orange));
     ImGui::SeparatorText("Disclaimer");
     ImGui::PopStyleColor();
     ImGui::TextWrapped(
@@ -119,4 +130,30 @@ void Rando::DrawMenu() {
     ImGui::SameLine();
     ImGui::Text("ProxySaw");
     ImGui::EndChild();
+}
+
+static void DrawLocationsTab() {
+
+}
+
+static void DrawItemsTab() {
+
+}
+
+void Rando::RegisterMenu() {
+    mBenMenu->AddSidebarEntry("Rando", "General", 1);
+    WidgetPath path = { "Rando", "General", 1 };
+    mBenMenu->AddWidget(path, "General", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        DrawGeneralTab();
+    });
+    // mBenMenu->AddSidebarEntry("Rando", "Locations", 1);
+    // path.sidebarName = "Locations";
+    // mBenMenu->AddWidget(path, "Locations", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+    //     DrawLocationsTab();
+    // });
+    // mBenMenu->AddSidebarEntry("Rando", "Items", 1);
+    // path.sidebarName = "Items";
+    // mBenMenu->AddWidget(path, "Items", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+    //     DrawItemsTab();
+    // });
 }

@@ -118,6 +118,8 @@ class BenMenu : public Ship::Menu {
     std::vector<std::string> enhancementsOrder;
     std::unordered_map<std::string, SidebarEntry> devToolsSidebar;
     std::vector<std::string> devToolsOrder;
+    std::unordered_map<std::string, SidebarEntry> randoSidebar;
+    std::vector<std::string> randoOrder;
 };
 } // namespace BenGui
 
