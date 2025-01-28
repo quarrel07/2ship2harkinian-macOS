@@ -1105,7 +1105,7 @@ void DrawSong(QuestItem slot) {
     }
     if (ImGui::IsItemHovered()) {
         ImGui::BeginTooltip();
-        ImGui::Text(songTooltip);
+        ImGui::Text("%s", songTooltip);
         ImGui::EndTooltip();
     }
     if (slot != QUEST_SONG_SUN && slot != QUEST_SONG_SARIA) {
@@ -1283,7 +1283,7 @@ void DrawDungeonItemTab() {
         ImGui::BeginChild(std::to_string(i).c_str(),
                           ImVec2(INV_GRID_WIDTH * 6 + INV_GRID_PADDING * 2, INV_GRID_HEIGHT * 1.5 + INV_GRID_PADDING),
                           ImGuiChildFlags_Border);
-        ImGui::Text(dungeonNames[i]);
+        ImGui::Text("%s", dungeonNames[i]);
         if (ImGui::ImageButton(
                 stray_id.c_str(),
                 Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(fairyIcons[dungeonId]),
@@ -1543,7 +1543,7 @@ void DrawPlayerTab() {
             ImGui::TableNextColumn();
 
             for (int i = 0; i <= 3; i++) {
-                ImGui::Text(std::to_string(states[i]).c_str());
+                ImGui::Text("%s", std::to_string(states[i]).c_str());
                 ImGui::TableNextColumn();
             }
 

@@ -481,6 +481,8 @@ class GameInteractor {
     DEFINE_HOOK(BeforeEndOfCycleSave, ());
     DEFINE_HOOK(AfterEndOfCycleSave, ());
     DEFINE_HOOK(BeforeMoonCrashSaveReset, ());
+    DEFINE_HOOK(AfterInterfaceClockDraw, ());
+    DEFINE_HOOK(BeforeInterfaceClockDraw, ());
 
     DEFINE_HOOK(OnSceneInit, (s8 sceneId, s8 spawnNum));
     DEFINE_HOOK(OnRoomInit, (s8 sceneId, s8 roomNum));
@@ -534,6 +536,8 @@ void GameInteractor_ExecuteOnFileSelectSaveLoad(s16 fileNum, bool isOwlSave, Sav
 void GameInteractor_ExecuteBeforeEndOfCycleSave();
 void GameInteractor_ExecuteAfterEndOfCycleSave();
 void GameInteractor_ExecuteBeforeMoonCrashSaveReset();
+void GameInteractor_ExecuteAfterInterfaceClockDraw();
+void GameInteractor_ExecuteBeforeInterfaceClockDraw();
 
 void GameInteractor_ExecuteOnSceneInit(s16 sceneId, s8 spawnNum);
 void GameInteractor_ExecuteOnRoomInit(s16 sceneId, s8 roomNum);
