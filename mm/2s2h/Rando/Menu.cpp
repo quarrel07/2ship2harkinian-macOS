@@ -135,30 +135,32 @@ static void DrawLocationsTab() {
     ImGui::SeparatorText("Shuffle Options");
     ImGui::BeginChild("randoLocationsColumn1", ImVec2(columnWidth, halfHeight));
     CVarCheckbox("Shuffle Songs", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Shuffle Owl Statues", Rando::StaticData::Options[RO_SHUFFLE_OWL_STATUES].cvar);
     CVarCheckbox("Shuffle Shops", Rando::StaticData::Options[RO_SHUFFLE_SHOPS].cvar);
     CVarCheckbox("Shuffle Boss Remains", Rando::StaticData::Options[RO_SHUFFLE_BOSS_REMAINS].cvar);
     CVarCheckbox("Shuffle Cows", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Shuffle Gold Skulltula Tokens", Rando::StaticData::Options[RO_SHUFFLE_GOLD_SKULLTULAS].cvar);
-    CVarSliderInt("Shuffle Gold Skulltula Tokens", "gPlaceholderInt",
-                  { { .disabled = true, .disabledTooltip = "Coming Soon" }, .min = 0, .max = 30, .defaultValue = 30 });
+    CVarSliderInt(
+        "Shuffle Gold Skulltula Tokens", "gPlaceholderInt",
+        IntSliderOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).Min(1).Max(30).DefaultValue(30));
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoLocationsColumn2", ImVec2(columnWidth, halfHeight));
     CVarCheckbox("Shuffle Mundane Checks", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar);
     CVarCheckbox("Shuffle Pot Drops", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar,
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Shuffle Crate Drops", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar,
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Shuffle Barrel Drops", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar,
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Shuffle Hive Drops", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Shuffle Hive Drops", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Shuffle Freestanding Items", Rando::StaticData::Options[RO_SHUFFLE_MUNDANE].cvar,
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Shuffle Wonder Items", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoLocationsColumn3", ImVec2(columnWidth, halfHeight));
@@ -173,25 +175,36 @@ static void DrawItemsTab() {
     f32 columnWidth = ImGui::GetContentRegionAvail().x / 3 - (ImGui::GetStyle().ItemSpacing.x * 2);
     f32 halfHeight = ImGui::GetContentRegionAvail().y / 3 - (ImGui::GetStyle().ItemSpacing.y * 2);
     ImGui::BeginChild("randoItemsColumn1", ImVec2(columnWidth, halfHeight));
-    CVarCheckbox("Bronze Scale", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Deku Stick Bag", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Deku Nut Bag", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Skeleton Key", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Child Wallet", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Infinite Upgrades", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+    CVarCheckbox("Bronze Scale", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Deku Stick Bag", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Deku Nut Bag", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Skeleton Key", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Child Wallet", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Infinite Upgrades", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoItemsColumn2", ImVec2(columnWidth, halfHeight));
-    CVarCheckbox("Boss Souls", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Enemy Souls", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+    CVarCheckbox("Boss Souls", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Enemy Souls", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
     ImGui::SameLine();
     ImGui::BeginChild("randoItemsColumn3", ImVec2(columnWidth, halfHeight));
-    CVarCheckbox("Song of Double Time", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+    CVarCheckbox("Song of Double Time", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     CVarCheckbox("Inverted Song of Time", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Saria's Song", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Sun's Song", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Saria's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Sun's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
     ImGui::BeginChild("randoItemsStarting", ImVec2(0, 0));
     ImGui::SeparatorText("Starting Items");
@@ -206,16 +219,19 @@ static void DrawHintsTab() {
     f32 halfHeight = ImGui::GetContentRegionAvail().y / 2 - (ImGui::GetStyle().ItemSpacing.y * 2);
     ImGui::BeginChild("randoHintsColumn1", ImVec2(columnWidth, halfHeight));
     CVarCheckbox("Spider House", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Happy Mask Salesman Purchaseable", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Gossip Stones", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
     CVarCheckbox("Boss Remains", "gPlaceholderBool",
-                 { { .disabled = true, .disabledTooltip = "Coming Soon" }, .defaultValue = true });
-    CVarCheckbox("Saria's Song", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Song of Soaring", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
-    CVarCheckbox("Hookshot Location", "gPlaceholderBool", { { .disabled = true, .disabledTooltip = "Coming Soon" } });
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }).DefaultValue(true));
+    CVarCheckbox("Saria's Song", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Song of Soaring", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
+    CVarCheckbox("Hookshot Location", "gPlaceholderBool",
+                 CheckboxOptions({ { .disabled = true, .disabledTooltip = "Coming Soon" } }));
     ImGui::EndChild();
 }
 
