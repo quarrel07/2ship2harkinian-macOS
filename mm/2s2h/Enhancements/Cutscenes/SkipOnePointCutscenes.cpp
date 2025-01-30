@@ -85,7 +85,6 @@ void RegisterSkipOnePointCutscenes() {
             case ACTOR_OBJ_BIGICICLE:
             case ACTOR_OBJ_HAKAISI:
             case ACTOR_BG_HAKA_BOMBWALL:
-            case ACTOR_EN_DINOFOS:
             case ACTOR_EN_DRAGON:
             case ACTOR_BG_DBLUE_BALANCE:
             case ACTOR_BG_DBLUE_WATERFALL:
