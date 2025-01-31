@@ -35,13 +35,3 @@ RandoCheckId Rando::FindItemPlacement(RandoItemId randoItemId) {
 
     return RC_UNKNOWN;
 }
-
-std::string Rando::GetItemName(RandoItemId randoItemId) {
-    std::string itemName = Rando::StaticData::Items[randoItemId].article;
-    if (itemName != "") {
-        itemName += " ";
-    }
-    itemName += Rando::StaticData::Items[randoItemId].name;
-
-    return itemName;
-}

@@ -44,22 +44,13 @@ void Rando::MiscBehavior::CheckQueue() {
                         auto& randoSaveCheck = RANDO_SAVE_CHECKS[CUSTOM_ITEM_PARAM];
                         RandoItemId randoItemId =
                             Rando::ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM);
-                        std::string msg = "You received";
-                        if (!Ship_IsCStringEmpty(Rando::StaticData::Items[randoItemId].article)) {
-                            msg += " ";
-                            msg += Rando::StaticData::Items[randoItemId].article;
-                        }
-
-                        std::string itemName = Rando::StaticData::Items[randoItemId].name;
-                        if (randoItemId == RI_JUNK) {
-                            randoItemId = Rando::CurrentJunkItem();
-                            itemName += std::string(" (") + Rando::StaticData::Items[randoItemId].name + ")";
-                        }
+                        std::string prefix = "You found";
+                        std::string message = Rando::StaticData::GetItemName(randoItemId);
 
                         CustomMessage::Entry entry = {
                             .textboxType = 2,
                             .icon = Rando::StaticData::GetIconForZMessage(randoItemId),
-                            .msg = msg + " " + itemName + "!",
+                            .msg = prefix + " " + message + "!",
                         };
 
                         if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
@@ -70,8 +61,8 @@ void Rando::MiscBehavior::CheckQueue() {
                         } else {
                             Notification::Emit({
                                 .itemIcon = Rando::StaticData::GetIconTexturePath(randoItemId),
-                                .message = msg,
-                                .suffix = itemName,
+                                .message = prefix,
+                                .suffix = message,
                             });
                         }
                         Rando::GiveItem(randoItemId);

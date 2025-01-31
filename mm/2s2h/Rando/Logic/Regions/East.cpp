@@ -142,8 +142,8 @@ static RegisterShipInitFunc initFunc([]() {
     Regions[RR_IKANA_CANYON_UPPER] = RandoRegion{ .name = "Upper", .sceneId = SCENE_IKANA,
         .checks = {
             CHECK(RC_IKANA_CANYON_OWL_STATUE, CAN_USE_SWORD),
-            CHECK(RC_IKANA_CANYON_TINGLE_MAP_01, CAN_USE_PROJECTILE),
-            CHECK(RC_IKANA_CANYON_TINGLE_MAP_02, CAN_USE_PROJECTILE),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_01, CAN_USE_PROJECTILE && CAN_AFFORD(RC_IKANA_CANYON_TINGLE_MAP_01)),
+            CHECK(RC_IKANA_CANYON_TINGLE_MAP_02, CAN_USE_PROJECTILE && CAN_AFFORD(RC_IKANA_CANYON_TINGLE_MAP_02)),
         },
         .exits = { //     TO                                         FROM
             EXIT(ENTRANCE(GHOST_HUT, 0),                    ENTRANCE(IKANA_CANYON, 1), true),

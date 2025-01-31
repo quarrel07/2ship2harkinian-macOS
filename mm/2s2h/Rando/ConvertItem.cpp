@@ -76,11 +76,11 @@ static std::vector<RandoItemId> junkItems = {
     RI_NONE,
 };
 
-// Pick a random junk item every 3 seconds
+// Pick a random junk item every second
 RandoItemId Rando::CurrentJunkItem() {
     static RandoItemId lastJunkItem = RI_UNKNOWN;
     static u32 lastChosenAt = 0;
-    if (gPlayState != NULL && ABS(gPlayState->gameplayFrames - lastChosenAt) > 15) {
+    if (gPlayState != NULL && ABS(gPlayState->gameplayFrames - lastChosenAt) > 20) {
         lastChosenAt = gPlayState->gameplayFrames;
         lastJunkItem = RI_UNKNOWN;
     }

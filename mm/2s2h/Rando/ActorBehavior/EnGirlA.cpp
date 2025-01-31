@@ -356,7 +356,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg = "I used this to make %r{{itemName}}%w, take it!\x19";
-        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::GetItemName(randoSaveCheck.randoItemId));
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
 
         // Mark the item as eligible for purchase
         randoSaveCheck.eligible = true;
@@ -381,7 +381,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg =
             "If nothing devastating happens to Mommy tonight, we should be able to sell %r{{itemName}}%w.\x19\xA8";
-        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::GetItemName(randoSaveCheck.randoItemId));
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
     });
@@ -403,7 +403,7 @@ void Rando::ActorBehavior::InitEnGirlABehavior() {
 
         auto entry = CustomMessage::LoadVanillaMessageTableEntry(*textId);
         entry.msg = "It's over... Now we'll never sell %r{{itemName}}%w...\x19\xA8";
-        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::GetItemName(randoSaveCheck.randoItemId));
+        CustomMessage::Replace(&entry.msg, "{{itemName}}", Rando::StaticData::GetItemName(randoSaveCheck.randoItemId));
 
         CustomMessage::LoadCustomMessageIntoFont(entry);
         *loadFromMessageTable = false;
