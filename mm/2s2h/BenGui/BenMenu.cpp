@@ -1316,8 +1316,8 @@ void BenMenu::AddEnhancements() {
     // Item Tracker Settings
     path = { "Enhancements", "Item Tracker", 1 };
     AddSidebarEntry("Enhancements", "Item Tracker", 1);
-    AddWidget(path, "Popout Item Tracker", WIDGET_WINDOW_BUTTON)
-        .CVar("gWindows.ItemTracker")
+    AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.ItemTrackerSettings")
         .WindowName("Item Tracker Settings");
 }
 
