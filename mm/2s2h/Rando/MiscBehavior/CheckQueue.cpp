@@ -47,6 +47,10 @@ void Rando::MiscBehavior::CheckQueue() {
                         std::string prefix = "You found";
                         std::string message = Rando::StaticData::GetItemName(randoItemId);
 
+                        if (randoItemId == RI_JUNK) {
+                            randoItemId = Rando::CurrentJunkItem();
+                        }
+
                         CustomMessage::Entry entry = {
                             .textboxType = 2,
                             .icon = Rando::StaticData::GetIconForZMessage(randoItemId),
@@ -55,8 +59,7 @@ void Rando::MiscBehavior::CheckQueue() {
 
                         if (CUSTOM_ITEM_FLAGS & CustomItem::GIVE_ITEM_CUTSCENE) {
                             CustomMessage::SetActiveCustomMessage(entry.msg, entry);
-                        } else if (Rando::StaticData::ShouldShowGetItemCutscene(
-                                       ConvertItem(randoSaveCheck.randoItemId, (RandoCheckId)CUSTOM_ITEM_PARAM))) {
+                        } else if (Rando::StaticData::ShouldShowGetItemCutscene(randoItemId)) {
                             CustomMessage::StartTextbox(entry.msg + "\x1C\x02\x10", entry);
                         } else {
                             Notification::Emit({
