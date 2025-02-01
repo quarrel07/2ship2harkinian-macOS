@@ -54,9 +54,14 @@ void RegisterSkipOnePointCutscenes() {
                 actor->csId = -1;
                 *should = false;
                 break;
+            case ACTOR_EN_BOX: // Chest
+                // Currently this breaks the treasure chest minigame, so we're not skipping there
+                if (gPlayState->sceneId != SCENE_TAKARAYA) {
+                    *should = false;
+                }
+                break;
             case ACTOR_BG_SPDWEB: // Spider Web
             case ACTOR_DOOR_SHUTTER:
-            case ACTOR_EN_BOX:       // Chest
             case ACTOR_BG_NUMA_HANA: // Big wooden flower in Woodfall Temple
             case ACTOR_BG_LADDER:
             case ACTOR_OBJ_RAILLIFT: // Moving Platform
