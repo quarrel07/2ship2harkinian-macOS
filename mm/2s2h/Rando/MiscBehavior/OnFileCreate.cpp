@@ -66,6 +66,9 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                         case RO_STARTING_ITEMS_3:
                             defaults = 2048;
                             break;
+                        case RO_STARTING_HEALTH:
+                            defaults = 3;
+                            break;
                         default:
                             break;
                     }
