@@ -81,6 +81,15 @@ void Rando::MiscBehavior::OnFileCreate(s16 fileNum) {
                             continue;
                         }
 
+                        // TODO: Until we have a way to get up to the moon without just being able to kill majora, we're
+                        // going to just disable all moon checks
+                        if (randoStaticCheck.sceneId == SCENE_LAST_BS || randoStaticCheck.sceneId == SCENE_LAST_DEKU ||
+                            randoStaticCheck.sceneId == SCENE_LAST_GORON ||
+                            randoStaticCheck.sceneId == SCENE_LAST_LINK ||
+                            randoStaticCheck.sceneId == SCENE_LAST_ZORA) {
+                            continue;
+                        }
+
                         if (randoStaticCheck.randoCheckType == RCTYPE_SKULL_TOKEN &&
                             RANDO_SAVE_OPTIONS[RO_SHUFFLE_GOLD_SKULLTULAS] == RO_GENERIC_NO) {
                             continue;
