@@ -250,7 +250,7 @@ static void DrawItemsTab() {
                                    ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1))) {
                 startingItems &= ~(1 << i);
                 CVarSetInteger(Rando::StaticData::Options[optionId].cvar, startingItems);
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);
@@ -295,7 +295,7 @@ static void DrawItemsTab() {
                                    ImVec2(0, 0), ImVec2(1, 1), ImVec4(0, 0, 0, 0), ImVec4(1, 1, 1, 1))) {
                 startingItems |= (1 << i);
                 CVarSetInteger(Rando::StaticData::Options[optionId].cvar, startingItems);
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::PopStyleColor(3);
             ImGui::PopStyleVar(2);
