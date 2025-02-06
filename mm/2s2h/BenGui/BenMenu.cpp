@@ -712,6 +712,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Faster Push/Pull", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Player.FasterPushAndPull")
         .Options(CheckboxOptions().Tooltip("Speeds up the time it takes to push/pull various objects."));
+    AddWidget(path, "Prevent Diving Over Water", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Player.PreventDiveOverWater")
+        .Options(CheckboxOptions().Tooltip("Prevents Link from automatically diving over bodies of water."));
     AddWidget(path, "Dpad Equips", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Dpad.DpadEquips")
         .Options(CheckboxOptions().Tooltip("Allows you to equip items to your d-pad"));
@@ -1159,7 +1162,8 @@ void BenMenu::AddEnhancements() {
                               "Includes the following:\n"
                               "- HESS/Weirdshot crashes\n"
                               "- Action Swap crash without arrow ammo\n"
-                              "- Owl Warp menu crash when moving the cursor with Index-Warp active")
+                              "- Owl Warp menu crash when moving the cursor with Index-Warp active\n"
+                              "- Remote Hookshot Hookslide crashes when over voids in Great Bay Temple")
                      .DefaultValue(true));
     AddWidget(path, "Fix Ammo Count Color", WIDGET_CVAR_CHECKBOX)
         .CVar("gFixes.FixAmmoCountEnvColor")
