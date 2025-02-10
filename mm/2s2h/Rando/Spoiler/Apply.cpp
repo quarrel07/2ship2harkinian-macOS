@@ -9,7 +9,7 @@ void ApplyToSaveContext(nlohmann::json spoiler) {
     gSaveContext.save.shipSaveInfo.rando.finalSeed = spoiler["finalSeed"].get<uint32_t>();
 
     for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
-        RANDO_SAVE_OPTIONS[randoOptionId] = spoiler["options"][randoStaticOption.name].get<(uint32_t)>();
+        RANDO_SAVE_OPTIONS[randoOptionId] = spoiler["options"][randoStaticOption.name].get<uint32_t>();
     }
 
     if (RANDO_SAVE_OPTIONS[RO_STARTING_HEALTH] != 3) {
