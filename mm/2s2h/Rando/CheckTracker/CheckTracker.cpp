@@ -80,6 +80,7 @@ std::vector<const char*> checkTypeIconList = {
     /*RCTYPE_SKULL_TOKEN*/ gQuestIconGoldSkulltulaTex,
     /*RCTYPE_SONG*/ gItemIconSongNoteTex,
     /*RCTYPE_STRAY_FAIRY*/ gStrayFairyGreatBayIconTex,
+    /*RCTYPE_TINGLE_SHOP*/ gItemIconAdultsWalletTex,
 };
 
 std::string totalChecksFound() {
