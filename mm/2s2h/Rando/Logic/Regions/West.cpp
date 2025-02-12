@@ -150,6 +150,10 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_ZORA_CAPE, CAN_BE_ZORA),
         },
+        .oneWayEntrances = {
+            ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
+            ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
+        }
     };
     Regions[RR_ZORA_CAPE_GROTTO] = RandoRegion{ .name = "Zora Cape Grotto", .sceneId = SCENE_KAKUSIANA,
         .checks = {
@@ -177,11 +181,7 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_ZORA_CAPE_BEFORE_GREAT_BAY_TEMPLE, CAN_BE_ZORA),
             CONNECTION(RR_ZORA_CAPE_GROTTO, CAN_USE_EXPLOSIVE || CAN_BE_GORON), // TODO: Grotto mapping
-        },
-        .oneWayEntrances = {
-            ENTRANCE(ZORA_CAPE, 6), // From Song of Soaring
-            ENTRANCE(ZORA_CAPE, 9), // From Great Bay Temple Blue Warp
-        },
+        }
     };
     Regions[RR_ZORA_HALL_EVANS_ROOM] = RandoRegion{ .name = "Evan's Room", .sceneId = SCENE_BANDROOM,
         .checks = {
