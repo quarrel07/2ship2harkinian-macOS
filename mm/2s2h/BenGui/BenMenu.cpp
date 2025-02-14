@@ -750,6 +750,13 @@ void BenMenu::AddEnhancements() {
                      .Min(1)
                      .Max(30)
                      .DefaultValue(30));
+    AddWidget(path, "Bombers Hide-and-Seek Count", WIDGET_CVAR_SLIDER_INT)
+        .CVar("gEnhancements.Minigames.BombersHideAndSeek")
+        .Options(IntSliderOptions()
+                     .Tooltip("Sets the number of Bomber Kids you have to find to complete the hide-and-seek game.")
+                     .Min(1)
+                     .Max(5)
+                     .DefaultValue(5));
     AddWidget(path, "Beaver Race Rings Collected", WIDGET_CVAR_SLIDER_INT)
         .CVar("gEnhancements.Minigames.BeaverRaceRingsCollected")
         .Options(IntSliderOptions()
