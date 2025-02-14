@@ -224,6 +224,7 @@ typedef enum {
     VB_OPEN_GREAT_BAY_FROM_SONG,
     VB_OPEN_SNOWHEAD_FROM_SONG,
     VB_GOHT_UNFREEZE,
+    VB_PERFORM_AC_COLLISION,
 } GIVanillaBehavior;
 
 typedef enum {
