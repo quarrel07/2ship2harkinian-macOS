@@ -20,6 +20,7 @@ std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_HINTS_BOSS_REMAINS,          RO_GENERIC_OFF),
     RO(RO_HINTS_GOSSIP_STONES,         RO_GENERIC_OFF),
     RO(RO_HINTS_HOOKSHOT,              RO_GENERIC_OFF),
+    RO(RO_HINTS_OATH_TO_ORDER,         RO_GENERIC_OFF),
     RO(RO_HINTS_PURCHASEABLE,          RO_GENERIC_OFF),
     RO(RO_HINTS_SPIDER_HOUSES,         RO_GENERIC_OFF),
     RO(RO_LOGIC,                       RO_LOGIC_GLITCHLESS),
