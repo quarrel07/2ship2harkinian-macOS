@@ -1160,6 +1160,9 @@ void BenMenu::AddEnhancements() {
     AddWidget(path, "Fast Dampe Flame Digging", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Timesavers.DampeDiggingSkip")
         .Options(CheckboxOptions().Tooltip("Only requires digging up one flame to spawn the big poe."));
+    AddWidget(path, "Faster Scene Transitions", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.Timesavers.FasterSceneTransitions")
+        .Options(CheckboxOptions().Tooltip("Fade in and out more quickly when moving between areas."));
 
     // Fixes
     path = { "Enhancements", "Fixes", 1 };
