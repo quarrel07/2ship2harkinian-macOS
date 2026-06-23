@@ -302,13 +302,13 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                           "\x1b[2;2HYou've launched 2Ship with an old ROM O2R file."
                           "\x1b[4;2HPlease regenerate a new ROM O2R and relaunch."
                           "\x1b[6;2HPress the Home button to exit...",
-                          "OK", "", [&]() { exit(1); });
+                          "OK", "", [&]() { _Exit(1); });
 #elif defined(__WIIU__)
     BenGui::RegisterPopup("Outdated ROM Archives",
                           "You've launched 2Ship with an old a ROM O2R file.\n\n"
                           "Please generate a ROM O2R and relaunch.\n\n"
                           "Press and hold the Power button to shutdown...",
-                          "OK", "", [&]() { exit(1); });
+                          "OK", "", [&]() { _Exit(1); });
     OSFatal();
 #endif
 
@@ -316,7 +316,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
         BenGui::RegisterPopup("Extractor assets not found",
                               "No O2R files found. Missing 'assets/' folder needed to generate OTR file.\nPlease "
                               "re-extract them from the download or.\n\nExiting...",
-                              "OK", "", [&]() { exit(1); });
+                              "OK", "", [&]() { _Exit(1); });
     } else if (shouldRegen) {
         if (RemoveArchiveAcrossAppDirs("mm.o2r")) {
             BenGui::RegisterPopup("Outdated ROM Archive",
@@ -326,7 +326,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
             BenGui::RegisterPopup("Outdated ROM Archive",
                                   "Your mm.o2r was created with incompatible versions of 2Ship, but it\n"
                                   "could not be removed automatically. Please delete it and relaunch.\n\nExiting...",
-                                  "OK", "", [&]() { exit(1); });
+                                  "OK", "", [&]() { _Exit(1); });
         }
     }
 
@@ -367,7 +367,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
 #endif
                     std::string title =
                         !std::filesystem::exists(portArchivePath) ? "Missing 2ship.o2r" : "2ship.o2r is outdated";
-                    BenGui::RegisterPopup(title, msg, "OK", "", [&]() { exit(1); });
+                    BenGui::RegisterPopup(title, msg, "OK", "", [&]() { _Exit(1); });
                 }
                 continue;
             }
@@ -390,7 +390,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                         if (IsSubpath(ownPath, tempPath)) {
                             BenGui::RegisterPopup("2S2H Path Error",
                                                   "2S2H is running in a temp folder.\nExtract the .zip and run again.",
-                                                  "OK", "", [&]() { exit(0); });
+                                                  "OK", "", [&]() { _Exit(0); });
                         } else {
                             windowsStep = WS_PERMS;
                         }
@@ -411,7 +411,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                                                   "OK", "", [&]() {
                                                       fclose(tfile);
                                                       PathTestCleanup(tfile);
-                                                      exit(0);
+                                                      _Exit(0);
                                                   });
                         } else {
                             fclose(tfile);
@@ -420,7 +420,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                                     "2S2H Permissions Error",
                                     "2S2H does not have proper file permissions.\nPlease move it to a "
                                     "folder that does and run again.",
-                                    "OK", "", [&]() { exit(0); });
+                                    "OK", "", [&]() { _Exit(0); });
                             }
                             windowsStep = WS_ONEDRIVE;
                         }
@@ -432,7 +432,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                                                   "2S2H appears to be in a OneDrive folder, which will cause issues.\n"
                                                   "Please move it to a folder outside of OneDrive, like the root of a\n"
                                                   "drive (e.g. \"C:\\Games\\2S2H\").",
-                                                  "OK", "", [&]() { exit(0); });
+                                                  "OK", "", [&]() { _Exit(0); });
                         } else {
                             windowsStep = WS_DONE;
                             extractStep = args.empty() ? ES_EXTRACT : ES_EXTRACT_ARGS;
@@ -486,7 +486,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                         if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("mm.o2r", appShortName))) {
                             BenGui::RegisterPopup(
                                 "No O2R Files", "No O2R files found. Generate one now?", "Yes", "No",
-                                [&]() { promptStep = PS_LOCAL; }, [&]() { exit(0); });
+                                [&]() { promptStep = PS_LOCAL; }, [&]() { _Exit(0); });
                         } else {
                             extractStep = ES_VERIFY;
                         }
@@ -535,7 +535,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                 if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("mm.o2r", appShortName))) {
                     BenGui::RegisterPopup("No ROM Archives",
                                           "No ROM O2R files detected. Please generate a ROM O2R and relaunch.", "OK",
-                                          "", [&]() { exit(0); });
+                                          "", [&]() { _Exit(0); });
                 }
                 extractDone = true;
                 continue;
@@ -546,7 +546,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
 
     render:
         if (!WindowIsRunning()) {
-            exit(0);
+            _Exit(0);
         }
         // Process window events for resize, mouse, keyboard events
         wnd->HandleEvents();
@@ -568,7 +568,7 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                 try {
                     extractionTask->get();
                 } catch (const std::exception& e) {
-                    BenGui::RegisterPopup("Extraction Crashed", e.what(), "Close", "", []() { exit(1); });
+                    BenGui::RegisterPopup("Extraction Crashed", e.what(), "Close", "", []() { _Exit(1); });
                 }
                 extractionTask.reset();
             } else {
@@ -734,7 +734,7 @@ void OTRGlobals::Initialize() {
                                      "Attempted to load an invalid O2R file. Try regenerating.", nullptr);
             SPDLOG_ERROR("Invalid O2R File!");
 #endif
-            exit(1);
+            _Exit(1);
         }
     }
 }
@@ -960,6 +960,13 @@ bool VerifyArchiveVersion(ArchiveVersion version) {
 }
 
 extern "C" void InitOTR(int argc, char* argv[]) {
+#ifdef __APPLE__
+    // Default the writable data folder to ~/Library/Application Support/com.2ship2harkinian.2s2h, which
+    // mirrors the SHIP_HOME value baked into the .app's Info.plist (LSEnvironment). overwrite=0 means the
+    // plist value wins when launched as a bundle; this fallback only kicks in when the raw binary is run
+    // directly (e.g. from the build dir) so it still lands in the right place instead of the cwd.
+    setenv("SHIP_HOME", "~/Library/Application Support/com.2ship2harkinian.2s2h", 0);
+#endif
     OTRGlobals::Instance = new OTRGlobals();
     OTRGlobals::Instance->RunExtract(argc, argv);
 
@@ -1881,12 +1888,31 @@ extern "C" s32* ResourceMgr_LoadCSByName(const char* path) {
 
 ImFont* OTRGlobals::CreateFontWithSize(float size, std::string fontPath) {
     auto mImGuiIo = &ImGui::GetIO();
+    // On a HiDPI/Retina display the ImGui overlay renders into a framebuffer scaled by the backing
+    // scale (e.g. 2x), but glyphs would be rasterized at the logical point size and then stretched up
+    // -> fuzzy menu text. Rasterize the atlas at a higher density via RasterizerDensity so text stays
+    // crisp. The atlas is baked once, but the ImGui scale option changes FontGlobalScale at runtime
+    // (stretching the fixed atlas); bake at backingScale * maxUiScale so FontGlobalScale then only ever
+    // downsamples a high-res atlas (supersampling, still sharp) instead of upscaling a low-res one ->
+    // crisp at every scale. On a standard-DPI display with the default 1.0 scale this is a no-op.
+    float dpiScale = 1.0f;
+    if (auto gui = Ship::Context::GetRawInstance()->GetWindow()->GetGui()) {
+        dpiScale = gui->GetDpiScale();
+    }
+    float maxUiScale = 1.0f;
+    for (float optionScale : imguiScaleOptionToValue) {
+        if (optionScale > maxUiScale) {
+            maxUiScale = optionScale;
+        }
+    }
+    float rasterDensity = dpiScale * maxUiScale;
     ImFont* font;
     if (fontPath == "") {
         ImFontConfig fontCfg = ImFontConfig();
         fontCfg.OversampleH = fontCfg.OversampleV = 1;
         fontCfg.PixelSnapH = true;
         fontCfg.SizePixels = size;
+        fontCfg.RasterizerDensity = rasterDensity;
         font = mImGuiIo->Fonts->AddFontDefault(&fontCfg);
     } else {
         auto initData = std::make_shared<Ship::ResourceInitData>();
@@ -1898,6 +1924,7 @@ ImFont* OTRGlobals::CreateFontWithSize(float size, std::string fontPath) {
             Ship::Context::GetRawInstance()->GetResourceManager()->LoadResource(fontPath, false, initData));
         ImFontConfig fontConf;
         fontConf.FontDataOwnedByAtlas = false;
+        fontConf.RasterizerDensity = rasterDensity;
         font = mImGuiIo->Fonts->AddFontFromMemoryTTF(fontData->Data, fontData->DataSize, size, &fontConf, nullptr);
     }
     // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
@@ -1907,6 +1934,7 @@ ImFont* OTRGlobals::CreateFontWithSize(float size, std::string fontPath) {
     iconsConfig.MergeMode = true;
     iconsConfig.PixelSnapH = true;
     iconsConfig.GlyphMinAdvanceX = iconFontSize;
+    iconsConfig.RasterizerDensity = rasterDensity;
     mImGuiIo->Fonts->AddFontFromMemoryCompressedBase85TTF(fontawesome_compressed_data_base85, iconFontSize,
                                                           &iconsConfig, sIconsRanges);
     return font;
