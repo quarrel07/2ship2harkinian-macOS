@@ -7,13 +7,19 @@
     <key>CFBundleName</key>
     <string>2 Ship 2 Harkinian</string>
     <key>CFBundleExecutable</key>
-    <string>2s2h</string>
+    <string>2 Ship 2 Harkinian</string>
     <key>CFBundleGetInfoString</key>
     <string>@CMAKE_PROJECT_VERSION@</string>
     <key>CFBundleIconFile</key>
-    <string>2s2h.icns</string>
+    <string>2s2hicon</string>
+    <key>CFBundleIconName</key>
+    <string>2s2hicon</string>
     <key>CFBundleIdentifier</key>
     <string>com.2ship2harkinian.2s2h</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
     <key>CFBundleDocumentTypes</key>
     <array>
     </array>

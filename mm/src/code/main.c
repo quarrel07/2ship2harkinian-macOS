@@ -16,6 +16,10 @@
 #include "BenPort.h"
 #include <libultraship/bridge/crashhandlerbridge.h>
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 // Variables are put before most headers as a hacky way to bypass bss reordering
 OSMesgQueue sSerialEventQueue;
 OSMesg sSerialMsgBuf[1];
@@ -58,6 +62,16 @@ int SDL_main(int argc, char* argv[] /* void* arg*/) {
     intptr_t sysHeap;
     s32 exit;
     s16* msg;
+
+#ifdef __APPLE__
+    // Disable the macOS "press and hold" accent/diacritic popup for this app. SDL keeps a Cocoa text
+    // input context active, so holding a movement key (e.g. WASD) is interpreted as holding a letter
+    // key in a text field, and macOS shows the accent picker instead of repeating the key. This is the
+    // per-app equivalent of `defaults write -app <App> ApplePressAndHoldEnabled -bool false`; it keeps
+    // normal key repeat and only suppresses the accent popup. Done before any window/text-input context.
+    CFPreferencesSetAppValue(CFSTR("ApplePressAndHoldEnabled"), kCFBooleanFalse, kCFPreferencesCurrentApplication);
+    CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
+#endif
 
 // Attach console for windows so we can conditionally display it when running the extractor
 #ifdef _WIN32
