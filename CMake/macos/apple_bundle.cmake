@@ -73,6 +73,13 @@ add_custom_command(TARGET 2ship POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${RES_DIR}/assets"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/mm/assets/extractor" "${RES_DIR}/assets"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/mm/assets/xml" "${RES_DIR}/assets/xml"
+    # Upstream's POST_BUILD (mm/CMakeLists.txt) also copies the extractor assets next to the binary
+    # for non-bundle runs, which lands them in Contents/MacOS/. In a bundle that copy is dead weight
+    # AND breaks release zips: codesign can only sign loose non-Mach-O files in MacOS/ via extended
+    # attributes, which zips either drop (broken seal) or carry as AppleDouble ._ entries that
+    # Archive Utility mishandles on symlinks ("damaged" app for downloaders). Remove it here; this
+    # runs after upstream's copy because this file is included later in mm/CMakeLists.txt.
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_FILE_DIR:2ship>/assets"
     COMMENT "Bundling 2 Ship 2 Harkinian resources into the .app"
     VERBATIM
 )
