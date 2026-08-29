@@ -1,7 +1,11 @@
 #include <libultraship/libultra.h>
 
 // 2S2H [Port] Version information
-const char gBuildVersion[] = "@PROJECT_BUILD_NAME@ (@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@)";
+// The "macOS fork" suffix marks builds from this fork rather than upstream, which ships its own
+// macOS download. It surfaces in the title screen, the About box and crash logs, so a bug report
+// filed against an upstream build is identifiable at a glance. Display only - the version numbers
+// below are what the ROM archive check compares, and they stay untouched.
+const char gBuildVersion[] = "@PROJECT_BUILD_NAME@ (@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@) macOS fork";
 const u16 gBuildVersionMajor = @CMAKE_PROJECT_VERSION_MAJOR@;
 const u16 gBuildVersionMinor = @CMAKE_PROJECT_VERSION_MINOR@;
 const u16 gBuildVersionPatch = @CMAKE_PROJECT_VERSION_PATCH@;

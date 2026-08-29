@@ -42,6 +42,7 @@ No copyrighted assets are bundled. You must supply your own legally-dumped ROM.
 | 5 | **Clean quit** `BenPort.cpp` | When you decline the first-run extractor prompt the app bailed via `exit()`, which ran a static `Context`/`spdlog` destructor during teardown and **segfaulted on a clean quit**. The pre-init bail-outs now use `_Exit()`, so declining quits silently. |
 | 6 | **Liquid Glass app icon** `mm/macosx/2s2hicon.icon` | A native [Icon Composer](https://developer.apple.com/documentation/Xcode/creating-your-app-icon-using-icon-composer) icon compiled with `actool` into `Assets.car` (+ an `.icns` fallback), so the Dock/Finder icon uses the real macOS 26+ Liquid Glass material instead of a flat PNG. |
 | 7 | **Metadata** `Info.plist.in` | `CFBundleIconName`/`CFBundleIconFile = 2s2hicon`; mark the app HiDPI-capable; point the writable data folder at `~/Library/Application Support/com.2ship2harkinian.2s2h` via `SHIP_HOME` (`LSEnvironment` in the bundle + a `setenv` fallback in `InitOTR` for the raw binary). |
+| 8 | **Build label** `mm/src/boot/build.c.in` | The title screen and About box only show the friendly `Battler Bravo (5.0.1)` line when the build sits on a git tag, so releases are cut from a tagged commit; otherwise they fall back to a branch/commit developer readout. A `macOS fork` suffix is appended so the title screen, About box and crash logs identify this build against upstream's own macOS download. Display only — the version numbers the ROM archive check compares are separate and unchanged. |
 
 ## File layout at runtime
 
