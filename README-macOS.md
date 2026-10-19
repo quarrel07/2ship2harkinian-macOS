@@ -43,6 +43,8 @@ No copyrighted assets are bundled. You must supply your own legally-dumped ROM.
 | 6 | **Liquid Glass app icon** `mm/macosx/2s2hicon.icon` | A native [Icon Composer](https://developer.apple.com/documentation/Xcode/creating-your-app-icon-using-icon-composer) icon compiled with `actool` into `Assets.car` (+ an `.icns` fallback), so the Dock/Finder icon uses the real macOS 26+ Liquid Glass material instead of a flat PNG. |
 | 7 | **Metadata** `Info.plist.in` | `CFBundleIconName`/`CFBundleIconFile = 2s2hicon`; mark the app HiDPI-capable; point the writable data folder at `~/Library/Application Support/com.2ship2harkinian.2s2h` via `SHIP_HOME` (`LSEnvironment` in the bundle + a `setenv` fallback in `InitOTR` for the raw binary). |
 | 8 | **Build label** `mm/src/boot/build.c.in` | The title screen and About box only show the friendly `Battler Bravo (5.0.1)` line when the build sits on a git tag, so releases are cut from a tagged commit; otherwise they fall back to a branch/commit developer readout. A `macOS fork` suffix is appended so the title screen, About box and crash logs identify this build against upstream's own macOS download. Display only — the version numbers the ROM archive check compares are separate and unchanged. |
+| 9 | **Retina viewport** (`libultraship`) | On Retina displays the Metal window size was recorded in pixels at startup, so **Viewport dimensions** read double the real size, and the internal render size came out at half the true pixels, so 100% internal resolution looked soft and native needed 200%. The window size is now point-based like the rest of the window code, and the render size is scaled by the display backing scale, so **100% internal resolution means native pixels**. |
+| 10 | **HDR upscaling** (`libultraship`, Settings → Graphics) | Opt-in **16-bit Color + HDR Output** draws the game and the window in 16-bit color instead of 8-bit, which smooths banding in dark scenes, fog and sky, and turns on macOS extended dynamic range (EDR). **Auto HDR** then converts the game's standard picture to HDR: darker colors stay as they are and the brightest ones glow brighter than normal white, up to what the display can show at that moment. Both are off by default and apply instantly. Auto HDR follows Filippo Tarpini's [PumboAutoHDR](https://github.com/Filoppi/PumboAutoHDR) and his AutoHDR shader for [Dolphin](https://github.com/dolphin-emu/dolphin). |
 
 ## File layout at runtime
 
@@ -72,7 +74,7 @@ dylib/SDL3 bundling for a local-only build that uses your Homebrew libraries dir
 
 | Submodule | Fork / branch | Change |
 |-----------|---------------|--------|
-| `libultraship` | [`quarrel07/libultraship@2ship-libus`](https://github.com/quarrel07/libultraship/tree/2ship-libus) | SDL2 framework build fix (#1) + HiDPI font density (#2) |
+| `libultraship` | [`quarrel07/libultraship@2ship-libus`](https://github.com/quarrel07/libultraship/tree/2ship-libus) | SDL2 framework build fix (#1) + HiDPI font density (#2) + Retina viewport (#9) + HDR (#10) |
 
 The fork branches from the exact commit upstream 2 Ship 2 Harkinian pins, so this fork tracks upstream
 `5.0.1` with only the macOS-specific deltas above. `ZAPDTR` and `OTRExporter` are unchanged and still
@@ -83,3 +85,5 @@ point at upstream.
 All credit for 2 Ship 2 Harkinian goes to the **[HarbourMasters](https://github.com/HarbourMasters)**
 team and contributors, and to **[Kenix3](https://github.com/Kenix3)** / the libultraship project.
 This fork only adds macOS build, packaging, and quality-of-life fixes.
+
+Auto HDR is based on **[Filippo Tarpini (Filoppi)](https://github.com/Filoppi)**'s [PumboAutoHDR](https://github.com/Filoppi/PumboAutoHDR) and the AutoHDR shader he wrote for the [Dolphin](https://github.com/dolphin-emu/dolphin) emulator.
